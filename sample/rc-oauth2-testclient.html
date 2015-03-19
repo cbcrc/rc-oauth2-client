@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sample - RC OAuth 2.0 Client</title> 
+</head>
+
+<body>
+    <div id="rc-oauth-loginbar">
+    </div>
+</body>
+</html>
+
+<script src="../src/rc.oauth2.client-1.0.0.js"></script>
+<script src="../src/rc.oauth2.loginbar-1.0.0.js"></script>
+<script>
+    //use:
+    //Set RcOAuthClient settings
+    rcOAuth2.client.init({ 
+        domain: "[Your authorization server domain]",
+        clientId: "[Your CLIENT ID here]"
+                , redirectUri: "http://lcl-rcoauth2client.radio-canada.ca/sample/rc-oauth2-testclient-callback.html"
+                , scope: "openid profile email"
+                , state: "http://lcl-rcoauth2client.radio-canada.ca/sample/rc-oauth2-testclient.html?state=authCode"
+    },false);
+
+    rcOAuth2.loginBar.init({
+            isForceLogin: false
+            , dropMenuItemsMarkup: {}
+            , welcomebackMessage: "Hello {0}!"
+        },false);
+</script>
+
+
+ 
