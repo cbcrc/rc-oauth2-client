@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sample - RC OAuth 2.0 Client Callback</title> 
+    <title>Sample - RC OAuth 2.0 Client Callback</title>
 </head>
-<body> 
+<body>
 </body>
 </html>
 <script src="../src/rc.oauth2.client-1.0.0.js"></script>
 <script>
     //use:
     //Set RcOAuthClient settings
-    rcOAuth2.client.init({
-        domain:"[Your authorization server domain]",
-        clientId: "[Your CLIENT ID here]"
-        , callbackDone: function (state) {  
-            opener.location.href = state;
-            window.close();
-        }
-    });  
+    rcOAuth2Client.init(
+        "06eeee04-f2a9-4401-9f35-d004172fbfad",
+        2,
+        {
+            done: function (state) {
+                opener.location.href = state;
+                window.close();
+            },
+            fail: function (errorMessage, state) {
+                alert(errorMessage + " | " + state);
+            }
+        },
+        false
+    );
 </script>
 
 
- 
+

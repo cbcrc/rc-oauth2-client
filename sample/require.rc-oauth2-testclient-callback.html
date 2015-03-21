@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sample using solely RequireJS modules- RC OAuth 2.0 Client</title>
+    <script src="requirejs-2.1.16.js"></script> 
+</head>
+<body>
+</body>
+</html>  
+<script>
+    require.config({
+        baseUrl: "../",
+        paths: {
+            rcOAuth2Client: 'src/rc.oauth2.client-1.0.0'
+        }
+        ,
+        config: {
+            'rcOAuth2Client': {
+                clientId: "06eeee04-f2a9-4401-9f35-d004172fbfad",
+                context: 2,
+                settings: {
+                    done: function (state) {
+                        opener.location.href = state;
+                        window.close();
+                    },
+                    fail: function (errorMessage, state) {
+                        alert(errorMessage + " | " + state);
+                    }
+                },
+                isDebug: false
+            }  
+        }
+    });
+    require(["rcOAuth2Client"], function () { });
+</script>
+
+
+
+
+
+
+

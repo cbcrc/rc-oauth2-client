@@ -3,44 +3,69 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
+//--
+//activate for Sample using entirely RequireJS modules
+// see require.rc-oauth2-testclient.html
+//--
+//define(["module","rcOAuth2Client"], function (module, rcOAuth2Client) {
 
-var rcOAuth2 = rcOAuth2 || {};
-
- 
-
-rcOAuth2.loginBar = (function (window, oauth2Client) {
+var rcOAuth2LoginBar = (function (window) {
     "use strict";
     var debug = false;
-    var _settings = {
+    var oauthClient;
+    var container;
+    var containerId = "rc-oauth2-loginbar";
+    var loginLinkId = "rc-oauth2-login-link";
+    var logoutLinkId = "rc-oauth2-logout-link";
+    var config = {
         isForceLogin: false
         , isVfLogout: false
         , isModalMode: true
-        , dropMenuItemsMarkup: {
-            /*valid settings: */
-        }
+        , dropMenuItemsMarkup: []
         , welcomebackMessage: "{0}"
     };
     var log = function (msg) {
-        if (debug) console.log(msg);
+        if (debug && console) console.log(msg);
     };
     var $ = function (id) {
         return window.document.getElementById(id);
     };
-    var container;
-    var init = function (settings, isDebug) {
+    var addEvent = function (element, event, fn) {
+        if (element.addEventListener) {
+            element.addEventListener(event, fn, false);
+        } else if (element.attachEvent) {
+            //support older browers
+            element.attachEvent('on' + event, fn);
+        }
+    };
+    var preventDefault = function(evt) {
+        if (evt instanceof Event) {
+            if (evt.preventDefault) {
+                evt.preventDefault();
+                evt.stopPropagation();
+            } else if (event) {
+                // IE uses the global event variable
+                event.returnValue = false;
+            }
+        }
+    };
+    var init = function (oauth2Client, settings, isDebug) {
+        
+        oauthClient = oauth2Client;
+
         if (isDebug === true) debug = true;
+
         // check for receiving container
-        var containerId = "rc-oauth-loginbar";
         container = $(containerId);
         if (container == null) {
             throw new Error("Please ensure that you have defined a container element with id " + containerId);
         }
 
         //update module settings 
-        setConfig(_settings, settings);
+        setConfig(config, settings);
 
         //start markup insertion flow
-        oauth2Client.getUserInfo({
+        oauthClient.getUserInfo({
             done: function (httpStatus, data) { getUserInfoDone(httpStatus, data); },
             fail: function (httpStatus, statusText, caseLabel) { getUserInfoFail(httpStatus, statusText, caseLabel); }
         });
@@ -58,55 +83,65 @@ rcOAuth2.loginBar = (function (window, oauth2Client) {
     var getConfig = function (target, prop) {
         return target[prop];
     };
-    var getLoginMarkup = function () { return "<div><a href='javascript:;' onclick='rcOAuth2.loginBar.login();return false;'>Login</a></div>"; };
+    var getLoginMarkup = function () { return "<div><a id='" + loginLinkId + "' href='javascript:;'>Login</a></div>"; };
     var getWelcomebackMarkup = function (userScreenName) {
-        return "<div>" + getConfig(_settings, "welcomebackMessage").replace(/\{0\}/gi, userScreenName) + "</div>"
-    + "<div><a href='javascript:;' onclick='rcOAuth2.loginBar.logout();return false;'>Logout</a></div>";
+        return "<div>" + getConfig(config, "welcomebackMessage").replace(/\{0\}/gi, userScreenName) + "</div>"
+    + "<div><a id ='" + logoutLinkId + "' href='javascript:;'>Logout</a></div>";
     };
-    var injectMarkup = function (html) {
+    var injectLoginMarkup = function (html) {
         container.innerHTML = html;
+        addEvent($(loginLinkId), "click", login);
+    };
+    var injectWelcomebackMarkup = function (html) {
+        container.innerHTML = html;
+        addEvent($(logoutLinkId), "click", logout);
     };
     var getUserInfoDone = function (httpStatus, data) {
-
         if (httpStatus === 200) {
             data = JSON.parse(data);
-            injectMarkup(getWelcomebackMarkup(data.name));
+            injectWelcomebackMarkup(getWelcomebackMarkup(data.name));
         } else if (httpStatus === 401) {
-            container.innerHTML = getLoginMarkup();
-            if (getConfig(_settings, "isForceLogin") === true) {
+            injectLoginMarkup(getLoginMarkup());
+            if (getConfig(config, "isForceLogin") === true) {
                 login(loginDelegate);
             }
         } else {
-            injectMarkup(getLoginMarkup());
+            injectLoginMarkup(getLoginMarkup());
         }
     };
     var getUserInfoFail = function (httpStatus, statusText, caseLabel) {
-        container.innerHTML = getLoginMarkup();
+        injectLoginMarkup(getLoginMarkup());
     };
     var login = function () {
-        if (getConfig(_settings, "isModalMode") === true) {
-            oauth2Client.login(loginDelegate);
+        if (getConfig(config, "isModalMode") === true) {
+            oauthClient.login(loginDelegate);
         } else {
-            oauth2Client.login();
+            oauthClient.login();
         };
     };
     var loginDelegate = function (url) {
         window.open(url, "pop", "scrollbars=yes,resizable=yes,,width=600,height=800");
     };
     var logout = function () {
-        var isVfLogout = getConfig(_settings, "isVfLogout");
-        oauth2Client.logout({
-            done: function (httpStatus, data) {
-                if (isVfLogout === true) window.viafoura.session.logout();
-                injectMarkup(getLoginMarkup());
-            }
-        });
+        var isVfLogout = getConfig(config, "isVfLogout");
+        oauthClient.logout(
+             function (httpStatus, data) {
+                 if (isVfLogout === true) window.viafoura.session.logout();
+                 injectLoginMarkup(getLoginMarkup());
+             }
+        );
     };
     return {
-        init: init,
-        login: login,
-        logout: logout
+        init: init
     };
-}(window, rcOAuth2.client));
+}(window));
+
+//    rcOAuth2LoginBar.init( rcOAuth2Client, module.config().settings, module.config().isDebug);
+//    return rcOAuth2LoginBar;
+//});
+
+
+
+
 
 

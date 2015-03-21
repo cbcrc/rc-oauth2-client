@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sample using solely RequireJS modules- RC OAuth 2.0 Client</title>
+    <script src="requirejs-2.1.16.js"></script> 
+</head>
+<body>
+    <div id="rc-oauth2-loginbar"></div>
+</body>
+</html> 
+<script>
+    require.config ({
+        baseUrl:"../",
+        paths: {
+            rcOAuth2Client: 'src/rc.oauth2.client-1.0.0',
+            rcOAuth2LoginBar: 'src/rc.oauth2.loginbar-1.0.0'
+        }
+        ,
+        config: {
+            'rcOAuth2Client': {
+                clientId: "06eeee04-f2a9-4401-9f35-d004172fbfad",
+                context: 1,
+                settings: {
+                    domain: "api-gw-dev.radio-canada.ca",
+                    redirectUri: "http://lcl-rcoauth2client.radio-canada.ca/sample/require.rc-oauth2-testclient-callback.html",
+                    scope: "openid profile email",
+                    state: "http://lcl-rcoauth2client.radio-canada.ca/sample/require.rc-oauth2-testclient.html?state=myPageState"
+                },
+                isDebug: false
+            }
+            ,
+            'rcOAuth2LoginBar': {
+                 settings: {
+                         isForceLogin: false,
+                         isModalMode: true,
+                         dropMenuItemsMarkup: [],
+                         welcomebackMessage: "Hello {0}!"
+                 }, 
+                 isDebug: false
+             }
+        }
+    });
+    require(["rcOAuth2LoginBar"], function() {  }); 
+</script>
+
+
+

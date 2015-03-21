@@ -2,45 +2,92 @@
 // Copyright (c) CBC/Radio-Canada. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
-var rcOAuth2 = rcOAuth2 || {};
 
-rcOAuth2.client = (function (window) {
+
+//--
+//activate for Sample using solely RequireJS modules
+// see require.rc-oauth2-testclient.html
+//--
+//define(["module"],function(module) {
+
+var rcOAuth2Client = (function (window) {
     //"use strict";
     var debug = false;
     var useLocalStorage = true;
-    var callbackKeys = { accessToken: "access_token", expiresIn: "expires_in", tokenType: "token_type", state: "state", scope: "scope" };
-    var urlHash;
-    var _settings = {
+    var callbackKeys = { accessToken: "access_token", expiresIn: "expires_in", tokenType: "token_type", state: "state", scope: "scope", error: "error" };
+    var config = {
+        clientId: "",
+        responseType: "",
+        logoutPath: "/cdm/oauth2/logout",
+        userInfoPath: "/openid/connect/v1/userinfo"
+    };
+    var callConfig = {
         domain: "services.radio-canada.ca",
         path: "/cdm/oauth2/authorize",
-        clientId: "",
         redirectUri: "",
         scope: "",
         state: "",
-        responseType: "token",
-        callbackDone: null 
+    };
+    var callbackConfig = {
+        done: null,
+        fail: null
     };
     var log = function (msg) {
-        if (debug) console.log(msg);
+        if (debug && console) console.log(msg);
     };
-    var init = function (settings, isDebug) {
-
-        //
-        //settings supported:  see _settings
-        //
+    var init = function (clientId, context, settings, isDebug) {
 
         if (isDebug === true) debug = true;
-        setConfig(_settings, settings);
-        setUrlHash();
 
-        //
-        //store access token if in callback mode
-        if (urlHash[callbackKeys.accessToken] != undefined) {
-            persistAccessToken();
-            if (typeof urlHash[callbackKeys.state] === "string" && urlHash[callbackKeys.state].indexOf("http") >= 0 && typeof (_settings.callbackDone) === "function") {
-                _settings.callbackDone(decodeURIComponent(urlHash[callbackKeys.state]).toString());
+        //init hidden settings
+        if (typeof (clientId) !== "string" || clientId == "" || clientId == " ") {
+            throw new Error("clientId parameter: Please provide a valid client id.");
+        }
+        config.clientId = clientId;
+        config.responseType = "token";
+
+
+        // init login call context
+        if (context == 1) {
+            setConfig(callConfig, settings);
+        }
+            //callback mode
+        else if (context == 2) {
+            setConfig(callbackConfig, settings);
+            actOnCallback();
+        } else {
+            throw new Error("context parameter: Please provide a valid context.");
+        }
+    };
+
+    var actOnCallback = function () {
+        var url = parseUrl(window.document.location.href);
+        var urlHash = getCallbackUrlKeyValues(url.hash);
+        var urlSearch = getCallbackUrlKeyValues(url.search);
+        var isDoneDelegate = (typeof (callbackConfig.done) === "function");
+        var isFailDelegate = (typeof (callbackConfig.fail) === "function");
+        var stateEchoed;
+        if (typeof (urlHash[callbackKeys.accessToken]) === "string") {
+            var isPersisted = tryPersistAccessToken(urlHash);
+            stateEchoed = decodeURIComponent(urlHash[callbackKeys.state]).toString();
+            if (isPersisted) {
+                if (isDoneDelegate) {
+                    callbackConfig.done(stateEchoed);
+                }
+            } else {
+                if (isFailDelegate) {
+                    callbackConfig.fail("access token could not be persisted", stateEchoed);
+                }
+            }
+        } else {
+            stateEchoed = decodeURIComponent(urlSearch[callbackKeys.state]).toString();
+            if (typeof (urlSearch[callbackKeys.error]) === "string") {
+                if (isFailDelegate) {
+                    callbackConfig.fail(urlSearch[callbackKeys.error], stateEchoed);
+                }
             }
         }
+
     };
     var setConfig = function (target, source) {
         for (var t in target) {
@@ -55,19 +102,24 @@ rcOAuth2.client = (function (window) {
     var getConfig = function (target, prop) {
         return target[prop];
     };
-    var setUrlHash = function () {
-        urlHash = {};
-        var hash = document.location.hash.substring(1).split("&");
+    var getCallbackUrlKeyValues = function (urlSegment) {
+        var kvs = {};
+        var hash = urlSegment.substring(1);
+        hash = typeof (hash) === "string" ? hash.split("&") : [];
         if (hash.length >= 1 && hash[0] != "") {
+
+            //loop through keys
             for (var h in hash) {
                 for (var k in callbackKeys) {
                     var key = callbackKeys[k];
                     if (hash[h].indexOf(key) >= 0) {
-                        urlHash[key] = hash[h].split("=")[1];
+                        kvs[key] = hash[h].split("=")[1];
                     }
                 }
             }
+            //end loop
         }
+        return kvs;
     };
     var parseUrl = function (url) {
         var div, a, addToBody, props, details;
@@ -75,7 +127,7 @@ rcOAuth2.client = (function (window) {
         props = ['protocol', 'hostname', 'port', 'pathname', 'search', 'hash', 'host'];
 
         // add the url to an anchor and let the browser parse the URL
-        a = document.createElement('A');
+        a = window.document.createElement('A');
         a.setAttribute("href", url);
 
         // IE8 (and 9?) Fix
@@ -83,12 +135,12 @@ rcOAuth2.client = (function (window) {
         // added to the body, and an innerHTML is needed to trigger the parsing
         addToBody = (a.host === '' && a.protocol !== 'file:');
         if (addToBody) {
-            div = document.createElement('DIV');
+            div = window.document.createElement('DIV');
             div.innerHTML = '<a href="' + url + '"></a>';
             a = div.firstChild;
             // prevent the div from affecting layout
             div.setAttribute('style', 'display:none; position:absolute;');
-            document.body.appendChild(div);
+            window.document.body.appendChild(div);
         }
 
         // Copy the specific URL properties to a new object
@@ -100,7 +152,7 @@ rcOAuth2.client = (function (window) {
         }
 
         if (addToBody) {
-            document.body.removeChild(div);
+            window.document.body.removeChild(div);
         }
 
         return details;
@@ -203,10 +255,10 @@ rcOAuth2.client = (function (window) {
     };
     var setCookie = function (key, value, expireDate) {
         var cookieValue = escape(value) + "; expires=" + expireDate;
-        document.cookie = key + "=" + cookieValue;
+        window.document.cookie = key + "=" + cookieValue;
     };
     var getCookie = function (key) {
-        var cookie = document.cookie;
+        var cookie = window.document.cookie;
         var start = cookie.indexOf(" " + key + "=");
         if (start == -1) {
             start = cookie.indexOf(key + "=");
@@ -227,12 +279,12 @@ rcOAuth2.client = (function (window) {
         // Delete a cookie by setting the date of expiry to yesterday
         var date = new Date();
         date.setDate(date.getDate() - 1);
-        document.cookie = escape(key) + '=;expires=' + date;
+        window.document.cookie = escape(key) + '=;expires=' + date;
     };
     var getPersistDataBaseKey = function () {
-        return "rcoac." + getConfig(_settings, "clientId");
+        return "rcoac." + getConfig(config, "clientId");
     };
-    var persistAccessToken = function () {
+    var tryPersistAccessToken = function (urlHash) {
         var accessToken = urlHash[callbackKeys.accessToken];
         var expiresIn = urlHash[callbackKeys.expiresIn];
         var scope = urlHash[callbackKeys.scope];
@@ -252,9 +304,12 @@ rcOAuth2.client = (function (window) {
                 localStorage.setItem(getPersistDataBaseKey() + "." + callbackKeys.expiresIn, expireDate);
                 //set scope 
                 // localStorage.setItem(getPersistDataBaseKey() + "." + callbackKeys.scope, scope.replace(/\+/gi, ' '));
-            } else { 
+            } else {
                 setCookie(accessTokenPersistKey, accessToken, expireDate);
             }
+            return true;
+        } else {
+            return false;
         }
     };
     var getAccessToken = function () {
@@ -269,10 +324,10 @@ rcOAuth2.client = (function (window) {
             //set scope
             //var scope = localStorage.getItem(getPersistDataBaseKey() + "." + callbackKeys.scope);
 
-            var now = new Date(); 
+            var now = new Date();
             if (Date.parse(expireDate) > now) {
                 accessToken = at;
-            } 
+            }
         } else {
             var cookie = getCookie(accessTokenPersistKey);
             if (typeof (cookie) === "string") {
@@ -307,7 +362,7 @@ rcOAuth2.client = (function (window) {
         //configure settings for ajax call settings:  done fail method bearerToken withCredentials
         // 
         settings.method = "GET";
-        settings.url = "https://" + getConfig(_settings, "domain") + "/openid/connect/v1/userinfo";
+        settings.url = "https://" + getConfig(callConfig, "domain") + getConfig(config, "userInfoPath");
         settings.bearerToken = getAccessToken();
         settings.withCredentials = false;
         var oldDone = settings.done;
@@ -338,41 +393,37 @@ rcOAuth2.client = (function (window) {
         }(oldFail);
         ajax(settings);
     };
-    var getAuthorizeUrl = function () { 
-        var out = "https://" + getConfig(_settings, "domain") + getConfig(_settings, "path");
-        out += "?client_id=" + getConfig(_settings, "clientId");
-        out += "&redirect_uri=" + encodeURIComponent(getConfig(_settings, "redirectUri"));
-        out += "&response_type=" + getConfig(_settings, "responseType");
-        out += "&scope=" + getConfig(_settings, "scope").replace(/\W/gi, '+');
-        out += "&state=" + encodeURIComponent(getConfig(_settings, "state"));
+    var getAuthorizeUrl = function () {
+        var out = "https://" + getConfig(callConfig, "domain") + getConfig(callConfig, "path");
+        out += "?client_id=" + getConfig(config, "clientId");
+        out += "&redirect_uri=" + encodeURIComponent(getConfig(callConfig, "redirectUri"));
+        out += "&response_type=" + getConfig(config, "responseType");
+        out += "&scope=" + getConfig(callConfig, "scope").replace(/\W/gi, '+');
+        out += "&state=" + encodeURIComponent(getConfig(callConfig, "state"));
         return out;
     };
-    var login = function (modalWindow) {
-        if (typeof (modalWindow) === "function") {
-            modalWindow(getAuthorizeUrl());
+    var login = function (urlHandler) {
+        var url = getAuthorizeUrl();
+        if (typeof (urlHandler) === "function") {
+            urlHandler(url);
         }
         else {
-            document.location.href = getAuthorizeUrl();
+            document.location.href = url;
         }
     };
-    var logout = function (settings) {
-        //
-        //supported settings: done
-        //
-        settings = settings || {};
-
+    var logout = function (continueWith) {
         var accessToken = getAccessToken();
         //
         //call session logout endpoint
         var iframe = document.createElement('iframe');
-        if(!debug) iframe.style.display = "none";
-        iframe.src = "https://" + getConfig(_settings, "domain") + "/cdm/oauth2/logout?access_token=" + accessToken + "&token_type_hint=access_token";
+        if (!debug) iframe.style.display = "none";
+        iframe.src = "https://" + getConfig(callConfig, "domain") + getConfig(config, "logoutPath") + "?access_token=" + accessToken + "&token_type_hint=access_token";
         document.body.appendChild(iframe);
 
 
         deleteAccessToken(401);//we always want to revoke the token, even if the auth server faulted on this 
-        if (settings && typeof (settings.done) === "function") {
-            settings.done(200, { "result": "ok" });
+        if (typeof (continueWith) === "function") {
+            continueWith(200, { "result": "ok" });
         }
     };
 
@@ -384,3 +435,12 @@ rcOAuth2.client = (function (window) {
         logout: logout
     };
 }(window));
+
+
+//    rcOAuth2Client.init(module.config().clientId, module.config().context, module.config().settings, module.config().isDebug);
+//    return rcOAuth2Client;
+//});
+
+
+
+

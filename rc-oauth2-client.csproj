@@ -32,8 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="sample\require.rc-oauth2-testclient.html" />
+    <Content Include="sample\require.rc-oauth2-testclient-callback.html" />
     <Content Include="sample\rc-oauth2-testclient-callback.html" />
     <Content Include="sample\rc-oauth2-testclient.html" />
+    <Content Include="sample\requirejs-2.1.16.js" />
     <Content Include="src\rc.oauth2.client-1.0.0.js" />
     <Content Include="src\rc.oauth2.loginbar-1.0.0.js" />
   </ItemGroup>

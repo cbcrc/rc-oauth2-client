@@ -1,34 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sample - RC OAuth 2.0 Client</title> 
+    <title>Sample using RequireJS - RC OAuth 2.0 Client</title>
+    <script src="requirejs-2.1.16.js"></script>
 </head>
-
 <body>
-    <div id="rc-oauth-loginbar">
-    </div>
+    <div id="rc-oauth2-loginbar"></div>
 </body>
 </html>
-
-<script src="../src/rc.oauth2.client-1.0.0.js"></script>
-<script src="../src/rc.oauth2.loginbar-1.0.0.js"></script>
 <script>
-    //use:
-    //Set RcOAuthClient settings
-    rcOAuth2.client.init({ 
-        domain: "[Your authorization server domain]",
-        clientId: "[Your CLIENT ID here]"
-                , redirectUri: "http://lcl-rcoauth2client.radio-canada.ca/sample/rc-oauth2-testclient-callback.html"
-                , scope: "openid profile email"
-                , state: "http://lcl-rcoauth2client.radio-canada.ca/sample/rc-oauth2-testclient.html?state=authCode"
-    },false);
-
-    rcOAuth2.loginBar.init({
-            isForceLogin: false
-            , dropMenuItemsMarkup: {}
-            , welcomebackMessage: "Hello {0}!"
-        },false);
+    require.config({
+        baseUrl: "../",
+        paths: {
+            rcOAuth2Client: 'src/rc.oauth2.client-1.0.0',
+            rcOAuth2LoginBar: 'src/rc.oauth2.loginbar-1.0.0'
+        } 
+    });
+    require(["rcOAuth2Client", "rcOAuth2LoginBar"], function () {
+        rcOAuth2Client.init("06eeee04-f2a9-4401-9f35-d004172fbfad",
+            1,
+            {
+                domain: "api-gw-dev.radio-canada.ca",
+                redirectUri: "http://lcl-rcoauth2client.radio-canada.ca/sample/rc-oauth2-testclient-callback.html",
+                scope: "openid profile email",
+                state: "http://lcl-rcoauth2client.radio-canada.ca/sample/rc-oauth2-testclient.html?state=myPageState"
+            },
+            false);
+        rcOAuth2LoginBar.init(
+            rcOAuth2Client,
+            {
+                isForceLogin: false,
+                isModalMode: true,
+                dropMenuItemsMarkup: [],
+                welcomebackMessage: "Hello {0}!"
+            },
+            false);
+    });
 </script>
 
 
- 
+
