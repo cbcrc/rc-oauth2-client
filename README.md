@@ -108,11 +108,12 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
         , welcomebackMessage: "{0}" // {0} will be replaced by the logged-in user's display name.
                                     // ex: "Hello {0}" will output "Hello John Smith"
     }
- ```
-    + `isDebug` //*Boolean*
-      An optional parameter that when set to true, will output messages to the console. 
-
-
+  ```
+    
+    
+   + `isDebug` //*Boolean*
+       An optional parameter that when set to true, will output messages to the console. 
+ 
 ##Integration
 
 Because the code is AMD ready (!) , you have 3 integration options:
