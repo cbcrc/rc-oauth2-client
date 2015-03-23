@@ -139,9 +139,3 @@ var rcOAuth2LoginBar = (function (window) {
 //    rcOAuth2LoginBar.init( rcOAuth2Client, module.config().settings, module.config().isDebug);
 //    return rcOAuth2LoginBar;
 //});
-
-
-
-
-
-

@@ -17,13 +17,14 @@
         } 
     });
     require(["rcOAuth2Client", "rcOAuth2LoginBar"], function () {
-        rcOAuth2Client.init("06eeee04-f2a9-4401-9f35-d004172fbfad",
+        rcOAuth2Client.init(
+            "my oauth 2.0 client id",
             1,
             {
-                domain: "api-gw-dev.radio-canada.ca",
-                redirectUri: "http://lcl-rcoauth2client.radio-canada.ca/sample/rc-oauth2-testclient-callback.html",
+                domain: "my.domain.com",
+                redirectUri: "http://my.domain.com/callback.html",
                 scope: "openid profile email",
-                state: "http://lcl-rcoauth2client.radio-canada.ca/sample/rc-oauth2-testclient.html?state=myPageState"
+                state: "myTargetPageOnCallback"
             },
             false);
         rcOAuth2LoginBar.init(

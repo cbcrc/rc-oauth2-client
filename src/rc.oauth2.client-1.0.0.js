@@ -18,12 +18,12 @@ var rcOAuth2Client = (function (window) {
     var config = {
         clientId: "",
         responseType: "",
-        logoutPath: "/cdm/oauth2/logout",
+        logoutPath: "/cdm//auth/oauth/v2/logout",
         userInfoPath: "/openid/connect/v1/userinfo"
     };
     var callConfig = {
         domain: "services.radio-canada.ca",
-        path: "/cdm/oauth2/authorize",
+        authorizePath: "/cdm/auth/oatuh/v2/authorize",
         redirectUri: "",
         scope: "",
         state: "",
@@ -59,7 +59,6 @@ var rcOAuth2Client = (function (window) {
             throw new Error("context parameter: Please provide a valid context.");
         }
     };
-
     var actOnCallback = function () {
         var url = parseUrl(window.document.location.href);
         var urlHash = getCallbackUrlKeyValues(url.hash);
@@ -394,7 +393,7 @@ var rcOAuth2Client = (function (window) {
         ajax(settings);
     };
     var getAuthorizeUrl = function () {
-        var out = "https://" + getConfig(callConfig, "domain") + getConfig(callConfig, "path");
+        var out = "https://" + getConfig(callConfig, "domain") + getConfig(callConfig, "authorizePath");
         out += "?client_id=" + getConfig(config, "clientId");
         out += "&redirect_uri=" + encodeURIComponent(getConfig(callConfig, "redirectUri"));
         out += "&response_type=" + getConfig(config, "responseType");
@@ -440,7 +439,3 @@ var rcOAuth2Client = (function (window) {
 //    rcOAuth2Client.init(module.config().clientId, module.config().context, module.config().settings, module.config().isDebug);
 //    return rcOAuth2Client;
 //});
-
-
-
-

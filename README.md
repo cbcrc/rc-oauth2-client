@@ -5,6 +5,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
 ##APIs
 
 ### rcOAuth2Client
+
   + **init(** clientId, context, settings, [isDebug] **)**
      Point of entry.
      
@@ -21,14 +22,14 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     ```javascript
     {
         domain: "", //oauth 2.0 server domain
-        path: "", //oauth 2.0 server authorize path
+        authorizePath: "", //oauth 2.0 server authorize path
         redirectUri: "", // oauth 2.0 redirect_uri parameter
         scope: "", //oauth 2.0 scope paramter
         state: "", //optional - oauth 2.0 state paramter 
     }
     ```
       If you have set *context* to 2, then the settings will accept the following object: 
-        ```javascript
+    ```javascript
     {
          done: null //a function/delegate with signature function(state /*String*/){} called when an access token has been granted 
          fail: null //a function/delegate with signature function(errorMessage /*String*/, state /*String*/){} on access token grant error
@@ -38,13 +39,13 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
      An optional parameter that when set to true, will output data to the console. 
 
   + **getAccessToken()**
- Attempts to retrieve a locally persisted access token.
+    Attempts to retrieve a locally persisted access token.
    **Attention**: Even if an access token is retrieved, your application should handle a possible 401 HTTP status response when using the access token, as there is no way of ensuring that the access token in question has not been invalidated by the authorization server.
    
     Returns: Empty string or an access token
 
   + **getUserInfo(settings)**
-   Wraps a call to the authorization server's OpenId Connect Userinfo endpoint.
+     Wraps a call to the authorization server's OpenId Connect userinfo endpoint.
    
     Returns: Please see *Parameters* section below for return values. 
     
@@ -81,23 +82,24 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     + `continueWith` //*Function*
       Function delegate called once logout has completed, with signature
    ```javascript 
-    function(){} 
+    function(){}
     ``` 
 
 
 ### rcOAuth2LoginBar 
+
   + **init(** rcOAuth2Client, settings, [isDebug] **)**
-  Point of entry.
+     Point of entry.
+     
+    Returns: ---
   
-  Returns: ---
-  
-  Parameters:
+    Parameters:
     + `rcOAuth2Client` //*Object*
        rcOAuth2Client object.
     
     + `settings` //*Object literal*
     The parameter takes the following object:
- ```javascript 
+  ```javascript 
    {
         isForceLogin: false // if true, user will be automatically be prompted to login
         , isVfLogout: false // if dependant on viafoura
@@ -106,9 +108,9 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
         , welcomebackMessage: "{0}" // {0} will be replaced by the logged-in user's display name.
                                     // ex: "Hello {0}" will output "Hello John Smith"
     }
-```
-   + `isDebug` //*Boolean*
-     An optional parameter that when set to true, will output messages to the console. 
+ ```
+    + `isDebug` //*Boolean*
+      An optional parameter that when set to true, will output messages to the console. 
 
 
 ##Integration
@@ -118,3 +120,53 @@ Because the code is AMD ready (!) , you have 3 integration options:
   + Standard JS file includes
   + RequireJS wrapper
   + RequireJS modules
+
+#### Standard JS file includes
+
+   ```html  
+       <html>
+       <head></head>
+       <body>
+         <div id="rc-oauth2-loginbar"></div>
+       </body>
+       <script>
+            rcOAuth2Client.init( 
+                "my auth2.0 client id",
+                1,
+                {
+                    domain: "my.domain.com",
+                    redirectUri: "http://my.domain.com/callback.html",
+                    scope: "openid profile email",
+                    state: "myTargetPageOnCallback"
+                },
+                false
+            );
+             
+	rcOAuth2LoginBar.init(
+                 rcOAuth2Client,  
+                 {
+                         isForceLogin: false,
+                         isModalMode: true,
+                         dropMenuItemsMarkup: [],
+                         welcomebackMessage: "Hello {0}!"
+                 }, 
+                 false
+              );
+       </script>
+       </html>
+   ```
+
+#### RequireJS wrapper
+
+Please see the 
+samples/rc-oauth2-testclient.html 
+samples/rc-oauth2-testclient-callback.html 
+
+#### RequireJS modules
+
+Please see the 
+samples/require.rc-oauth2-testclient.html 
+samples/require.rc-oauth2-testclient-callback.html 
+
+*Note*: 
+You will have to activate the modules by uncommenting the `define( )` declarations in both source JS files. 
