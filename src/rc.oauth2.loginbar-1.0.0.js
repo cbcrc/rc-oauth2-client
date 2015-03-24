@@ -3,10 +3,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
-//--
-//activate for Sample using entirely RequireJS modules
-// see require.rc-oauth2-testclient.html
-//--
+
+//**
+// define() must be activated for Sample using solely RequireJS modules
+// see readme.md for more details
+//**
 //define(["module","rcOAuth2Client"], function (module, rcOAuth2Client) {
 
 var rcOAuth2LoginBar = (function (window) {

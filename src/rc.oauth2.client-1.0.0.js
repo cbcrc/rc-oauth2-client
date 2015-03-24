@@ -4,12 +4,11 @@
 //
 
 
-//--
-//activate for Sample using solely RequireJS modules
-// see require.rc-oauth2-testclient.html
-//--
-//define(["module"],function(module) {
-
+//**
+// define() must be activated for Sample using solely RequireJS modules
+// see readme.md for more details
+//**
+//define(["module"],function(module) { 
 var rcOAuth2Client = (function (window) {
     //"use strict";
     var debugActive = false;
@@ -442,3 +441,4 @@ var rcOAuth2Client = (function (window) {
 //    rcOAuth2Client.init(module.config().clientId, module.config().context, module.config().settings, module.config().debug);
 //    return rcOAuth2Client;
 //});
+ 

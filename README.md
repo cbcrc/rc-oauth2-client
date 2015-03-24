@@ -13,11 +13,17 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     
     Parameters:
     + `clientId` //*String*
+
       OAuth 2.0 client id  
+
     + `context`  //*Number*
+
      The context in which the client will be executing. Possible values: 1 (login)  or 2 (callback).  
+
     + `settings` //*Object literal*
+
     The settings parameter will differ depending on what *mode* is used.
+
     If you have set *context* to 1, then the settings will accept the following object:
     ```javascript
     {
@@ -35,7 +41,9 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
          fail: null //a function/delegate with signature function(errorMessage /*String*/, state /*String*/){} on access token grant error
     }
     ```
+
     + `debug` //*Boolean*
+
      An optional parameter that when set to true, will output data to the console. 
 
   + **getAccessToken()**
@@ -80,6 +88,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     
     Parameters:
     + `continueWith` //*Function*
+
       Function delegate called once logout has completed, with signature
    ```javascript 
     function(){}
@@ -95,9 +104,11 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
   
     Parameters:
     + `rcOAuth2Client` //*Object*
+
        rcOAuth2Client object.
     
     + `settings` //*Object literal*
+
     The parameter takes the following object:
   ```javascript 
    {
@@ -112,6 +123,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     
     
    + `debug` //*Boolean*
+
        An optional parameter that when set to true, will output messages to the console. 
  
 ##Integration
@@ -170,4 +182,22 @@ samples/require.rc-oauth2-testclient.html
 samples/require.rc-oauth2-testclient-callback.html 
 
 *Note*: 
-You will have to activate the modules by uncommenting the `define( )` declarations in both source JS files. 
+You will have to activate the modules by uncommenting the `define( )` declarations in both source JS files:
+
+#####rc.oauth2.client
+  ```javascript
+    define(["module"],function(module) { 
+        [...]
+        rcOAuth2Client.init(module.config().clientId, module.config().context, module.config().settings, module.config().debug);
+        return rcOAuth2Client;
+    });
+  ``` 
+
+#####rc.oauth2.loginbar
+  ```javascript
+    define(["module","rcOAuth2Client"], function (module, rcOAuth2Client) {
+         [...]
+         rcOAuth2LoginBar.init( rcOAuth2Client, module.config().settings, module.config().debug);
+         return rcOAuth2LoginBar;
+     });
+  ``` 
