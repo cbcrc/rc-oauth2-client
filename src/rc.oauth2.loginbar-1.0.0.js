@@ -11,21 +11,21 @@
 
 var rcOAuth2LoginBar = (function (window) {
     "use strict";
-    var debug = false;
+    var debugActive = false;
     var oauthClient;
     var container;
     var containerId = "rc-oauth2-loginbar";
     var loginLinkId = "rc-oauth2-login-link";
     var logoutLinkId = "rc-oauth2-logout-link";
     var config = {
-        isForceLogin: false
-        , isVfLogout: false
-        , isModalMode: true
+        forceLogin: false
+        , vfLogout: false
+        , modalMode: true
         , dropMenuItemsMarkup: []
-        , welcomebackMessage: "{0}"
+        , loggedInMessage: "{0}"
     };
     var log = function (msg) {
-        if (debug && console) console.log(msg);
+        if (debugActive && console) console.log(msg);
     };
     var $ = function (id) {
         return window.document.getElementById(id);
@@ -49,11 +49,14 @@ var rcOAuth2LoginBar = (function (window) {
             }
         }
     };
-    var init = function (oauth2Client, settings, isDebug) {
+    var init = function (oauth2Client, settings, debug) {
         
         oauthClient = oauth2Client;
 
-        if (isDebug === true) debug = true;
+        if (debug === true) {
+            debugActive = true;
+            log("rcOauth2LoginBar dbug mode activated.");
+        }
 
         // check for receiving container
         container = $(containerId);
@@ -85,7 +88,7 @@ var rcOAuth2LoginBar = (function (window) {
     };
     var getLoginMarkup = function () { return "<div><a id='" + loginLinkId + "' href='javascript:;'>Login</a></div>"; };
     var getWelcomebackMarkup = function (userScreenName) {
-        return "<div>" + getConfig(config, "welcomebackMessage").replace(/\{0\}/gi, userScreenName) + "</div>"
+        return "<div>" + getConfig(config, "loggedInMessage").replace(/\{0\}/gi, userScreenName) + "</div>"
     + "<div><a id ='" + logoutLinkId + "' href='javascript:;'>Logout</a></div>";
     };
     var injectLoginMarkup = function (html) {
@@ -102,7 +105,7 @@ var rcOAuth2LoginBar = (function (window) {
             injectWelcomebackMarkup(getWelcomebackMarkup(data.name));
         } else if (httpStatus === 401) {
             injectLoginMarkup(getLoginMarkup());
-            if (getConfig(config, "isForceLogin") === true) {
+            if (getConfig(config, "forceLogin") === true) {
                 login(loginDelegate);
             }
         } else {
@@ -113,7 +116,7 @@ var rcOAuth2LoginBar = (function (window) {
         injectLoginMarkup(getLoginMarkup());
     };
     var login = function () {
-        if (getConfig(config, "isModalMode") === true) {
+        if (getConfig(config, "modalMode") === true) {
             oauthClient.login(loginDelegate);
         } else {
             oauthClient.login();
@@ -123,10 +126,10 @@ var rcOAuth2LoginBar = (function (window) {
         window.open(url, "pop", "scrollbars=yes,resizable=yes,,width=600,height=800");
     };
     var logout = function () {
-        var isVfLogout = getConfig(config, "isVfLogout");
+        var forceVfLogout = getConfig(config, "forceVfLogout");
         oauthClient.logout(
              function (httpStatus, data) {
-                 if (isVfLogout === true) window.viafoura.session.logout();
+                 if (forceVfLogout === true && window.viafoura) window.viafoura.session.logout();
                  injectLoginMarkup(getLoginMarkup());
              }
         );
@@ -136,6 +139,6 @@ var rcOAuth2LoginBar = (function (window) {
     };
 }(window));
 
-//    rcOAuth2LoginBar.init( rcOAuth2Client, module.config().settings, module.config().isDebug);
+//    rcOAuth2LoginBar.init( rcOAuth2Client, module.config().settings, module.config().debug);
 //    return rcOAuth2LoginBar;
 //});

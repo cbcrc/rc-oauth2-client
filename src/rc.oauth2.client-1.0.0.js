@@ -12,7 +12,7 @@
 
 var rcOAuth2Client = (function (window) {
     //"use strict";
-    var debug = false;
+    var debugActive = false;
     var useLocalStorage = true;
     var callbackKeys = { accessToken: "access_token", expiresIn: "expires_in", tokenType: "token_type", state: "state", scope: "scope", error: "error" };
     var config = {
@@ -33,11 +33,14 @@ var rcOAuth2Client = (function (window) {
         fail: null
     };
     var log = function (msg) {
-        if (debug && console) console.log(msg);
+        if (debugActive && console) console.log(msg);
     };
-    var init = function (clientId, context, settings, isDebug) {
+    var init = function (clientId, context, settings, debug) {
 
-        if (isDebug === true) debug = true;
+        if (debug === true) {
+            debugActive = true;
+            log("rcOauth2Client dbug mode activated.");
+        }
 
         //init hidden settings
         if (typeof (clientId) !== "string" || clientId == "" || clientId == " ") {
@@ -415,7 +418,7 @@ var rcOAuth2Client = (function (window) {
         //
         //call session logout endpoint
         var iframe = document.createElement('iframe');
-        if (!debug) iframe.style.display = "none";
+        if (!debugActive) iframe.style.display = "none";
         iframe.src = "https://" + getConfig(callConfig, "domain") + getConfig(config, "logoutPath") + "?access_token=" + accessToken + "&token_type_hint=access_token";
         document.body.appendChild(iframe);
 
@@ -436,6 +439,6 @@ var rcOAuth2Client = (function (window) {
 }(window));
 
 
-//    rcOAuth2Client.init(module.config().clientId, module.config().context, module.config().settings, module.config().isDebug);
+//    rcOAuth2Client.init(module.config().clientId, module.config().context, module.config().settings, module.config().debug);
 //    return rcOAuth2Client;
 //});

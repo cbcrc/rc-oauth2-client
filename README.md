@@ -6,7 +6,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
 
 ### rcOAuth2Client
 
-  + **init(** clientId, context, settings, [isDebug] **)**
+  + **init(** clientId, context, settings, [debug] **)**
      Point of entry.
      
     Returns: --
@@ -35,7 +35,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
          fail: null //a function/delegate with signature function(errorMessage /*String*/, state /*String*/){} on access token grant error
     }
     ```
-    + `isDebug` //*Boolean*
+    + `debug` //*Boolean*
      An optional parameter that when set to true, will output data to the console. 
 
   + **getAccessToken()**
@@ -88,7 +88,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
 
 ### rcOAuth2LoginBar 
 
-  + **init(** rcOAuth2Client, settings, [isDebug] **)**
+  + **init(** rcOAuth2Client, settings, [debug] **)**
      Point of entry.
      
     Returns: ---
@@ -101,17 +101,17 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     The parameter takes the following object:
   ```javascript 
    {
-        isForceLogin: false // if true, user will be automatically be prompted to login
-        , isVfLogout: false // if dependant on viafoura
-        , isModalMode: true // if login page should be shown in a modal 
+        forceLogin: false // if true, user will be automatically be prompted to login
+        , forceVfLogout: false // if dependant on viafoura
+        , modalMode: true // if login page should be shown in a modal 
         , dropMenuItemsMarkup: [] // an array of user action objects. Note: a Logout action is automatically added by  rcOAuth2.loginBar
-        , welcomebackMessage: "{0}" // {0} will be replaced by the logged-in user's display name.
+        , loggedInMessage: "{0}" // {0} will be replaced by the logged-in user's display name.
                                     // ex: "Hello {0}" will output "Hello John Smith"
     }
   ```
     
     
-   + `isDebug` //*Boolean*
+   + `debug` //*Boolean*
        An optional parameter that when set to true, will output messages to the console. 
  
 ##Integration
@@ -146,10 +146,10 @@ Because the code is AMD ready (!) , you have 3 integration options:
 	rcOAuth2LoginBar.init(
                  rcOAuth2Client,  
                  {
-                         isForceLogin: false,
-                         isModalMode: true,
+                         forceLogin: false,
+                         modalMode: true,
                          dropMenuItemsMarkup: [],
-                         welcomebackMessage: "Hello {0}!"
+                         loggedInMessage: "Hello {0}!"
                  }, 
                  false
               );
