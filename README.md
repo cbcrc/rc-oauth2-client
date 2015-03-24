@@ -7,7 +7,8 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
 ### rcOAuth2Client
 
   + **init(** clientId, context, settings, [debug] **)**
-     Point of entry.
+
+    Point of entry.
      
     Returns: --
     
@@ -37,8 +38,10 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
       If you have set *context* to 2, then the settings will accept the following object: 
     ```javascript
     {
-         done: null //a function/delegate with signature function(state /*String*/){} called when an access token has been granted 
-         fail: null //a function/delegate with signature function(errorMessage /*String*/, state /*String*/){} on access token grant error
+         done: null //a function/delegate with signature function(state /*String*/){}
+                    //called when an access token has been granted 
+         fail: null //a function/delegate with signature function(errorMessage /*String*/, state /*String*/){}
+                    //on access token grant error
     }
     ```
 
@@ -47,12 +50,15 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
      An optional parameter that when set to true, will output data to the console. 
 
   + **getAccessToken()**
+
     Attempts to retrieve a locally persisted access token.
-   **Attention**: Even if an access token is retrieved, your application should handle a possible 401 HTTP status response when using the access token, as there is no way of ensuring that the access token in question has not been invalidated by the authorization server.
+    **Attention**: Even if an access token is retrieved, your application should handle a possible 401 HTTP status response when
+    using the access token, as there is no way of ensuring that the access token in question has not been invalidated by the authorization server.
    
     Returns: Empty string or an access token
 
   + **getUserInfo(settings)**
+
      Wraps a call to the authorization server's OpenId Connect userinfo endpoint.
    
     Returns: Please see *Parameters* section below for return values. 
@@ -63,13 +69,16 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
      The parameter takes the following object:
     ```javascript
     {
-        done: null //function delegate with signature function(httpStatus,data){} called on ajax call success
+        done: null //function delegate with signature function(httpStatus,data){}
+                   //called on ajax call success
         ,
-        fail: null //function delegate with signature function(httpStatus, statusText, caseLabel){} called on ajax call error
+        fail: null //function delegate with signature function(httpStatus, statusText, caseLabel){}
+                   //called on ajax call error
     }
     ```
 
   + **login(** [urlHandler] **)**
+
     Generates the oauth 2.0 authorize URL and will either redirect the user's browser to the latter, or returns the URL(authorize endpoint) as a parameter to the *urlHandler* delegate so that you can, for example, open the URL in a pop-up window.
     
     Returns: -
@@ -82,6 +91,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     ```
     
   + **logout(** [continueWith] **)**
+
     This function will clear the user's session with the authorization server and revoke the client's access token
     
     Returns: -
@@ -98,7 +108,8 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
 ### rcOAuth2LoginBar 
 
   + **init(** rcOAuth2Client, settings, [debug] **)**
-     Point of entry.
+
+    Point of entry.
      
     Returns: ---
   
