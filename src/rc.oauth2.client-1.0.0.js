@@ -16,16 +16,16 @@ var rcOAuth2Client = (function (window) {
     var callbackKeys = { accessToken: "access_token", expiresIn: "expires_in", tokenType: "token_type", state: "state", scope: "scope", error: "error" };
     var config = {
         clientId: "",
-        responseType: "token",
-        logoutPath: "/member/auth/oauth/v2/logout",
-        userInfoPath: "/openid/connect/v1/userinfo"
+        responseType: "token"
     };
     var callConfig = {
         domain: "dev-services.radio-canada.ca",
-        authorizePath: "/member/auth/oauth/v2/authorize",
+        authorizePath: "/auth/oauth/v2/authorize",
+        logoutPath: "/auth/oauth/v2/logout",
+        userInfoPath: "/openid/connect/v1/userinfo",
         redirectUri: "",
         scope: "",
-        state: "",
+        state: ""
     };
     var callbackConfig = {
         done: null,

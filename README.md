@@ -28,11 +28,18 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     If you have set *context* to 1, then the settings will accept the following object:
     ```javascript
     {
-        domain: "", //oauth 2.0 server domain
-        authorizePath: "", //oauth 2.0 server authorize path
+        domain: "", //optional - oauth 2.0 server domain.
+                    // Default = dev-services.radio-canada.ca
+        authorizePath: "", //optional - oauth 2.0 server authorize path
+                          // Default = /auth/oauth/v2/authorize
+        logoutPath: "", //optional - oauth 2.0 server logout path
+                        // Default = /auth/oauth/v2/logout
+        userInfoPath: "", //optional - oauth 2.0 server oidc userinfo path
+                         // Default = /openid/connect/v1/userinfo
         redirectUri: "", // oauth 2.0 redirect_uri parameter
         scope: "", //oauth 2.0 scope paramter
-        state: "", //optional - oauth 2.0 state paramter 
+        state: "", //optional - oauth 2.0 state paramter
+                   //Default = ""
     }
     ```
       If you have set *context* to 2, then the settings will accept the following object: 
@@ -40,7 +47,8 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     {
          done: null //a function/delegate with signature function(state /*String*/){}
                     //called when an access token has been granted 
-         fail: null //a function/delegate with signature function(errorMessage /*String*/, state /*String*/){}
+         fail: null //a function/delegate with signature 
+                    //function(errorMessage /*String*/, state /*String*/){}
                     //on access token grant error
     }
     ```
