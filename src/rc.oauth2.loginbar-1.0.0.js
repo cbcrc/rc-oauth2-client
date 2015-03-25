@@ -21,7 +21,7 @@ var rcOAuth2LoginBar = (function (window) {
     var config = {
         forceLogin: false
         , vfLogout: false
-        , modalMode: true
+        , modalMode: false
         , dropMenuItemsMarkup: []
         , loggedInMessage: "{0}"
     };
