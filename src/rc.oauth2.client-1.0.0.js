@@ -389,7 +389,7 @@ var rcOAuth2Client = (function (window) {
                 //configure settings for ajax call settings:  done fail method bearerToken withCredentials
                 // 
                 settings.method = "GET";
-                settings.url = "https://" + getConfig(callConfig, "domain") + getConfig(config, "userInfoPath");
+                settings.url = "https://" + getConfig(callConfig, "domain") + getConfig(callConfig, "userInfoPath");
                 settings.bearerToken = accessToken;
                 settings.withCredentials = false;
                 settings.done = function (old, oldIsFunction) {
@@ -481,7 +481,7 @@ var rcOAuth2Client = (function (window) {
         //call session logout endpoint
         var iframe = document.createElement('iframe');
         if (!debugActive) iframe.style.display = "none";
-        iframe.src = "https://" + getConfig(callConfig, "domain") + getConfig(config, "logoutPath") + "?access_token=" + accessToken + "&token_type_hint=access_token";
+        iframe.src = "https://" + getConfig(callConfig, "domain") + getConfig(callConfig, "logoutPath") + "?access_token=" + accessToken + "&token_type_hint=access_token";
         document.body.appendChild(iframe);
 
 

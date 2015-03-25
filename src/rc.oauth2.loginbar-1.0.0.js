@@ -20,7 +20,7 @@ var rcOAuth2LoginBar = (function (window) {
     var logoutLinkId = "rc-oauth2-logout-link";
     var config = {
         forceLogin: false
-        , vfLogout: false
+        , vfDependant: true
         , modalMode: false
         , dropMenuItemsMarkup: []
         , loggedInMessage: "{0}"
@@ -49,6 +49,14 @@ var rcOAuth2LoginBar = (function (window) {
                 event.returnValue = false;
             }
         }
+    };
+    var setCookie = function (key, value, expireDate) {
+        var cookieValue = escape(value) + "; expires=" + expireDate;
+        window.document.cookie = key + "=" + cookieValue;
+    };
+    var isVf = function () {
+        var forceVf = getConfig(config, "vfDependant");
+        return forceVf === true && window.viafoura;
     };
     var init = function (oauth2Client, settings, debug) {
         
@@ -88,7 +96,7 @@ var rcOAuth2LoginBar = (function (window) {
         return target[prop];
     };
     var getLoginMarkup = function () { return "<div><a id='" + loginLinkId + "' href='javascript:;'>Login</a></div>"; };
-    var getWelcomebackMarkup = function (userScreenName) {
+    var getLoggedInMarkup = function (userScreenName) {
         return "<div>" + getConfig(config, "loggedInMessage").replace(/\{0\}/gi, userScreenName) + "</div>"
     + "<div><a id ='" + logoutLinkId + "' href='javascript:;'>Logout</a></div>";
     };
@@ -96,13 +104,16 @@ var rcOAuth2LoginBar = (function (window) {
         container.innerHTML = html;
         addEvent($(loginLinkId), "click", login);
     };
-    var injectWelcomebackMarkup = function (html) {
+    var injectLoggedInMarkup = function (html) {
         container.innerHTML = html;
         addEvent($(logoutLinkId), "click", logout);
     };
     var getUserInfoDone = function (httpStatus, data) {
         if (httpStatus === 200) { 
-            injectWelcomebackMarkup(getWelcomebackMarkup(data.name));
+            injectLoggedInMarkup(getLoggedInMarkup(data.name));
+            if (isVf()) {
+                setCookie("VfSess", data.session, 30);
+            }
         } else if (httpStatus === 401) {
             injectLoginMarkup(getLoginMarkup());
             if (getConfig(config, "forceLogin") === true) {
@@ -126,10 +137,15 @@ var rcOAuth2LoginBar = (function (window) {
         window.open(url, "pop", "scrollbars=yes,resizable=yes,,width=600,height=800");
     };
     var logout = function () {
-        var forceVfLogout = getConfig(config, "forceVfLogout");
+        
         oauthClient.logout(
              function (httpStatus, data) {
-                 if (forceVfLogout === true && window.viafoura) window.viafoura.session.logout();
+                 if(data){
+                     var result = data.result;
+                 }
+                 if (isVf()) {
+                     window.viafoura.session.logout();
+                 }
                  injectLoginMarkup(getLoginMarkup());
              }
         );

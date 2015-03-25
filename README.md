@@ -133,12 +133,11 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
    {
         forceLogin: false // optional: if true, the user will be automatically be prompted to login
                           //Default = false
-        , forceVfLogout: false // if a vf session logout must be executed upon logout
-                               //Default = false
+        , vfDependant: true // if vf dependant actions must be taken
+                               //Default = true
         , modalMode: false //optional - whether or not the login page should be shown in a modal
-                           //Dafault = false (a redirection to the login page will occur)
-        , dropMenuItemsMarkup: [] //optional - an array of user action items to add to the base actions: Logout, Mon espace.
-                                  //Note: a Logout action is automatically added by  rcOAuth2.loginBar
+                           //Default = false (a redirection to the login page will occur)
+        , dropMenuItemsMarkup: [] //optional - an array of user action items to add to the base actions: Logout
         , loggedInMessage: "{0}" //optional - {0} will be replaced by the logged-in user's display name.
                                  //ex: "Hello {0}" will output "Hello John Smith"
                                  //Default = "{0}"
