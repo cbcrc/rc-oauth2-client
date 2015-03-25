@@ -26,7 +26,7 @@ var rcOAuth2LoginBar = (function (window) {
         , loggedInMessage: "{0}"
     };
     var log = function (msg) {
-        if (debugActive && console) console.log(msg);
+        if (debugActive && console) console.log("rcOAuth2LoginBar: " + msg);
     };
     var $ = function (id) {
         return window.document.getElementById(id);
@@ -56,7 +56,7 @@ var rcOAuth2LoginBar = (function (window) {
 
         if (debug === true) {
             debugActive = true;
-            log("rcOauth2LoginBar dbug mode activated.");
+            log("init");
         }
 
         // check for receiving container
@@ -101,8 +101,7 @@ var rcOAuth2LoginBar = (function (window) {
         addEvent($(logoutLinkId), "click", logout);
     };
     var getUserInfoDone = function (httpStatus, data) {
-        if (httpStatus === 200) {
-            data = JSON.parse(data);
+        if (httpStatus === 200) { 
             injectWelcomebackMarkup(getWelcomebackMarkup(data.name));
         } else if (httpStatus === 401) {
             injectLoginMarkup(getLoginMarkup());
