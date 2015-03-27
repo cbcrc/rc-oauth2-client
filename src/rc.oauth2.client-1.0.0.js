@@ -35,8 +35,7 @@ var rcOAuth2Client = (function (window) {
     var log = function (msg) {
         if (debugActive && console) console.log("rcOauth2Client: " + msg);
     };
-    var isFunction = function(fn)
-    {
+    var isFunction = function (fn) {
         return (typeof (fn) === "function");
     };
     var setConfig = function (target, source) {
@@ -52,9 +51,10 @@ var rcOAuth2Client = (function (window) {
     var getConfig = function (target, prop) {
         return target[prop];
     };
-    var getPersistDataBaseKey = function (suffix) {
-        return "rcoac." + getConfig(config, "clientId") + "." + suffix;
-    }; 
+    var persistedDataKeyNames = { accessToken: "at", userInfo: "ui" };
+    var getPersistDataBaseKey = function (persistedDataKeyName) {
+        return "rcoac." + getConfig(config, "clientId") + "." + persistedDataKeyName;
+    };
     var getCallbackUrlKeyValues = function (urlSegment) {
         var kvs = {};
         var hash = urlSegment.substring(1);
@@ -155,7 +155,7 @@ var rcOAuth2Client = (function (window) {
 
         //onError = settings.fail || function () { };
 
-        if (typeof XMLHttpRequest === 'undefined') {
+        if (!XMLHttpRequest) {
             // Shim XMLHttpRequest for older IEs
             window.XMLHttpRequest = function () {
                 try {
@@ -252,10 +252,10 @@ var rcOAuth2Client = (function (window) {
         }
 
         //init hidden settings
-        if (typeof (clientId) !== "string" || clientId == "" || clientId == " ") {
+        if (!clientId || clientId == " ") {
             throw new Error("clientId parameter: Please provide a valid client id.");
         }
-        config.clientId = clientId; 
+        config.clientId = clientId;
 
 
         // init login call context
@@ -273,13 +273,13 @@ var rcOAuth2Client = (function (window) {
     var actOnCallback = function () {
         var url = parseUrl(window.document.location.href);
         var urlHash = getCallbackUrlKeyValues(url.hash);
-        var urlSearch = getCallbackUrlKeyValues(url.search); 
+        var urlSearch = getCallbackUrlKeyValues(url.search);
         var stateEchoed;
         if (typeof (urlHash[callbackKeys.accessToken]) === "string") {
             var isPersisted = tryPersistAccessToken(urlHash);
             stateEchoed = decodeURIComponent(urlHash[callbackKeys.state]).toString();
             if (isPersisted) {
-                if (isFunction (callbackConfig.done )) {
+                if (isFunction(callbackConfig.done)) {
                     callbackConfig.done(stateEchoed);
                 }
             } else {
@@ -297,10 +297,10 @@ var rcOAuth2Client = (function (window) {
         }
 
     };
-    
+
     var getAccessToken = function () {
         log("getAccessToken");
-        var accessTokenPersistKey = getPersistDataBaseKey("at");
+        var accessTokenPersistKey = getPersistDataBaseKey(persistedDataKeyNames.accessToken);
         var at;
         var result;
         var now;
@@ -331,13 +331,13 @@ var rcOAuth2Client = (function (window) {
 
         //all values must be present for persistance
         if (typeof accessToken === "string" && accessToken != "" && accessToken != " " && typeof expiresIn === "string" && typeof scope === "string") {
-            var accessTokenPersistKey = getPersistDataBaseKey("at");
+            var accessTokenPersistKey = getPersistDataBaseKey(persistedDataKeyNames.accessToken);
             var expireDate = new Date();
             expireDate.setSeconds(parseInt(expiresIn));
             expireDate = expireDate.toUTCString();
             var dataToPersist = JSON.stringify({ token: accessToken, expires: expireDate });
 
-             
+
             //persist access token to localstorage or cookie 
             if (isLocalStorageSupported()) {
                 localStorage.setItem(accessTokenPersistKey, dataToPersist);
@@ -351,7 +351,7 @@ var rcOAuth2Client = (function (window) {
         }
     };
     var deletePersistedAccessToken = function (httpStatus) {
-        var key = getPersistDataBaseKey("at");
+        var key = getPersistDataBaseKey(persistedDataKeyNames.accessToken);
         //check local storage or cookie
         if (httpStatus === 401) {
             if (isLocalStorageSupported()) {
@@ -370,7 +370,7 @@ var rcOAuth2Client = (function (window) {
         settings = settings || {};
 
         var done = settings.done;
-        var fail = settings.fail; 
+        var fail = settings.fail;
         var accessToken = getAccessToken();
         var userInfo;
 
@@ -394,10 +394,12 @@ var rcOAuth2Client = (function (window) {
                 settings.withCredentials = false;
                 settings.done = function (old, oldIsFunction) {
                     return function (httpStatus, data) {
-                        var userInfoPersisted = tryPersistUserInfo(data);
+                        data = JSON.parse(data);
+                        if (!data) data = {}; 
+                        if (httpStatus == 200) {
+                            var userInfoPersisted = tryPersistUserInfo(data);
+                        } 
                         if (oldIsFunction) {
-                            data = JSON.parse(data);
-                            if (!data) data = {};
                             old(httpStatus, data);
                         }
                     };
@@ -421,7 +423,7 @@ var rcOAuth2Client = (function (window) {
     var getPersistedUserInfo = function () {
         var userInfo;
         var result;
-        var key = getPersistDataBaseKey("ui");
+        var key = getPersistDataBaseKey(persistedDataKeyNames.userInfo);
         if (isLocalStorageSupported()) {
             userInfo = sessionStorage.getItem(key);
         } else {
@@ -435,7 +437,7 @@ var rcOAuth2Client = (function (window) {
     var tryPersistUserInfo = function (data) {
         //all values must be present for persistance
         if (data) {
-            var key = getPersistDataBaseKey("ui");
+            var key = getPersistDataBaseKey(persistedDataKeyNames.userInfo);
             var dataToPersist = (typeof (data) !== "string") ? JSON.stringify(data) : data;
 
             //
@@ -452,7 +454,7 @@ var rcOAuth2Client = (function (window) {
         }
     };
     var deletePersistedUserInfo = function (httpStatus) {
-        var key = getPersistDataBaseKey("ui");
+        var key = getPersistDataBaseKey(persistedDataKeyNames.userInfo);
         //check local storage or cookie
         if (httpStatus === 401) {
             if (isLocalStorageSupported()) {
@@ -467,21 +469,21 @@ var rcOAuth2Client = (function (window) {
     var login = function (urlHandler) {
         log("login");
         var url = getAuthorizeUrl();
-        if (isFunction (urlHandler)) {
+        if (isFunction(urlHandler)) {
             urlHandler(url);
         }
         else {
             document.location.href = url;
         }
     };
-    var logout = function (continueWith) { 
+    var logout = function (continueWith) {
         log("logout");
         var accessToken = getAccessToken();
         //
         //call session logout endpoint
         var iframe = document.createElement('iframe');
         if (!debugActive) iframe.style.display = "none";
-        iframe.src = "https://" + getConfig(callConfig, "domain") + getConfig(callConfig, "logoutPath") + "?access_token=" + accessToken + "&token_type_hint=access_token";
+        iframe.src = "https://" + getConfig(callConfig, "domain") + getConfig(callConfig, "logoutPath") + "?access_token=" + accessToken ;
         document.body.appendChild(iframe);
 
 

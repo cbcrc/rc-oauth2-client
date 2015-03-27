@@ -39,6 +39,7 @@
     <Content Include="samples\rc-oauth2-testclient.html" />
     <Content Include="samples\requirejs-2.1.16.js" />
     <Content Include="src\rc.oauth2.client-1.0.0.js" />
+    <Content Include="src\rc.oauth2.loginbar-1.0.0.css" />
     <Content Include="src\rc.oauth2.loginbar-1.0.0.js" />
   </ItemGroup>
   <ItemGroup>

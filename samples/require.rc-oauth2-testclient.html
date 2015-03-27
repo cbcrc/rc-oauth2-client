@@ -1,16 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <title>Sample using solely RequireJS modules- RC OAuth 2.0 Client</title>
-    <script src="requirejs-2.1.16.js"></script> 
+    <link type="text/css" rel="stylesheet" href="../src/rc.oauth2.loginbar-1.0.0.css" />
+    <script src="requirejs-2.1.16.js"></script>
 </head>
 <body>
     <div id="rc-oauth2-loginbar"></div>
 </body>
-</html> 
+</html>
 <script>
-    require.config ({
-        baseUrl:"../",
+    require.config({
+        baseUrl: "../",
         paths: {
             rcOAuth2Client: 'src/rc.oauth2.client-1.0.0',
             rcOAuth2LoginBar: 'src/rc.oauth2.loginbar-1.0.0'
@@ -18,10 +19,10 @@
         ,
         config: {
             'rcOAuth2Client': {
-                clientId: "my oauth 2.0 client id",
+                clientId: "my OAuth 2.0 client id here",
                 context: 1,
                 settings: {
-                    domain: "my.domain.com",
+                    domain: "my.oauth2.server.com",
                     redirectUri: "http://my.domain.com/callback.html",
                     scope: "openid profile email",
                     state: "myTargetPageOnCallback"
@@ -30,17 +31,21 @@
             }
             ,
             'rcOAuth2LoginBar': {
-                 settings: {
-                         forceLogin: false,
-                         modalMode: true,
-                         dropMenuItemsMarkup: [],
-                         loggedInMessage: "Hello {0}!"
-                 }, 
-                 debug: false
-             }
+                settings: {
+                    locale: "en",
+                    i18n: {
+                        fr: { loggedInMessage: "Bonjour {0}!", help: "Aide", faq: "FAQ" },
+                        en: { loggedInMessage: "Hello {0}!", help: "Help", faq: "FAQ" }
+                    },
+                    forceLogin: false,
+                    modalMode: true,
+                    dropMenuItems: [{ i18nLabel: "help", action: function (e) { alert('HELP'); } }, { i18nLabel: "faq", action: (function (e) { alert('FAQ'); }) }]
+                },
+                debug: false
+            }
         }
     });
-    require(["rcOAuth2LoginBar"], function() {  }); 
+    require(["rcOAuth2LoginBar"], function () { });
 </script>
 
 

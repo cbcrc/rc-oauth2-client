@@ -28,18 +28,18 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     If you have set *context* to 1, then the settings will accept the following object:
     ```javascript
     {
-        domain: "", //optional - oauth 2.0 server domain.
-                    // Default = dev-services.radio-canada.ca
-        authorizePath: "", //optional - oauth 2.0 server authorize path
-                          // Default = /auth/oauth/v2/authorize
-        logoutPath: "", //optional - oauth 2.0 server logout path
-                        // Default = /auth/oauth/v2/logout
-        userInfoPath: "", //optional - oauth 2.0 server oidc userinfo path
-                         // Default = /openid/connect/v1/userinfo
-        redirectUri: "", // oauth 2.0 redirect_uri parameter
-        scope: "", //oauth 2.0 scope paramter
-        state: "", //optional - oauth 2.0 state paramter
-                   //Default = ""
+        domain: "",         //optional - oauth 2.0 server domain.
+                            // Default = dev-services.radio-canada.ca
+        authorizePath: "",  //optional - oauth 2.0 server authorize path
+                            // Default = /auth/oauth/v2/authorize
+        logoutPath: "",     //optional - oauth 2.0 server logout path
+                            // Default = /auth/oauth/v2/logout
+        userInfoPath: "",   //optional - oauth 2.0 server oidc userinfo path
+                            // Default = /openid/connect/v1/userinfo
+        redirectUri: "",    // oauth 2.0 redirect_uri parameter
+        scope: "",          //oauth 2.0 scope paramter
+        state: "",          //optional - oauth 2.0 state paramter
+                            //Default = ""
     }
     ```
       If you have set *context* to 2, then the settings will accept the following object: 
@@ -77,11 +77,10 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
      The parameter takes the following object:
     ```javascript
     {
-        done: null //function delegate with signature function(httpStatus,data){}
-                   //called on ajax call success
-        ,
-        fail: null //function delegate with signature function(httpStatus, statusText, caseLabel){}
-                   //called on ajax call error
+        done: null  //function delegate with signature function(httpStatus,data){}
+                    //called on ajax call success
+        ,fail: null //function delegate with signature function(httpStatus, statusText, caseLabel){}
+                    //called on ajax call error
     }
     ```
 
@@ -131,16 +130,24 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     The parameter takes the following object:
   ```javascript 
    {
-        forceLogin: false // optional: if true, the user will be automatically be prompted to login
-                          //Default = false
-        , vfDependant: true // if vf dependant actions must be taken
-                               //Default = true
-        , modalMode: false //optional - whether or not the login page should be shown in a modal
-                           //Default = false (a redirection to the login page will occur)
-        , dropMenuItemsMarkup: [] //optional - an array of user action items to add to the base actions: Logout
-        , loggedInMessage: "{0}" //optional - {0} will be replaced by the logged-in user's display name.
-                                 //ex: "Hello {0}" will output "Hello John Smith"
-                                 //Default = "{0}"
+        ,locale: "fr"       // optional -  i18n settings that should be used.
+                            // Default = "fr"
+        ,i18n:{}            // optional - 
+                            // Default: 
+                            //      { fr:{loggedInMessage:"{0}", signin:"Connexion", signout:"Déconnexion"},
+                            //        en : {loggedInMessage:"{0}", signin:"Sign-in", signout:"Sign-out"}
+                            //      }
+                            // Note: the {0} token is replaced by the logged-in user's display name
+        ,forceLogin: false  // optional -  if true, the user will be automatically  prompted to login
+                            // Default = false
+        ,vfDependant: true  // if Viafoura dependant actions must be taken
+                            // Default = true
+        ,modalMode: false   // optional - whether or not the login page should be shown in a modal
+                            // Default = false (a redirection to the login page will occur)
+        ,dropMenuItems: []  // optional - an array of user action objects to add to the base action of 'Logout'
+                            // An action object has the following properties: i18nLabel, action 
+                            // i18nLabel: the name of the property in your i18n configuration object above 
+                            // action: supports either a string (will create a href attribute) or a function (will create an onclick attribute)
     }
   ```
     
@@ -161,16 +168,18 @@ Because the code is AMD ready (!) , you have 3 integration options:
 
    ```html  
        <html>
-       <head></head>
+       <head> 
+           <link type="text/css" rel="stylesheet" href="/src/rc.oauth2.loginbar-1.0.0.css" />
+       </head>
        <body>
          <div id="rc-oauth2-loginbar"></div>
        </body>
        <script>
             rcOAuth2Client.init( 
-                "my auth2.0 client id",
+                "my OAuth2.0 client id",
                 1,
                 {
-                    domain: "my.domain.com",
+                    domain: "my.oauth2.server.com",
                     redirectUri: "http://my.domain.com/callback.html",
                     scope: "openid profile email",
                     state: "myTargetPageOnCallback"
@@ -181,10 +190,14 @@ Because the code is AMD ready (!) , you have 3 integration options:
 	rcOAuth2LoginBar.init(
                  rcOAuth2Client,  
                  {
-                         forceLogin: false,
-                         modalMode: true,
-                         dropMenuItemsMarkup: [],
-                         loggedInMessage: "Hello {0}!"
+                locale: "en",
+                i18n: {
+                    fr: { loggedInMessage: "Bonjour {0}!", help: "Aide" , faq:"FAQ"},
+                    en: { loggedInMessage: "Hello {0}!", help: "Help", faq:"FAQ" }
+                },
+                forceLogin: false,
+                modalMode: true,
+                dropMenuItems: [{ i18nLabel: "help", action: function(e) { alert('HELP'); } }, { i18nLabel: "faq", action: (function(e){ alert('FAQ'); }) }]
                  }, 
                  false
               );

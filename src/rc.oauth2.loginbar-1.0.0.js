@@ -19,19 +19,21 @@ var rcOAuth2LoginBar = (function (window) {
     var loginLinkId = "rc-oauth2-login-link";
     var logoutLinkId = "rc-oauth2-logout-link";
     var config = {
-        forceLogin: false
+        locale: "fr"
+        , i18n: {}
+        , forceLogin: false
         , vfDependant: true
         , modalMode: false
-        , dropMenuItemsMarkup: []
-        , loggedInMessage: "{0}"
+        , dropMenuItems: []
     };
+  
+    var $ = function (id) {
+        return window.document.getElementById(id);
+    }; 
     var log = function (msg) {
         if (debugActive && console) console.log("rcOAuth2LoginBar: " + msg);
     };
-    var $ = function (id) {
-        return window.document.getElementById(id);
-    };
-    var addEvent = function (element, event, fn) {
+     var addEvent = function (element, event, fn) {
         if (element.addEventListener) {
             element.addEventListener(event, fn, false);
         } else if (element.attachEvent) {
@@ -39,7 +41,7 @@ var rcOAuth2LoginBar = (function (window) {
             element.attachEvent('on' + event, fn);
         }
     };
-    var preventDefault = function(evt) {
+    var preventDefault = function (evt) {
         if (evt instanceof Event) {
             if (evt.preventDefault) {
                 evt.preventDefault();
@@ -54,12 +56,120 @@ var rcOAuth2LoginBar = (function (window) {
         var cookieValue = escape(value) + "; expires=" + expireDate;
         window.document.cookie = key + "=" + cookieValue;
     };
+    var setConfig = function (target, source) {
+        for (var t in target) {
+            for (var s in source) {
+                if (t == s) {
+                    target[t] = source[s];
+                    break;
+                }
+            }
+        }
+    };
+    var getConfig = function (target, prop) {
+        return target[prop];
+    };
+    var toggleSlide = function (elem, height) {
+        if (elem) {
+            var show =
+                function () {
+                    var currHeight = 0;
+                    if (elem.style && elem.style.height) {
+                        currHeight = parseInt(elem.style.height.split("px")[0]);
+                    } else {
+                        elem.style.height = "0px";
+                    }
+                    if (currHeight < height) {
+                        elem.style.height = (currHeight + 2) + "px";
+                        log("toggleSlide:" + currHeight + "---" + height);
+                        setTimeout(show, 10);
+                    } else {
+                        elem.style.overflow = "";
+                        elem.style.height = "";
+                    }
+                };
+            var hide = function () {
+                elem.style.display = "none";
+            };
+
+            if (elem.style.display == "none") {
+                elem.style.overflow = "hidden";
+                elem.style.display = "block";
+                show();
+            } else {
+                hide();
+            }
+        } else {
+            log("toggleSlide: element is undefined");
+        }
+    }; 
+    var hasClass = function (elem, className) {
+        return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
+    };
+    var addClass = function (elem, className) {
+        if (!hasClass(elem, className)) {
+            elem.className += ' ' + className;
+        }
+    };
+    var removeClass = function (elem, className) {
+        var newClass = ' ' + elem.className.replace(/[\t\r\n]/g, ' ') + ' ';
+        if (hasClass(elem, className)) {
+            while (newClass.indexOf(' ' + className + ' ') >= 0) {
+                newClass = newClass.replace(' ' + className + ' ', ' ');
+            }
+            elem.className = newClass.replace(/^\s+|\s+$/g, '');
+        }
+    };
+    var toggleClass = function (elem, className) {
+        if (elem) {
+            if (hasClass(elem, className)) {
+                removeClass(elem, className);
+            } else {
+                addClass(elem, className);
+            }
+        }
+    };
+
     var isVf = function () {
         var forceVf = getConfig(config, "vfDependant");
         return forceVf === true && window.viafoura;
     };
+    var setI18n = function () {
+
+        config.i18n = getConfig(config, "i18n") || {};
+
+        if (!config.i18n.fr) config.i18n.fr = {};
+        config.i18n.fr.signin = "Connexion";
+        config.i18n.fr.signout = "Déconnexion";
+        if (!config.i18n.fr.loggedInMessage) config.i18n.fr.loggedInMessage = "{0}";
+
+        if (!config.i18n.en) config.i18n.en = {};
+        config.i18n.en.signin = "Sign-in";
+        config.i18n.en.signout = "Sign-out";
+        if (!config.i18n.en.loggedInMessage) config.i18n.fr.loggedInMessage = "{0}";
+
+    };
+    var addDropMenuEvents = function () {
+        var el = $("widgetLogin_containerSousMenu");
+        var arrowEl = window.document.getElementsByClassName("wgt_iconeFleche")[0];
+        el.style.display = "block";
+        var height = el.clientHeight;
+        el.style.display = "none";
+        el.style.height = "0px";
+
+        addEvent($("widgetLogin"), "click", function (event) {
+            preventDefault(event);
+            toggleSlide(el, height);
+            toggleClass(arrowEl, "flecheToggleRotate");
+        });
+        addEvent(window.document, "click", function () {
+            el.style.display = "none";
+            removeClass(arrowEl, "flecheToggleRotate");
+        });
+    };
+
     var init = function (oauth2Client, settings, debug) {
-        
+
         oauthClient = oauth2Client;
 
         if (debug === true) {
@@ -75,6 +185,8 @@ var rcOAuth2LoginBar = (function (window) {
 
         //update module settings 
         setConfig(config, settings);
+        //add settings to i18n
+        setI18n(); 
 
         //start markup insertion flow
         oauthClient.getUserInfo({
@@ -82,23 +194,39 @@ var rcOAuth2LoginBar = (function (window) {
             fail: function (httpStatus, statusText, caseLabel) { getUserInfoFail(httpStatus, statusText, caseLabel); }
         });
     };
-    var setConfig = function (target, source) {
-        for (var t in target) {
-            for (var s in source) {
-                if (t == s) {
-                    target[t] = source[s];
-                    break;
-                }
-            }
-        }
+     
+    var getLoginMarkup = function () {
+        var locale = getConfig(config, "locale"); 
+        var i18n = getConfig(config, "i18n");
+        var html =
+            '<div id="widgetLogin_btnLogin"><a id="' + loginLinkId + '" href="javascript:;">' + i18n[locale].signin + '</a></div>';
+        return html;
     };
-    var getConfig = function (target, prop) {
-        return target[prop];
-    };
-    var getLoginMarkup = function () { return "<div><a id='" + loginLinkId + "' href='javascript:;'>Login</a></div>"; };
-    var getLoggedInMarkup = function (userScreenName) {
-        return "<div>" + getConfig(config, "loggedInMessage").replace(/\{0\}/gi, userScreenName) + "</div>"
-    + "<div><a id ='" + logoutLinkId + "' href='javascript:;'>Logout</a></div>";
+    var getLoggedInMarkup = function (userScreenName) { 
+        var locale = getConfig(config, "locale");
+        var i18n = getConfig(config, "i18n");
+        var html = '<div id="widgetLogin">'
+            + '<div id="widgetLogin_MainContainer">'
+            + '<div id="widgetLogin_containerUserInfo">'
+            + '<span class="wgt_userName">' + i18n[locale].loggedInMessage.replace(/\{0\}/gi, userScreenName) + '</span>'
+            + '<span class="wgt_userImg"><span class="wgt_userProfileImage"></span></span>'
+            + '<span class="wgt_containerIconeFleche">'
+            + '<span class="wgt_iconeFleche"></span>'
+            + ' </span>'
+            + '</div>'
+            + '<div id="widgetLogin_containerSousMenu">'
+            + '<div class="wgt_sousMenuWrapper">'
+            + '<ul id="widgetLogin_DropMenuItems">'
+            + '<li>'
+            + '<div class="wgt_arrow"></div>'
+            + '</li>'  
+            +  '<li><a id ="' + logoutLinkId + '" href="javascript:;">' + i18n[locale].signout + '</a></li>'
+                        + '</ul>'
+                    + '</div>'
+                + '</div>'
+            + '</div>'
+        + '</div>';
+        return html;
     };
     var injectLoginMarkup = function (html) {
         container.innerHTML = html;
@@ -106,26 +234,51 @@ var rcOAuth2LoginBar = (function (window) {
     };
     var injectLoggedInMarkup = function (html) {
         container.innerHTML = html;
+        injectLoggedInMarkupDropMenuItems();
         addEvent($(logoutLinkId), "click", logout);
+        addDropMenuEvents();
     };
+    var injectLoggedInMarkupDropMenuItems = function () {
+        // add drop menu items specified by client
+        var items = getConfig(config, "dropMenuItems");
+        var l = items.length - 1;
+        var n = l;
+        var itemsContainer = $("widgetLogin_DropMenuItems");
+        var i18n = getConfig(config, "i18n");
+        var locale = getConfig(config, "locale");
+        for (n; n >= 0; n--) {
+            var liElem = document.createElement("LI");
+            var aElem = document.createElement("A");
+            var aText = window.document.createTextNode(i18n[locale][items[n].i18nLabel]);
+            aElem.appendChild(aText);
+            if (typeof (items[n].action) === "function") {
+                addEvent(aElem, "click", items[n].action);
+                aElem.setAttribute("href", "javascript:;");
+            } else if (typeof (items[n].action) === "string") {
+                aElem.setAttribute("href", items[n].action);
+            }
+            liElem.appendChild(aElem);
+            itemsContainer.insertBefore(liElem, itemsContainer.lastElementChild);
+        }
+    };
+
     var getUserInfoDone = function (httpStatus, data) {
-        if (httpStatus === 200) { 
+        if (httpStatus === 200) {
             injectLoggedInMarkup(getLoggedInMarkup(data.name));
             if (isVf()) {
                 setCookie("VfSess", data.session, 30);
             }
-        } else if (httpStatus === 401) {
+        } else {
             injectLoginMarkup(getLoginMarkup());
             if (getConfig(config, "forceLogin") === true) {
                 login(loginDelegate);
             }
-        } else {
-            injectLoginMarkup(getLoginMarkup());
         }
     };
     var getUserInfoFail = function (httpStatus, statusText, caseLabel) {
         injectLoginMarkup(getLoginMarkup());
     };
+
     var login = function () {
         if (getConfig(config, "modalMode") === true) {
             oauthClient.login(loginDelegate);
@@ -137,10 +290,10 @@ var rcOAuth2LoginBar = (function (window) {
         window.open(url, "pop", "scrollbars=yes,resizable=yes,,width=600,height=800");
     };
     var logout = function () {
-        
+
         oauthClient.logout(
              function (httpStatus, data) {
-                 if(data){
+                 if (data) {
                      var result = data.result;
                  }
                  if (isVf()) {
