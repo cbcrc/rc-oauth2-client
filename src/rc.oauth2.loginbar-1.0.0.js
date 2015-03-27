@@ -202,14 +202,15 @@ var rcOAuth2LoginBar = (function (window) {
             '<div id="widgetLogin_btnLogin"><a id="' + loginLinkId + '" href="javascript:;">' + i18n[locale].signin + '</a></div>';
         return html;
     };
-    var getLoggedInMarkup = function (userScreenName) { 
+    var getLoggedInMarkup = function (data) { 
         var locale = getConfig(config, "locale");
         var i18n = getConfig(config, "i18n");
         var html = '<div id="widgetLogin">'
             + '<div id="widgetLogin_MainContainer">'
             + '<div id="widgetLogin_containerUserInfo">'
-            + '<span class="wgt_userName">' + i18n[locale].loggedInMessage.replace(/\{0\}/gi, userScreenName) + '</span>'
-            + '<span class="wgt_userImg"><span class="wgt_userProfileImage"></span></span>'
+            + '<span class="wgt_userName">' + i18n[locale].loggedInMessage.replace(/\{0\}/gi, data.name) + '</span>'
+            + '<span class="wgt_userImg"><span class="wgt_userProfileImage">'
+        + '<img id="smallProfilPict" class="smallCircular" width="37" alt="'+data.name+'" src="' + data.picture + '"></span></span>'
             + '<span class="wgt_containerIconeFleche">'
             + '<span class="wgt_iconeFleche"></span>'
             + ' </span>'
@@ -264,7 +265,7 @@ var rcOAuth2LoginBar = (function (window) {
 
     var getUserInfoDone = function (httpStatus, data) {
         if (httpStatus === 200) {
-            injectLoggedInMarkup(getLoggedInMarkup(data.name));
+            injectLoggedInMarkup(getLoggedInMarkup(data));
             if (isVf()) {
                 setCookie("VfSess", data.session, 30);
             }
