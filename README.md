@@ -134,7 +134,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                             // Default = "fr"
         ,i18n:{}            // optional - 
                             // Default: 
-                            //      { fr:{loggedInMessage:"{0}", signin:"Connexion", signout:"Déconnexion"},
+                            //      { fr:{loggedInMessage:"{0}", signin:"Connexion", signout:"DÃ©connexion"},
                             //        en : {loggedInMessage:"{0}", signin:"Sign-in", signout:"Sign-out"}
                             //      }
                             // Note: the {0} token is replaced by the logged-in user's display name
@@ -220,7 +220,7 @@ samples/require.rc-oauth2-testclient-callback.html
 *Note*: 
 You will have to activate the modules by uncommenting the `define( )` declarations in both source JS files:
 
-#####rc.oauth2.client
+#####rcOAuth2Client
   ```javascript
     define(["module"],function(module) { 
         [...]
@@ -229,7 +229,7 @@ You will have to activate the modules by uncommenting the `define( )` declaratio
     });
   ``` 
 
-#####rc.oauth2.loginbar
+#####rcOAuth2LoginBar
   ```javascript
     define(["module","rcOAuth2Client"], function (module, rcOAuth2Client) {
          [...]
