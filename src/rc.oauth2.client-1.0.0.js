@@ -14,6 +14,7 @@ var rcOAuth2Client = (function (window) {
     var debugActive = false;
     var useLocalStorage = true;
     var callbackKeys = { accessToken: "access_token", expiresIn: "expires_in", tokenType: "token_type", state: "state", scope: "scope", error: "error" };
+    var persistedDataKeyNames = { accessToken: "at", userInfo: "ui" };
     var config = {
         clientId: "",
         responseType: "token"
@@ -33,7 +34,7 @@ var rcOAuth2Client = (function (window) {
     };
 
     var log = function (msg) {
-        if (debugActive && console) console.log("rcOauth2Client: " + msg);
+        if ((debugActive===true) && console) console.log("rcOauth2Client: " + msg);
     };
     var isFunction = function (fn) {
         return (typeof (fn) === "function");
@@ -47,33 +48,7 @@ var rcOAuth2Client = (function (window) {
                 }
             }
         }
-    };
-    var getConfig = function (target, prop) {
-        return target[prop];
-    };
-    var persistedDataKeyNames = { accessToken: "at", userInfo: "ui" };
-    var getPersistDataBaseKey = function (persistedDataKeyName) {
-        return "rcoac." + getConfig(config, "clientId") + "." + persistedDataKeyName;
-    };
-    var getCallbackUrlKeyValues = function (urlSegment) {
-        var kvs = {};
-        var hash = urlSegment.substring(1);
-        hash = typeof (hash) === "string" ? hash.split("&") : [];
-        if (hash.length >= 1 && hash[0] != "") {
-
-            //loop through keys
-            for (var h in hash) {
-                for (var k in callbackKeys) {
-                    var key = callbackKeys[k];
-                    if (hash[h].indexOf(key) >= 0) {
-                        kvs[key] = hash[h].split("=")[1];
-                    }
-                }
-            }
-            //end loop
-        }
-        return kvs;
-    };
+    }; 
     var setCookie = function (key, value, expireDate) {
         var cookieValue = escape(value) + "; expires=" + expireDate;
         window.document.cookie = key + "=" + cookieValue;
@@ -101,6 +76,14 @@ var rcOAuth2Client = (function (window) {
         var date = new Date();
         date.setDate(date.getDate() - 1);
         window.document.cookie = escape(key) + '=;expires=' + date;
+    }; 
+    var isLocalStorageSupported = function () {
+        try {
+            return (useLocalStorage && ('localStorage' in window) && (window['localStorage'] !== null));
+        } catch (e) {
+            return false;
+        }
+
     };
     var parseUrl = function (url) {
         var div, a, addToBody, props, details;
@@ -137,14 +120,6 @@ var rcOAuth2Client = (function (window) {
         }
 
         return details;
-    };
-    var isLocalStorageSupported = function () {
-        try {
-            return (useLocalStorage && ('localStorage' in window) && (window['localStorage'] !== null));
-        } catch (e) {
-            return false;
-        }
-
     };
     var ajax = function (settings) {
 
@@ -234,16 +209,7 @@ var rcOAuth2Client = (function (window) {
             settings.fail(request.status, e, "onsend");
         }
     };
-    var getAuthorizeUrl = function () {
-        var out = "https://" + getConfig(callConfig, "domain") + getConfig(callConfig, "authorizePath");
-        out += "?client_id=" + getConfig(config, "clientId");
-        out += "&redirect_uri=" + encodeURIComponent(getConfig(callConfig, "redirectUri"));
-        out += "&response_type=" + getConfig(config, "responseType");
-        out += "&scope=" + getConfig(callConfig, "scope").replace(/\W/gi, '+');
-        out += "&state=" + encodeURIComponent(getConfig(callConfig, "state"));
-        return out;
-    };
-
+ 
     var init = function (clientId, context, settings, debug) {
 
         if (debug === true) {
@@ -270,6 +236,8 @@ var rcOAuth2Client = (function (window) {
             throw new Error("context parameter: Please provide a valid context.");
         }
     };
+  
+
     var actOnCallback = function () {
         var url = parseUrl(window.document.location.href);
         var urlHash = getCallbackUrlKeyValues(url.hash);
@@ -297,6 +265,41 @@ var rcOAuth2Client = (function (window) {
         }
 
     };
+    var getPersistDataBaseKey = function (persistedDataKeyName) {
+        return "rcoac." + config.clientId + "." + persistedDataKeyName;
+    };
+    var getCallbackUrlKeyValues = function (urlSegment) {
+        var kvs = {};
+        var hash = urlSegment.substring(1);
+        hash = typeof (hash) === "string" ? hash.split("&") : [];
+        if (hash.length >= 1 && hash[0] != "") {
+
+            //loop through keys
+            for (var h in hash) {
+                for (var k in callbackKeys) {
+                    var key = callbackKeys[k];
+                    if (hash[h].indexOf(key) >= 0) {
+                        kvs[key] = hash[h].split("=")[1];
+                    }
+                }
+            }
+            //end loop
+        }
+        return kvs;
+    };
+
+    var getAuthorizeUrl = function () {
+        var out = "https://" + callConfig.domain + callConfig.authorizePath;
+        out += "?client_id=" + config.clientId;
+        out += "&redirect_uri=" + encodeURIComponent(callConfig.redirectUri);
+        out += "&response_type=" + config.responseType;
+        out += "&scope=" + callConfig.scope.replace(/\W/gi, '+');
+        if (typeof (callConfig.state) === "string") {
+            out += "&state=" + encodeURIComponent(callConfig.state);
+        }
+        return out;
+    };
+
 
     var getAccessToken = function () {
         log("getAccessToken");
@@ -389,16 +392,16 @@ var rcOAuth2Client = (function (window) {
                 //configure settings for ajax call settings:  done fail method bearerToken withCredentials
                 // 
                 settings.method = "GET";
-                settings.url = "https://" + getConfig(callConfig, "domain") + getConfig(callConfig, "userInfoPath");
+                settings.url = "https://" + callConfig.domain  + callConfig.userInfoPath;
                 settings.bearerToken = accessToken;
                 settings.withCredentials = false;
                 settings.done = function (old, oldIsFunction) {
                     return function (httpStatus, data) {
                         data = JSON.parse(data);
-                        if (!data) data = {}; 
+                        if (!data) data = {};
                         if (httpStatus == 200) {
                             var userInfoPersisted = tryPersistUserInfo(data);
-                        } 
+                        }
                         if (oldIsFunction) {
                             old(httpStatus, data);
                         }
@@ -483,7 +486,7 @@ var rcOAuth2Client = (function (window) {
         //call session logout endpoint
         var iframe = document.createElement('iframe');
         if (!debugActive) iframe.style.display = "none";
-        iframe.src = "https://" + getConfig(callConfig, "domain") + getConfig(callConfig, "logoutPath") + "?access_token=" + accessToken ;
+        iframe.src = "https://" + callConfig.domain + callConfig.logoutPath + "?access_token=" + accessToken;
         document.body.appendChild(iframe);
 
 

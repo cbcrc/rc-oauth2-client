@@ -12,7 +12,7 @@
 
 var rcOAuth2LoginBar = (function (window) {
     "use strict";
-    var debugActive = false;
+    var debugActive=false;
     var oauthClient;
     var container;
     var containerId = "rc-oauth2-loginbar";
@@ -26,14 +26,18 @@ var rcOAuth2LoginBar = (function (window) {
         , modalMode: false
         , dropMenuItems: []
     };
-  
-    var $ = function (id) {
-        return window.document.getElementById(id);
-    }; 
-    var log = function (msg) {
-        if (debugActive && console) console.log("rcOAuth2LoginBar: " + msg);
+
+    var $ = function (needle) {
+        if (needle.indexOf(".") === 0) {
+            return window.document.getElementsByClassName(needle.split(".")[1]);
+        } else {
+            return window.document.getElementById(needle);
+        }
     };
-     var addEvent = function (element, event, fn) {
+    var log = function (msg) {
+        if ((debugActive===true) && console) console.log("rcOAuth2LoginBar: " + msg);
+    };
+    var addEvent = function (element, event, fn) {
         if (element.addEventListener) {
             element.addEventListener(event, fn, false);
         } else if (element.attachEvent) {
@@ -66,23 +70,29 @@ var rcOAuth2LoginBar = (function (window) {
             }
         }
     };
-    var getConfig = function (target, prop) {
-        return target[prop];
-    };
     var toggleSlide = function (elem, height) {
         if (elem) {
+            var initSpeed = config.dropMenuItems.length || 1;
+            var initIncrement = config.dropMenuItems.length || 1;
             var show =
                 function () {
                     var currHeight = 0;
+                    var speed = initSpeed;
+                    var increment = initIncrement;
                     if (elem.style && elem.style.height) {
                         currHeight = parseInt(elem.style.height.split("px")[0]);
                     } else {
                         elem.style.height = "0px";
                     }
                     if (currHeight < height) {
-                        elem.style.height = (currHeight + 2) + "px";
+                        //add easing
+                        if (currHeight >= (height * .90)) {
+                            speed = 10;
+                            increment = 1;
+                        }
+                        elem.style.height = (currHeight + increment) + "px";
                         log("toggleSlide:" + currHeight + "---" + height);
-                        setTimeout(show, 10);
+                        setTimeout(show, speed);
                     } else {
                         elem.style.overflow = "";
                         elem.style.height = "";
@@ -102,7 +112,7 @@ var rcOAuth2LoginBar = (function (window) {
         } else {
             log("toggleSlide: element is undefined");
         }
-    }; 
+    };
     var hasClass = function (elem, className) {
         return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
     };
@@ -131,12 +141,11 @@ var rcOAuth2LoginBar = (function (window) {
     };
 
     var isVf = function () {
-        var forceVf = getConfig(config, "vfDependant");
-        return forceVf === true && window.viafoura;
+        return (config.vfDependant === true) && window.viafoura;
     };
     var setI18n = function () {
 
-        config.i18n = getConfig(config, "i18n") || {};
+        config.i18n = config.i18n || {};
 
         if (!config.i18n.fr) config.i18n.fr = {};
         config.i18n.fr.signin = "Connexion";
@@ -146,26 +155,8 @@ var rcOAuth2LoginBar = (function (window) {
         if (!config.i18n.en) config.i18n.en = {};
         config.i18n.en.signin = "Sign-in";
         config.i18n.en.signout = "Sign-out";
-        if (!config.i18n.en.loggedInMessage) config.i18n.fr.loggedInMessage = "{0}";
+        if (!config.i18n.en.loggedInMessage) config.i18n.en.loggedInMessage = "{0}";
 
-    };
-    var addDropMenuEvents = function () {
-        var el = $("widgetLogin_containerSousMenu");
-        var arrowEl = window.document.getElementsByClassName("wgt_iconeFleche")[0];
-        el.style.display = "block";
-        var height = el.clientHeight;
-        el.style.display = "none";
-        el.style.height = "0px";
-
-        addEvent($("widgetLogin"), "click", function (event) {
-            preventDefault(event);
-            toggleSlide(el, height);
-            toggleClass(arrowEl, "flecheToggleRotate");
-        });
-        addEvent(window.document, "click", function () {
-            el.style.display = "none";
-            removeClass(arrowEl, "flecheToggleRotate");
-        });
     };
 
     var init = function (oauth2Client, settings, debug) {
@@ -186,7 +177,7 @@ var rcOAuth2LoginBar = (function (window) {
         //update module settings 
         setConfig(config, settings);
         //add settings to i18n
-        setI18n(); 
+        setI18n();
 
         //start markup insertion flow
         oauthClient.getUserInfo({
@@ -194,23 +185,28 @@ var rcOAuth2LoginBar = (function (window) {
             fail: function (httpStatus, statusText, caseLabel) { getUserInfoFail(httpStatus, statusText, caseLabel); }
         });
     };
-     
+
     var getLoginMarkup = function () {
-        var locale = getConfig(config, "locale"); 
-        var i18n = getConfig(config, "i18n");
+        var locale = config.locale;
+        var i18n = config.i18n;
         var html =
             '<div id="widgetLogin_btnLogin"><a id="' + loginLinkId + '" href="javascript:;">' + i18n[locale].signin + '</a></div>';
         return html;
     };
-    var getLoggedInMarkup = function (data) { 
-        var locale = getConfig(config, "locale");
-        var i18n = getConfig(config, "i18n");
+    var injectLoginMarkup = function (html) {
+        container.innerHTML = html;
+        addEvent($(loginLinkId), "click", login);
+    };
+
+    var getLoggedInMarkup = function (data) {
+        var locale = config.locale;
+        var i18n = config.i18n;
         var html = '<div id="widgetLogin">'
             + '<div id="widgetLogin_MainContainer">'
             + '<div id="widgetLogin_containerUserInfo">'
             + '<span class="wgt_userName">' + i18n[locale].loggedInMessage.replace(/\{0\}/gi, data.name) + '</span>'
             + '<span class="wgt_userImg"><span class="wgt_userProfileImage">'
-        + '<img id="smallProfilPict" class="smallCircular" width="37" alt="'+data.name+'" src="' + data.picture + '"></span></span>'
+        + '<img id="smallProfilPict" class="smallCircular" width="37" alt="' + data.name + '" src="' + data.picture + '"></span></span>'
             + '<span class="wgt_containerIconeFleche">'
             + '<span class="wgt_iconeFleche"></span>'
             + ' </span>'
@@ -220,18 +216,14 @@ var rcOAuth2LoginBar = (function (window) {
             + '<ul id="widgetLogin_DropMenuItems">'
             + '<li>'
             + '<div class="wgt_arrow"></div>'
-            + '</li>'  
-            +  '<li><a id ="' + logoutLinkId + '" href="javascript:;">' + i18n[locale].signout + '</a></li>'
+            + '</li>'
+            + '<li><a id ="' + logoutLinkId + '" href="javascript:;">' + i18n[locale].signout + '</a></li>'
                         + '</ul>'
                     + '</div>'
                 + '</div>'
             + '</div>'
         + '</div>';
         return html;
-    };
-    var injectLoginMarkup = function (html) {
-        container.innerHTML = html;
-        addEvent($(loginLinkId), "click", login);
     };
     var injectLoggedInMarkup = function (html) {
         container.innerHTML = html;
@@ -240,13 +232,15 @@ var rcOAuth2LoginBar = (function (window) {
         addDropMenuEvents();
     };
     var injectLoggedInMarkupDropMenuItems = function () {
+        //
         // add drop menu items specified by client
-        var items = getConfig(config, "dropMenuItems");
+        //ATTENTION: injectLoggedInMarkup() should have been called before
+        var items = config.dropMenuItems;
         var l = items.length - 1;
         var n = l;
         var itemsContainer = $("widgetLogin_DropMenuItems");
-        var i18n = getConfig(config, "i18n");
-        var locale = getConfig(config, "locale");
+        var i18n = config.i18n;
+        var locale = config.locale;
         for (n; n >= 0; n--) {
             var liElem = document.createElement("LI");
             var aElem = document.createElement("A");
@@ -262,6 +256,24 @@ var rcOAuth2LoginBar = (function (window) {
             itemsContainer.insertBefore(liElem, itemsContainer.lastElementChild);
         }
     };
+    var addDropMenuEvents = function () {
+        var el = $("widgetLogin_containerSousMenu");
+        var arrowEl = $(".wgt_iconeFleche")[0];
+        el.style.display = "block";
+        var height = el.clientHeight;
+        el.style.display = "none";
+        el.style.height = "0px";
+
+        addEvent($("widgetLogin"), "click", function (event) {
+            preventDefault(event);
+            toggleSlide(el, height);
+            toggleClass(arrowEl, "flecheToggleRotate");
+        });
+        addEvent(window.document, "click", function () {
+            el.style.display = "none";
+            removeClass(arrowEl, "flecheToggleRotate");
+        });
+    };
 
     var getUserInfoDone = function (httpStatus, data) {
         if (httpStatus === 200) {
@@ -271,7 +283,7 @@ var rcOAuth2LoginBar = (function (window) {
             }
         } else {
             injectLoginMarkup(getLoginMarkup());
-            if (getConfig(config, "forceLogin") === true) {
+            if (config.forceLogin === true) {
                 login(loginDelegate);
             }
         }
@@ -281,7 +293,7 @@ var rcOAuth2LoginBar = (function (window) {
     };
 
     var login = function () {
-        if (getConfig(config, "modalMode") === true) {
+        if (config.modalMode) {
             oauthClient.login(loginDelegate);
         } else {
             oauthClient.login();
