@@ -77,10 +77,13 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
      The parameter takes the following object:
     ```javascript
     {
-        done: null  //function delegate with signature function(httpStatus,data){}
-                    //called on ajax call success
-        ,fail: null //function delegate with signature function(httpStatus, statusText, caseLabel){}
-                    //called on ajax call error
+        forceRefresh    //if we need to force refresh cached user info
+                        //Attention: A value of true will force a call to the server. 
+                        //Default = false
+        ,done: null     //function delegate with signature function(httpStatus,data){}
+                        //called on ajax call success
+        ,fail: null     //function delegate with signature function(httpStatus, statusText, caseLabel){}
+                        //called on ajax call error
     }
     ```
 

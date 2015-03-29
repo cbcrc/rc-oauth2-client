@@ -368,7 +368,7 @@ var rcOAuth2Client = (function (window) {
     var getUserInfo = function (settings) {
         log("getUserInfo");
         //
-        //settings supported: done fail  
+        //settings supported: done fail forceRefresh
         //
         settings = settings || {};
 
@@ -378,16 +378,22 @@ var rcOAuth2Client = (function (window) {
         var userInfo;
 
         if (accessToken) {
-            //check for local persisted info first
-            userInfo = getPersistedUserInfo();
+            //check for locally persisted info first
+            if (settings.forceRefresh !== true) {
+                userInfo = getPersistedUserInfo();
+            }
+
+            //if we got persisted user info
             if (userInfo) {
                 if (isFunction(done)) {
                     //userInfo = JSON.parse(userInfo);
                     //if (!userInfo) userInfo = {};
                     done(200, userInfo);
                 }
+
+            // else get info from server
             } else {
-                // else get info from server
+               
                 //
                 //configure settings for ajax call settings:  done fail method bearerToken withCredentials
                 // 
