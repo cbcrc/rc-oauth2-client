@@ -77,13 +77,12 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
      The parameter takes the following object:
     ```javascript
     {
-        forceRefresh    //if we need to force refresh cached user info
-                        //Attention: A value of true will force a call to the server. 
-                        //Default = false
-        ,done: null     //function delegate with signature function(httpStatus,data){}
-                        //called on ajax call success
-        ,fail: null     //function delegate with signature function(httpStatus, statusText, caseLabel){}
-                        //called on ajax call error
+        forceRefresh: false     //refresh cached user info by forcing a call to the user info endpoint 
+                                //Default = false
+        ,done: null             //function delegate with signature function(httpStatus,data){}
+                                //called on ajax call success
+        ,fail: null             //function delegate with signature function(httpStatus, statusText, caseLabel){}
+                                //called on ajax call error
     }
     ```
 
@@ -133,7 +132,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     The parameter takes the following object:
   ```javascript 
    {
-        ,locale: "fr"       // optional -  i18n settings that should be used.
+        locale: "fr"       // optional -  i18n settings that should be used.
                             // Default = "fr"
         ,i18n:{}            // optional - 
                             // Default: 
