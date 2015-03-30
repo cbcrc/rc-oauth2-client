@@ -45,11 +45,13 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
       If you have set *context* to 2, then the settings will accept the following object: 
     ```javascript
     {
-         done: null //a function/delegate with signature function(state /*String*/){}
-                    //called when an access token has been granted 
-         fail: null //a function/delegate with signature 
-                    //function(errorMessage /*String*/, state /*String*/){}
-                    //on access token grant error
+        vfDependant: false  // if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
+                            // Default = false
+         done: null         //a function/delegate with signature function(state /*String*/){}
+                            //called when an access token has been granted 
+         fail: null         //a function/delegate with signature 
+                            //function(errorMessage /*String*/, state /*String*/){}
+                            //on access token grant error
     }
     ```
 
@@ -77,7 +79,8 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
      The parameter takes the following object:
     ```javascript
     {
-        forceRefresh: false     //refresh cached user info by forcing a call to the user info endpoint 
+        forceRefresh: false     //optional - refresh cached user info by forcing a call to the 
+                                //user info endpoint; this option should be judicially used
                                 //Default = false
         ,done: null             //function delegate with signature function(httpStatus,data){}
                                 //called on ajax call success
@@ -132,7 +135,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     The parameter takes the following object:
   ```javascript 
    {
-        locale: "fr"       // optional -  i18n settings that should be used.
+        locale: "fr"        // optional -  i18n settings that should be used.
                             // Default = "fr"
         ,i18n:{}            // optional - 
                             // Default: 
@@ -142,8 +145,8 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                             // Note: the {0} token is replaced by the logged-in user's display name
         ,forceLogin: false  // optional -  if true, the user will be automatically  prompted to login
                             // Default = false
-        ,vfDependant: true  // if Viafoura dependant actions must be taken
-                            // Default = true
+        ,vfDependant: false // if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
+                            // Default = false
         ,modalMode: false   // optional - whether or not the login page should be shown in a modal
                             // Default = false (a redirection to the login page will occur)
         ,dropMenuItems: []  // optional - an array of user action objects to add to the base action of 'Logout'

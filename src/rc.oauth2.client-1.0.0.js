@@ -13,8 +13,9 @@ var rcOAuth2Client = (function (window) {
     //"use strict";
     var debugActive = false;
     var useLocalStorage = true;
-    var callbackKeys = { accessToken: "access_token", expiresIn: "expires_in", tokenType: "token_type", state: "state", scope: "scope", error: "error" };
+    var callbackKeys = { accessToken: "access_token", expiresIn: "expires_in", tokenType: "token_type", state: "state", scope: "scope", error: "error", vfsid: "vfsid" /*viafoura session id*/};
     var persistedDataKeyNames = { accessToken: "at", userInfo: "ui" };
+    var vfSessionCookieName = "VfSess";
     var config = {
         clientId: "",
         responseType: "token"
@@ -29,6 +30,7 @@ var rcOAuth2Client = (function (window) {
         state: ""
     };
     var callbackConfig = {
+        vfDependant:false,
         done: null,
         fail: null
     };
@@ -50,7 +52,7 @@ var rcOAuth2Client = (function (window) {
         }
     }; 
     var setCookie = function (key, value, expireDate) {
-        var cookieValue = escape(value) + "; expires=" + expireDate;
+        var cookieValue = escape(value) + "; expires=" + expireDate + "; path=/";
         window.document.cookie = key + "=" + cookieValue;
     };
     var getCookie = function (key) {
@@ -209,7 +211,10 @@ var rcOAuth2Client = (function (window) {
             settings.fail(request.status, e, "client: ajax onsend");
         }
     };
- 
+    var isVf = function () {
+        return (callbackConfig.vfDependant === true) /*&& window.viafoura*/;
+    };
+
     var init = function (clientId, context, settings, debug) {
 
         if (debug === true) {
@@ -331,6 +336,7 @@ var rcOAuth2Client = (function (window) {
         var accessToken = urlHash[callbackKeys.accessToken];
         var expiresIn = urlHash[callbackKeys.expiresIn];
         var scope = urlHash[callbackKeys.scope];
+        var viafouraSid = urlHash[callbackKeys.vfsid];
 
         //all values must be present for persistance
         if (typeof accessToken === "string" && accessToken != "" && accessToken != " " && typeof expiresIn === "string" && typeof scope === "string") {
@@ -348,6 +354,12 @@ var rcOAuth2Client = (function (window) {
                 setCookie(accessTokenPersistKey, dataToPersist, expireDate);
             }
 
+
+            // viafoura session support
+            if (isVf()) {
+                setCookie(vfSessionCookieName, viafouraSid, expireDate);
+            }
+
             return true;
         } else {
             return false;
@@ -362,6 +374,11 @@ var rcOAuth2Client = (function (window) {
             } else {
                 deleteCookie(key);
             }
+
+            // viafoura session support
+            if (isVf()) {
+                deleteCookie(vfSessionCookieName);
+            }
         }
     };
 
@@ -374,15 +391,17 @@ var rcOAuth2Client = (function (window) {
 
         var done = settings.done;
         var fail = settings.fail;
+        var forceRefresh = settings.forceRefresh || false;
+
         var accessToken = getAccessToken();
         var userInfo;
 
         if (accessToken) {
 
-            log(">> forceRefresh= " + settings.forceRefresh.toString());
+            log(">> forceRefresh=" + forceRefresh);
 
             //check for locally persisted info first
-            if (settings.forceRefresh !== true) { 
+            if (forceRefresh !== true) {
                 userInfo = getPersistedUserInfo();
             }
 

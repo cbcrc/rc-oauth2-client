@@ -22,7 +22,7 @@ var rcOAuth2LoginBar = (function (window) {
         locale: "fr"
         , i18n: {}
         , forceLogin: false
-        , vfDependant: true
+        , vfDependant: false
         , modalMode: false
         , dropMenuItems: []
     };
@@ -55,10 +55,6 @@ var rcOAuth2LoginBar = (function (window) {
                 event.returnValue = false;
             }
         }
-    };
-    var setCookie = function (key, value, expireDate) {
-        var cookieValue = escape(value) + "; expires=" + expireDate;
-        window.document.cookie = key + "=" + cookieValue;
     };
     var setConfig = function (target, source) {
         for (var t in target) {
@@ -278,10 +274,7 @@ var rcOAuth2LoginBar = (function (window) {
         log("getUserInfoDone");
         if (httpStatus === 200) {
             log(">> status=" + httpStatus);
-            injectLoggedInMarkup(data);
-            if (isVf()) {
-                setCookie("VfSess", data.session, 30);
-            }
+            injectLoggedInMarkup(data); 
         } else { //4xx (401) or 5xx
             getUserInfoFail(httpStatus, "getUserInfoDone called with a 4xx/5xx HTTP status", "loginbar: getUserInfoDone");
         }
