@@ -165,10 +165,10 @@ var rcOAuth2Client = (function (window) {
             request.onload = function () {
                 settings.done(request.responseText);
             };
-            request.onerror = function () { settings.fail(request.status, request.statusText, "onerror"); };
+            request.onerror = function () { settings.fail(request.status, request.statusText, "client: ajax onerror"); };
             // these blank handlers need to be set to fix ie9 http://cypressnorth.com/programming/internet-explorer-aborting-ajax-requests-fixed/
             request.onprogress = function () { };
-            request.ontimeout = function () { settings.fail(request.status, request.statusText, "ontimeout"); };
+            request.ontimeout = function () { settings.fail(request.status, request.statusText, "client: ajax ontimeout"); };
 
             // XMLHTTPRequest
         } else {
@@ -179,7 +179,7 @@ var rcOAuth2Client = (function (window) {
                     if (request.status === 200 || request.status === 401 || fileUrl && request.status === 0) {
                         settings.done(request.status, request.responseText);
                     } else {
-                        settings.fail(request.status, request.statusText, "onreadystatechange");
+                        settings.fail(request.status, request.statusText, "client: ajax onreadystatechange");
                     }
                 }
             };
@@ -206,7 +206,7 @@ var rcOAuth2Client = (function (window) {
         try {
             request.send();
         } catch (e) {
-            settings.fail(request.status, e, "onsend");
+            settings.fail(request.status, e, "client: ajax onsend");
         }
     };
  
@@ -378,8 +378,11 @@ var rcOAuth2Client = (function (window) {
         var userInfo;
 
         if (accessToken) {
+
+            log(">> forceRefresh= " + settings.forceRefresh.toString());
+
             //check for locally persisted info first
-            if (settings.forceRefresh !== true) {
+            if (settings.forceRefresh !== true) { 
                 userInfo = getPersistedUserInfo();
             }
 
@@ -425,11 +428,12 @@ var rcOAuth2Client = (function (window) {
             }
         } else {
             if (isFunction(fail)) {
-                fail(401, "No valid access token found", "getUserInfo");
+                fail(401, "No valid access token found", "client: getUserInfo");
             }
         }
     };
     var getPersistedUserInfo = function () {
+        log("getPersistedUserInfo");
         var userInfo;
         var result;
         var key = getPersistDataBaseKey(persistedDataKeyNames.userInfo);

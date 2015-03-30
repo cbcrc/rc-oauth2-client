@@ -90,8 +90,7 @@ var rcOAuth2LoginBar = (function (window) {
                             speed = 10;
                             increment = 1;
                         }
-                        elem.style.height = (currHeight + increment) + "px";
-                        log("toggleSlide:" + currHeight + "---" + height);
+                        elem.style.height = (currHeight + increment) + "px"; 
                         setTimeout(show, speed);
                     } else {
                         elem.style.overflow = "";
@@ -193,8 +192,8 @@ var rcOAuth2LoginBar = (function (window) {
             '<div id="widgetLogin_btnLogin"><a id="' + loginLinkId + '" href="javascript:;">' + i18n[locale].signin + '</a></div>';
         return html;
     };
-    var injectLoginMarkup = function (html) {
-        container.innerHTML = html;
+    var injectLoginMarkup = function () {
+        container.innerHTML = getLoginMarkup();
         addEvent($(loginLinkId), "click", login);
     };
 
@@ -225,8 +224,8 @@ var rcOAuth2LoginBar = (function (window) {
         + '</div>';
         return html;
     };
-    var injectLoggedInMarkup = function (html) {
-        container.innerHTML = html;
+    var injectLoggedInMarkup = function (userInfo) {
+        container.innerHTML = getLoggedInMarkup(userInfo);
         injectLoggedInMarkupDropMenuItems();
         addEvent($(logoutLinkId), "click", logout);
         addDropMenuEvents();
@@ -276,20 +275,24 @@ var rcOAuth2LoginBar = (function (window) {
     };
 
     var getUserInfoDone = function (httpStatus, data) {
+        log("getUserInfoDone");
         if (httpStatus === 200) {
-            injectLoggedInMarkup(getLoggedInMarkup(data));
+            log(">> status=" + httpStatus);
+            injectLoggedInMarkup(data);
             if (isVf()) {
                 setCookie("VfSess", data.session, 30);
             }
-        } else {
-            injectLoginMarkup(getLoginMarkup());
-            if (config.forceLogin === true) {
-                login(loginDelegate);
-            }
+        } else { //4xx (401) or 5xx
+            getUserInfoFail(httpStatus, "getUserInfoDone called with a 4xx/5xx HTTP status", "loginbar: getUserInfoDone");
         }
     };
-    var getUserInfoFail = function (httpStatus, statusText, caseLabel) {
-        injectLoginMarkup(getLoginMarkup());
+    var getUserInfoFail = function (httpStatus, statusText, caseLabel) { 
+        log("getUserInfoFail");
+        log(">> status= " + httpStatus + ", text= " + statusText + ", case= " + caseLabel);
+        injectLoginMarkup();
+        if (config.forceLogin === true) {
+            login();
+        }
     };
 
     var login = function () {
@@ -300,6 +303,8 @@ var rcOAuth2LoginBar = (function (window) {
         };
     };
     var loginDelegate = function (url) {
+        //
+        //temporary pop-up window functionality. Will be replaced with properly branded modal
         window.open(url, "pop", "scrollbars=yes,resizable=yes,,width=600,height=800");
     };
     var logout = function () {
