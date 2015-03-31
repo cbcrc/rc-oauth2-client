@@ -12,7 +12,7 @@
 
 var rcOAuth2LoginBar = (function (window) {
     "use strict";
-    var debugActive=false;
+    var debugActive = false;
     var oauthClient;
     var container;
     var containerId = "rc-oauth2-loginbar";
@@ -35,7 +35,7 @@ var rcOAuth2LoginBar = (function (window) {
         }
     };
     var log = function (msg) {
-        if ((debugActive===true) && console) console.log("rcOAuth2LoginBar: " + msg);
+        if ((debugActive === true) && console) console.log("rcOAuth2LoginBar: " + msg);
     };
     var addEvent = function (element, event, fn) {
         if (element.addEventListener) {
@@ -86,7 +86,7 @@ var rcOAuth2LoginBar = (function (window) {
                             speed = 10;
                             increment = 1;
                         }
-                        elem.style.height = (currHeight + increment) + "px"; 
+                        elem.style.height = (currHeight + increment) + "px";
                         setTimeout(show, speed);
                     } else {
                         elem.style.overflow = "";
@@ -200,8 +200,11 @@ var rcOAuth2LoginBar = (function (window) {
             + '<div id="widgetLogin_MainContainer">'
             + '<div id="widgetLogin_containerUserInfo">'
             + '<span class="wgt_userName">' + i18n[locale].loggedInMessage.replace(/\{0\}/gi, data.name) + '</span>'
-            + '<span class="wgt_userImg"><span class="wgt_userProfileImage">'
-        + '<img id="smallProfilPict" class="smallCircular" width="37" alt="' + data.name + '" src="' + data.picture + '"></span></span>'
+            + '<span class="wgt_userImg">';
+        if (data.picture) {
+            html += '<span class="wgt_userProfileImage"><img id="smallProfilPict" class="smallCircular" width="37" alt="' + data.name + '" src="' + data.picture + '"/></span>';
+        }
+            html += '</span>'
             + '<span class="wgt_containerIconeFleche">'
             + '<span class="wgt_iconeFleche"></span>'
             + ' </span>'
@@ -274,12 +277,12 @@ var rcOAuth2LoginBar = (function (window) {
         log("getUserInfoDone");
         if (httpStatus === 200) {
             log(">> status=" + httpStatus);
-            injectLoggedInMarkup(data); 
+            injectLoggedInMarkup(data);
         } else { //4xx (401) or 5xx
             getUserInfoFail(httpStatus, "getUserInfoDone called with a 4xx/5xx HTTP status", "loginbar: getUserInfoDone");
         }
     };
-    var getUserInfoFail = function (httpStatus, statusText, caseLabel) { 
+    var getUserInfoFail = function (httpStatus, statusText, caseLabel) {
         log("getUserInfoFail");
         log(">> status= " + httpStatus + ", text= " + statusText + ", case= " + caseLabel);
         injectLoginMarkup();
