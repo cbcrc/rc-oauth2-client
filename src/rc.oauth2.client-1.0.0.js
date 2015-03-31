@@ -190,7 +190,7 @@ var rcOAuth2Client = (function (window) {
         // open the connection
         try {
             // Third arg is async, or ignored by XDomainRequest
-            request.open(settings.method, settings.url, true /*(settings.async === true ? true : false)*/);
+            request.open(settings.method, settings.url, ((settings.async === false)?false:true));
             if (typeof (settings.bearerToken) === "string") {
                 request.setRequestHeader("Authorization", "Bearer " + settings.bearerToken);
                 request.setRequestHeader("Content-Type", "application/json;charset=utf-8");
@@ -385,13 +385,13 @@ var rcOAuth2Client = (function (window) {
     var getUserInfo = function (settings) {
         log("getUserInfo");
         //
-        //settings supported: done fail forceRefresh
+        //settings supported: async done fail forceRefresh
         //
-        settings = settings || {};
-
+        settings = settings || {}; 
         var done = settings.done;
         var fail = settings.fail;
         var forceRefresh = settings.forceRefresh || false;
+                  
 
         var accessToken = getAccessToken();
         var userInfo;
@@ -422,7 +422,8 @@ var rcOAuth2Client = (function (window) {
                 settings.method = "GET";
                 settings.url = "https://" + callConfig.domain  + callConfig.userInfoPath;
                 settings.bearerToken = accessToken;
-                settings.withCredentials = false;
+                settings.withCredentials = false; 
+                settings.async = (settings.async === false) ? false : true;
                 settings.done = function (old, oldIsFunction) {
                     return function (httpStatus, data) {
                         data = JSON.parse(data);
