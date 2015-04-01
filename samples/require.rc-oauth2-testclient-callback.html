@@ -16,12 +16,11 @@
         ,
         config: {
             'rcOAuth2Client': {
-                clientId: "my oauth 2.0 client id",
+                clientId: "my OAuth 2.0 Client ID",
                 context: 2,
                 settings: {
                     done: function (state) {
-                        opener.location.href = state;
-                        window.close();
+                        window.location.href = state;
                     },
                     fail: function (errorMessage, state) {
                         alert(errorMessage + " | " + state);

@@ -11,12 +11,12 @@
     //use:
     //Set RcOAuthClient settings
     rcOAuth2Client.init(
-        "my oauth 2.0 client id",
+        "my OAuth 2.0 Client ID",
         2,
         {
+            vfDependant:true,
             done: function (state) {
-                opener.location.href = state;
-                window.close();
+                window.location.href = state;
             },
             fail: function (errorMessage, state) {
                 alert(errorMessage + " | " + state);

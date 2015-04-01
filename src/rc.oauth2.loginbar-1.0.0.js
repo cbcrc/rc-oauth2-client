@@ -292,7 +292,7 @@ var rcOAuth2LoginBar = (function (window) {
         }
     };
 
-    var login = function () {
+    var login = function (event) {
         if (config.modalMode) {
             oauthClient.login(loginDelegate);
         } else {
@@ -304,7 +304,7 @@ var rcOAuth2LoginBar = (function (window) {
         //temporary pop-up window functionality. Will be replaced with properly branded modal
         window.open(url, "pop", "scrollbars=yes,resizable=yes,,width=600,height=800");
     };
-    var logout = function () {
+    var logout = function (event) {
 
         oauthClient.logout(
              function (httpStatus, data) {
@@ -319,7 +319,7 @@ var rcOAuth2LoginBar = (function (window) {
                  injectLoginMarkup(getLoginMarkup());
 
                  if (typeof (config.logoutContinueWith) === "function") {
-                     config.logoutContinueWith();
+                     config.logoutContinueWith(event);
                  }
              }
         );

@@ -153,8 +153,9 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                     // An action object has the following properties: i18nLabel, action 
                                     // i18nLabel: the name of the property in your i18n configuration object above 
                                     // action: supports either a string (will create a href attribute) or a function 
-                                    // (will create an onclick attribute)
-        ,logoutContinueWith:null    // optional - a function to be invoked at the end of the logout process
+                                    // (will create an onclick attribute and your function will recieve the click event object as a parameter)
+        ,logoutContinueWith:null    // optional - a function to be invoked at the end of the logout process (click event)
+                                    // Your function will recieve the click event object as a parameter when invoked
     }
   ```
     
@@ -204,9 +205,9 @@ Because the code is AMD ready (!) , you have 3 integration options:
                 },
                 forceLogin: false,
                 modalMode: true,
-                dropMenuItems: [{ i18nLabel: "help", action: function(e) { alert('HELP'); } }, 
-                                { i18nLabel: "faq", action: (function(e){ alert('FAQ'); }) }],
-                logoutContinueWith: function(){console.log("test");}
+                dropMenuItems: [{ i18nLabel: "help", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }, 
+                                { i18nLabel: "faq", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }],
+                logoutContinueWith: function(evt){ console.log(evt.currentTarget.innerHTML); }
 
                  }, 
                  false

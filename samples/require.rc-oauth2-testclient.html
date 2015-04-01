@@ -19,11 +19,11 @@
         ,
         config: {
             'rcOAuth2Client': {
-                clientId: "my OAuth 2.0 client id here",
+                clientId: "my OAuth 2.0 Client ID",
                 context: 1,
                 settings: {
                     domain: "my.oauth2.server.com",
-                    redirectUri: "http://my.domain.com/callback.html",
+                    redirectUri: "http://my.oauth2.server.com/callback.html",
                     scope: "openid profile email",
                     state: "myTargetPageOnCallback"
                 },
@@ -39,7 +39,9 @@
                     },
                     forceLogin: false,
                     modalMode: true,
-                    dropMenuItems: [{ i18nLabel: "help", action: function (e) { alert('HELP'); } }, { i18nLabel: "faq", action: (function (e) { alert('FAQ'); }) }]
+                    dropMenuItems: [{ i18nLabel: "help", action: function (evt) { console.log(evt.currentTarget.innerHTML); } },
+                                    { i18nLabel: "faq", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }],
+                    logoutContinueWith: function (evt) { console.log(evt.currentTarget.innerHTML); }
                 },
                 debug: false
             }

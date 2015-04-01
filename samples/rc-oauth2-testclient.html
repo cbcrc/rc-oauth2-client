@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Sample using RequireJS - RC OAuth 2.0 Client</title> 
+    <title>Sample using RequireJS - RC OAuth 2.0 Client</title>
     <link type="text/css" rel="stylesheet" href="../src/rc.oauth2.loginbar-1.0.0.css" />
-    <script src="requirejs-2.1.16.js"></script> 
+    <script src="requirejs-2.1.16.js"></script>
 </head>
-<body> 
-    <div id="rc-oauth2-loginbar"></div> 
+<body>
+    <div id="rc-oauth2-loginbar"></div>
 </body>
 </html>
 <script>
@@ -19,29 +19,35 @@
     });
     require(["rcOAuth2Client", "rcOAuth2LoginBar"], function () {
         rcOAuth2Client.init(
-             "my OAuth 2.0 client id here",
+             "my OAuth 2.0 Client ID",
              1,
              {
-                 domain: "my.oauth2.server.com", 
-                 rredirectUri: "http://my.domain.com/callback.html",
+                 domain: "my.oauth2.server.com",
+                 authorizePath: "/auth/oauth/v2/authorize",
+                 logoutPath: "/auth/oauth/v2/logout",
+                 userInfoPath: "/openid/connect/v1/userinfo",
+                 redirectUri: "http://my.oauth2.server.com/callback.html",
                  scope: "openid profile email",
-                 state: "myTargetPageOnCallback"
+                 state: "http://my.oauth2.server.com/callback.html?state=myPageState"
              },
-             false);
+             true);
         rcOAuth2LoginBar.init(
             rcOAuth2Client,
             {
-                locale: "en",
+                locale: "fr",
                 i18n: {
-                    fr: { loggedInMessage: "Bonjour {0}!", help: "Aide" , faq:"FAQ"},
-                    en: { loggedInMessage: "Hello {0}!", help: "Help", faq:"FAQ" }
+                    fr: { loggedInMessage: "Bonjour {0}!", help: "Aide", faq: "FAQ" },
+                    en: { loggedInMessage: "Hello {0}!", help: "Help", faq: "FAQ" }
                 },
                 forceLogin: false,
-                modalMode: true,
-                dropMenuItems: [{ i18nLabel: "help", action: function(e) { alert('HELP'); } }, { i18nLabel: "faq", action: (function(e){ alert('FAQ'); }) }]
+                modalMode: false,
+                dropMenuItems: [{ i18nLabel: "help", action: function (evt) { console.log(evt.currentTarget.innerHTML); } },
+                                { i18nLabel: "faq", action: function (evt) { console.log(evt.currentTarget.innerHTML); } }],
+                logoutContinueWith: function (evt) { console.log(evt.type); }
             },
-            false);
+            true);
     });
+ 
 </script>
 
 
