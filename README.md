@@ -135,24 +135,26 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     The parameter takes the following object:
   ```javascript 
    {
-        locale: "fr"        // optional -  i18n settings that should be used.
-                            // Default = "fr"
-        ,i18n:{}            // optional - 
-                            // Default: 
-                            //      { fr:{loggedInMessage:"{0}", signin:"Connexion", signout:"Déconnexion"},
-                            //        en : {loggedInMessage:"{0}", signin:"Sign-in", signout:"Sign-out"}
-                            //      }
-                            // Note: the {0} token is replaced by the logged-in user's display name
-        ,forceLogin: false  // optional -  if true, the user will be automatically  prompted to login
-                            // Default = false
-        ,vfDependant: false // if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
-                            // Default = false
-        ,modalMode: false   // optional - whether or not the login page should be shown in a modal
-                            // Default = false (a redirection to the login page will occur)
-        ,dropMenuItems: []  // optional - an array of user action objects to add to the base action of 'Logout'
-                            // An action object has the following properties: i18nLabel, action 
-                            // i18nLabel: the name of the property in your i18n configuration object above 
-                            // action: supports either a string (will create a href attribute) or a function (will create an onclick attribute)
+        locale: "fr"                // optional -  i18n settings that should be used.
+                                    // Default = "fr"
+        ,i18n:{}                    // optional - 
+                                    // Default: 
+                                    //      { fr:{loggedInMessage:"{0}", signin:"Connexion", signout:"Déconnexion"},
+                                    //        en : {loggedInMessage:"{0}", signin:"Sign-in", signout:"Sign-out"}
+                                    //      }
+                                    // Note: the {0} token is replaced by the logged-in user's display name
+        ,forceLogin: false          // optional -  if true, the user will be automatically  prompted to login
+                                    // Default = false
+        ,vfDependant: false         // if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
+                                    // Default = false
+        ,modalMode: false           // optional - whether or not the login page should be shown in a modal
+                                    // Default = false (a redirection to the login page will occur)
+        ,dropMenuItems: []          // optional - an array of user action objects to add to the base action of 'Logout'
+                                    // An action object has the following properties: i18nLabel, action 
+                                    // i18nLabel: the name of the property in your i18n configuration object above 
+                                    // action: supports either a string (will create a href attribute) or a function 
+                                    // (will create an onclick attribute)
+        ,logoutContinueWith:null    // optional - a function to be invoked at the end of the logout process
     }
   ```
     
@@ -202,7 +204,10 @@ Because the code is AMD ready (!) , you have 3 integration options:
                 },
                 forceLogin: false,
                 modalMode: true,
-                dropMenuItems: [{ i18nLabel: "help", action: function(e) { alert('HELP'); } }, { i18nLabel: "faq", action: (function(e){ alert('FAQ'); }) }]
+                dropMenuItems: [{ i18nLabel: "help", action: function(e) { alert('HELP'); } }, 
+                                { i18nLabel: "faq", action: (function(e){ alert('FAQ'); }) }],
+                logoutContinueWith: function(){console.log("test");}
+
                  }, 
                  false
               );

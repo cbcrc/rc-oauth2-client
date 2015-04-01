@@ -25,6 +25,7 @@ var rcOAuth2LoginBar = (function (window) {
         , vfDependant: false
         , modalMode: false
         , dropMenuItems: []
+        , logoutContinueWith:null
     };
 
     var $ = function (needle) {
@@ -307,6 +308,8 @@ var rcOAuth2LoginBar = (function (window) {
 
         oauthClient.logout(
              function (httpStatus, data) {
+                 log("logout");
+
                  if (data) {
                      var result = data.result;
                  }
@@ -314,6 +317,10 @@ var rcOAuth2LoginBar = (function (window) {
                      window.viafoura.session.logout();
                  }
                  injectLoginMarkup(getLoginMarkup());
+
+                 if (typeof (config.logoutContinueWith) === "function") {
+                     config.logoutContinueWith();
+                 }
              }
         );
     };
