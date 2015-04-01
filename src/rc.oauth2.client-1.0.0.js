@@ -13,7 +13,7 @@ var rcOAuth2Client = (function (window) {
     //"use strict";
     var debugActive = false;
     var useLocalStorage = true;
-    var callbackKeys = { accessToken: "access_token", expiresIn: "expires_in", tokenType: "token_type", state: "state", scope: "scope", error: "error", vfsid: "vfsid" /*viafoura session id*/};
+    var callbackKeys = { accessToken: "access_token", expiresIn: "expires_in", tokenType: "token_type", state: "state", scope: "scope", error: "error", vfsession: "vfsession" /*viafoura session id*/};
     var persistedDataKeyNames = { accessToken: "at", userInfo: "ui" };
     var vfSessionCookieName = "VfSess";
     var config = {
@@ -336,7 +336,7 @@ var rcOAuth2Client = (function (window) {
         var accessToken = urlHash[callbackKeys.accessToken];
         var expiresIn = urlHash[callbackKeys.expiresIn];
         var scope = urlHash[callbackKeys.scope];
-        var viafouraSid = urlHash[callbackKeys.vfsid];
+        var viafouraSession = urlHash[callbackKeys.vfsession];
 
         //all values must be present for persistance
         if (typeof accessToken === "string" && accessToken != "" && accessToken != " " && typeof expiresIn === "string" && typeof scope === "string") {
@@ -357,7 +357,7 @@ var rcOAuth2Client = (function (window) {
 
             // viafoura session support
             if (isVf()) {
-                setCookie(vfSessionCookieName, viafouraSid, expireDate);
+                setCookie(vfSessionCookieName, viafouraSession, expireDate);
             }
 
             return true;
