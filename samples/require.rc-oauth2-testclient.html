@@ -40,8 +40,9 @@
                     forceLogin: false,
                     modalMode: true,
                     dropMenuItems: [{ i18nLabel: "help", action: function (evt) { console.log(evt.currentTarget.innerHTML); } },
-                                    { i18nLabel: "faq", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }],
-                    logoutContinueWith: function (evt) { console.log(evt.currentTarget.innerHTML); }
+                                    { i18nLabel: "faq", action: function (evt) { console.log(evt.currentTarget.innerHTML); } }],
+                    loginComplete: function (accessToken) { console.log("my access token: " + accessToken); },
+                    logoutComplete: function (evt) { console.log(evt.currentTarget.innerHTML); }
                 },
                 debug: false
             }

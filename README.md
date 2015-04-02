@@ -29,24 +29,24 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     ```javascript
     {
         domain: "",         //optional - oauth 2.0 server domain.
-                            // Default = dev-services.radio-canada.ca
+                            //default = dev-services.radio-canada.ca
         authorizePath: "",  //optional - oauth 2.0 server authorize path
-                            // Default = /auth/oauth/v2/authorize
+                            //default = /auth/oauth/v2/authorize
         logoutPath: "",     //optional - oauth 2.0 server logout path
-                            // Default = /auth/oauth/v2/logout
+                            //default = /auth/oauth/v2/logout
         userInfoPath: "",   //optional - oauth 2.0 server oidc userinfo path
-                            // Default = /openid/connect/v1/userinfo
-        redirectUri: "",    // oauth 2.0 redirect_uri parameter
+                            //default = /openid/connect/v1/userinfo
+        redirectUri: "",    //oauth 2.0 redirect_uri parameter
         scope: "",          //oauth 2.0 scope paramter
         state: "",          //optional - oauth 2.0 state paramter
-                            //Default = ""
+                            //default = ""
     }
     ```
       If you have set *context* to 2, then the settings will accept the following object: 
     ```javascript
     {
-        vfDependant: false  // if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
-                            // Default = false
+        vfDependant: false  //if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
+                            //Default = false
          done: null         //a function/delegate with signature function(state /*String*/){}
                             //called when an access token has been granted 
          fail: null         //a function/delegate with signature 
@@ -57,7 +57,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
 
     + `debug` //*Boolean*
 
-     An optional parameter that when set to true, will output data to the console. 
+     Optional - When set to true, will output data to the console for debugging. 
 
   + **getAccessToken()**
 
@@ -91,13 +91,15 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
 
   + **login(** [urlHandler] **)**
 
-    Generates the oauth 2.0 authorize URL and will either redirect the user's browser to the latter, or returns the URL(authorize endpoint) as a parameter to the *urlHandler* delegate so that you can, for example, open the URL in a pop-up window.
+    Generates the OAuth 2.0 authorize URL and will, by default, redirect the user's browser to the endpoint in question.
+    The default behaviour can be altered using the optional *urlHandler* parameter.
     
     Returns: -
     
     Parameters:
     + `urlHandler` //*Function*
-      Function delegate with signature
+      
+       Optional - If set, the function delegate is called to handle the display of the authorize url/endpoint, with signature:
     ```javascript 
     function(url /*String*/){} 
     ```
@@ -111,7 +113,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     Parameters:
     + `complete` //*Function*
 
-      Function delegate called once logout has completed, with signature
+      Optional - If set, the function delegate will be called once logout has completed, with signature
    ```javascript 
     function(){}
     ``` 
@@ -154,7 +156,9 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                 // i18nLabel: the name of the property in your i18n configuration object above 
                                 // action: supports either a string (will create a href attribute) or a function 
                                 // (will create an onclick attribute and your function will recieve the click event object as a parameter)
-        ,logoutComplete:null    // optional - a function to be invoked when logout process completes, with signature
+        ,loginComplete:null    // optional - a function to be invoked when the user has succesfully logged in to the client application, with signature
+                                // function(accessToken){}
+        ,logoutComplete:null    // optional - a function to be invoked when hte logout process completes, with signature
                                 // function(evt /*click event*/){}
     }
   ```
@@ -207,6 +211,7 @@ Because the code is AMD ready (!) , you have 3 integration options:
                 modalMode: true,
                 dropMenuItems: [{ i18nLabel: "help", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }, 
                                 { i18nLabel: "faq", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }],
+                loginComplete: function(accessToken){ console.log("my access token: " + accessToken); },
                 logoutComplete: function(evt){ console.log(evt.currentTarget.innerHTML); }
 
                  }, 

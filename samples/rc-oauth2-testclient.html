@@ -19,7 +19,7 @@
     });
     require(["rcOAuth2Client", "rcOAuth2LoginBar"], function () {
         rcOAuth2Client.init(
-             "my OAuth 2.0 Client ID",
+              "my OAuth 2.0 Client ID",
              1,
              {
                  domain: "my.oauth2.server.com",
@@ -30,7 +30,7 @@
                  scope: "openid profile email",
                  state: "http://my.oauth2.server.com/callback.html?state=myPageState"
              },
-             true);
+             false);
         rcOAuth2LoginBar.init(
             rcOAuth2Client,
             {
@@ -43,9 +43,10 @@
                 modalMode: false,
                 dropMenuItems: [{ i18nLabel: "help", action: function (evt) { console.log(evt.currentTarget.innerHTML); } },
                                 { i18nLabel: "faq", action: function (evt) { console.log(evt.currentTarget.innerHTML); } }],
-                logoutContinueWith: function (evt) { console.log(evt.type); }
+                loginComplete: function (accessToken) { console.log("my access token: " + accessToken); },
+                logoutComplete: function (evt) { console.log(evt.currentTarget.innerHTML); }
             },
-            true);
+            false);
     });
  
 </script>

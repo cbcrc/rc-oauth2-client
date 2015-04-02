@@ -25,6 +25,7 @@ var rcOAuth2LoginBar = (function (window) {
         , vfDependant: false
         , modalMode: false
         , dropMenuItems: []
+        , loginComplete: null
         , logoutComplete:null
     };
 
@@ -37,6 +38,9 @@ var rcOAuth2LoginBar = (function (window) {
     };
     var log = function (msg) {
         if ((debugActive === true) && console) console.log("rcOAuth2LoginBar: " + msg);
+    };
+    var isFunction = function(fn) {
+        return typeof (fn) === "function";
     };
     var addEvent = function (element, event, fn) {
         if (element.addEventListener) {
@@ -279,6 +283,10 @@ var rcOAuth2LoginBar = (function (window) {
         if (httpStatus === 200) {
             log(">> status=" + httpStatus);
             injectLoggedInMarkup(data);
+            if (isFunction(config.loginComplete)) {
+                var accessToken = oauthClient.getAccessToken();
+                config.loginComplete(accessToken);
+            }
         } else { //4xx (401) or 5xx
             getUserInfoFail(httpStatus, "getUserInfoDone called with a 4xx/5xx HTTP status", "loginbar: getUserInfoDone");
         }
@@ -318,7 +326,7 @@ var rcOAuth2LoginBar = (function (window) {
                  }
                  injectLoginMarkup(getLoginMarkup());
 
-                 if (typeof (config.logoutComplete) === "function") {
+                 if (isFunction(config.logoutComplete)) {
                      config.logoutComplete(event);
                  }
              }
