@@ -509,7 +509,7 @@ var rcOAuth2Client = (function (window) {
             document.location.href = url;
         }
     };
-    var logout = function (continueWith) {
+    var logout = function (complete) {
         log("logout");
         var accessToken = getAccessToken();
         //
@@ -522,8 +522,8 @@ var rcOAuth2Client = (function (window) {
 
         deletePersistedAccessToken(401);//we always want to revoke the token, even if the auth server faulted on this 
         deletePersistedUserInfo(401);//we always want to remove user info, even if the auth server faulted on this 
-        if (isFunction(continueWith)) {
-            continueWith(200, { "result": "ok" });
+        if (isFunction(complete)) {
+            complete(200, { "result": "ok" });
         }
     };
 

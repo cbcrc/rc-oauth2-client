@@ -102,14 +102,14 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     function(url /*String*/){} 
     ```
     
-  + **logout(** [continueWith] **)**
+  + **logout(** [complete] **)**
 
     This function will clear the user's session with the authorization server and revoke the client's access token
     
     Returns: -
     
     Parameters:
-    + `continueWith` //*Function*
+    + `complete` //*Function*
 
       Function delegate called once logout has completed, with signature
    ```javascript 
@@ -135,27 +135,27 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     The parameter takes the following object:
   ```javascript 
    {
-        locale: "fr"                // optional -  i18n settings that should be used.
-                                    // Default = "fr"
-        ,i18n:{}                    // optional - 
-                                    // Default: 
-                                    //      { fr:{loggedInMessage:"{0}", signin:"Connexion", signout:"Déconnexion"},
-                                    //        en : {loggedInMessage:"{0}", signin:"Sign-in", signout:"Sign-out"}
-                                    //      }
-                                    // Note: the {0} token is replaced by the logged-in user's display name
-        ,forceLogin: false          // optional -  if true, the user will be automatically  prompted to login
-                                    // Default = false
-        ,vfDependant: false         // if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
-                                    // Default = false
-        ,modalMode: false           // optional - whether or not the login page should be shown in a modal
-                                    // Default = false (a redirection to the login page will occur)
-        ,dropMenuItems: []          // optional - an array of user action objects to add to the base action of 'Logout'
-                                    // An action object has the following properties: i18nLabel, action 
-                                    // i18nLabel: the name of the property in your i18n configuration object above 
-                                    // action: supports either a string (will create a href attribute) or a function 
-                                    // (will create an onclick attribute and your function will recieve the click event object as a parameter)
-        ,logoutContinueWith:null    // optional - a function to be invoked at the end of the logout process (click event)
-                                    // Your function will recieve the click event object as a parameter when invoked
+        locale: "fr"            // optional -  i18n settings that should be used.
+                                // Default = "fr"
+        ,i18n:{}                // optional - 
+                                // Default: 
+                                //      { fr:{loggedInMessage:"{0}", signin:"Connexion", signout:"Déconnexion"},
+                                //        en : {loggedInMessage:"{0}", signin:"Sign-in", signout:"Sign-out"}
+                                //      }
+                                // Note: the {0} token is replaced by the logged-in user's display name
+        ,forceLogin: false      // optional -  if true, the user will be automatically  prompted to login
+                                // Default = false
+        ,vfDependant: false     // if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
+                                // Default = false
+        ,modalMode: false       // optional - whether or not the login page should be shown in a modal
+                                // Default = false (a redirection to the login page will occur)
+        ,dropMenuItems: []      // optional - an array of user action objects to add to the base action of 'Logout'
+                                // An action object has the following properties: i18nLabel, action 
+                                // i18nLabel: the name of the property in your i18n configuration object above 
+                                // action: supports either a string (will create a href attribute) or a function 
+                                // (will create an onclick attribute and your function will recieve the click event object as a parameter)
+        ,logoutComplete:null    // optional - a function to be invoked when logout process completes, with signature
+                                // function(evt /*click event*/){}
     }
   ```
     
@@ -207,7 +207,7 @@ Because the code is AMD ready (!) , you have 3 integration options:
                 modalMode: true,
                 dropMenuItems: [{ i18nLabel: "help", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }, 
                                 { i18nLabel: "faq", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }],
-                logoutContinueWith: function(evt){ console.log(evt.currentTarget.innerHTML); }
+                logoutComplete: function(evt){ console.log(evt.currentTarget.innerHTML); }
 
                  }, 
                  false

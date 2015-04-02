@@ -25,7 +25,7 @@ var rcOAuth2LoginBar = (function (window) {
         , vfDependant: false
         , modalMode: false
         , dropMenuItems: []
-        , logoutContinueWith:null
+        , logoutComplete:null
     };
 
     var $ = function (needle) {
@@ -318,8 +318,8 @@ var rcOAuth2LoginBar = (function (window) {
                  }
                  injectLoginMarkup(getLoginMarkup());
 
-                 if (typeof (config.logoutContinueWith) === "function") {
-                     config.logoutContinueWith(event);
+                 if (typeof (config.logoutComplete) === "function") {
+                     config.logoutComplete(event);
                  }
              }
         );
