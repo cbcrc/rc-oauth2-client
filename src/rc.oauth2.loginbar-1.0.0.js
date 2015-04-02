@@ -204,7 +204,7 @@ var rcOAuth2LoginBar = (function (window) {
         var html = '<div id="widgetLogin">'
             + '<div id="widgetLogin_MainContainer">'
             + '<div id="widgetLogin_containerUserInfo">'
-            + '<span class="wgt_userName">' + i18n[locale].loggedInMessage.replace(/\{0\}/gi, data.name) + '</span>'
+            + '<span class="wgt_userName">' + i18n[locale].loggedInMessage.replace(/\{0\}/gi, ((data.given_name) ? data.given_name : ((data.name) ? data.name.split(" ")[0] : ""))) + '</span>'
             + '<span class="wgt_userImg">';
         if (data.picture) {
             html += '<span class="wgt_userProfileImage"><img id="smallProfilPict" class="smallCircular" width="37" alt="' + data.name + '" src="' + data.picture + '"/></span>';
