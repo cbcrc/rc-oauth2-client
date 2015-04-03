@@ -13,33 +13,44 @@ var rcOAuth2Client = (function (window) {
     //"use strict";
     var debugActive = false;
     var useLocalStorage = true;
-    var callbackKeys = { accessToken: "access_token", expiresIn: "expires_in", tokenType: "token_type", state: "state", scope: "scope", error: "error", vfsession: "vfsession" /*viafoura session id*/};
-    var persistedDataKeyNames = { accessToken: "at", userInfo: "ui" };
+    var callbackKeys = {
+        accessToken: "access_token"
+        ,expiresIn: "expires_in"
+        ,tokenType: "token_type"
+        ,state: "state"
+        ,scope: "scope"
+        ,error: "error"
+        ,vfsession: "vfsession" /*viafoura session id*/
+    };
+    var persistedDataKeyNames = {
+        accessToken: "at"
+        ,userInfo: "ui"
+    };
     var vfSessionCookieName = "VfSess";
     var config = {
-        clientId: "",
-        responseType: "token"
+        clientId: ""
+        ,responseType: "token"
     };
     var callConfig = {
-        domain: "dev-services.radio-canada.ca",
-        authorizePath: "/auth/oauth/v2/authorize",
-        logoutPath: "/auth/oauth/v2/logout",
-        userInfoPath: "/openid/connect/v1/userinfo",
-        redirectUri: "",
-        scope: "",
-        state: ""
+        domain: "dev-services.radio-canada.ca"
+        ,authorizePath: "/auth/oauth/v2/authorize"
+        ,logoutPath: "/auth/oauth/v2/logout"
+        ,userInfoPath: "/openid/connect/v1/userinfo"
+        ,redirectUri: ""
+        ,scope: ""
+        ,state: ""
     };
     var callbackConfig = {
-        vfDependant:false,
-        done: null,
-        fail: null
+        vfDependant:false
+        ,done: null
+        ,fail: null
     };
 
     var log = function (msg) {
-        if ((debugActive===true) && console) console.log("rcOauth2Client: " + msg);
+        if ((debugActive===true) && console) {console.log("rcOauth2Client: " + msg);}
     };
     var isFunction = function (fn) {
-        return (typeof (fn) === "function");
+        return (typeof fn === "function");
     };
     var setConfig = function (target, source) {
         for (var t in target) {
