@@ -159,7 +159,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
         ,loginComplete:null    // optional - a function to be invoked when the user has succesfully logged in to the client application, with signature
                                 // function(accessToken){}
         ,logoutComplete:null    // optional - a function to be invoked when hte logout process completes, with signature
-                                // function(evt /*click event*/){}
+                                // function(){}
     }
   ```
     
@@ -212,7 +212,7 @@ Because the code is AMD ready (!) , you have 3 integration options:
                 dropMenuItems: [{ i18nLabel: "help", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }, 
                                 { i18nLabel: "faq", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }],
                 loginComplete: function(accessToken){ console.log("my access token: " + accessToken); },
-                logoutComplete: function(evt){ console.log(evt.currentTarget.innerHTML); }
+                logoutComplete: function( ){ "my logoutComplete called!"); }
 
                  }, 
                  false

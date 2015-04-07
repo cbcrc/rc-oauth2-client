@@ -19,14 +19,14 @@ var rcOAuth2LoginBar = (function (window) {
     var loginLinkId = "rc-oauth2-login-link";
     var logoutLinkId = "rc-oauth2-logout-link";
     var config = {
-        locale:"fr"
-        ,i18n: {}
-        ,forceLogin: false
-        ,vfDependant: false
-        ,modalMode: false
-        ,dropMenuItems: []
-        ,loginComplete: null
-        ,logoutComplete: null
+        locale: "fr"
+        , i18n: {}
+        , forceLogin: false
+        , vfDependant: false
+        , modalMode: false
+        , dropMenuItems: []
+        , loginComplete: null
+        , logoutComplete: null
     };
 
     var $ = function (needle) {
@@ -42,12 +42,12 @@ var rcOAuth2LoginBar = (function (window) {
     var isFunction = function (fn) {
         return (typeof fn === "function");
     };
-    var addEvent = function (element, event, fn) {
-        if (element.addEventListener) {
-            element.addEventListener(event, fn, false);
-        } else if (element.attachEvent) {
+    var addEvent = function (elem, evt, fn) {
+        if (elem.addEventListener) {
+            elem.addEventListener(evt, fn, false);
+        } else if (elem.attachEvent) {
             //support older browers
-            element.attachEvent('on' + event, fn);
+            elem.attachEvent('on' + evt, fn);
         }
     };
     var preventDefault = function (evt) {
@@ -138,7 +138,7 @@ var rcOAuth2LoginBar = (function (window) {
                 addClass(elem, className);
             }
         }
-    }; 
+    };
 
     var isVf = function () {
         return (config.vfDependant === true) && window.viafoura;
@@ -176,13 +176,14 @@ var rcOAuth2LoginBar = (function (window) {
 
         //update module settings 
         setConfig(config, settings);
+
         //add settings to i18n
         setI18n();
 
         //start markup insertion flow
         oauthClient.getUserInfo({
-            done: function (httpStatus, data) { getUserInfoDone(httpStatus, data); },
-            fail: function (httpStatus, statusText, caseLabel) { getUserInfoFail(httpStatus, statusText, caseLabel); }
+            done: getUserInfoDone,
+            fail: getUserInfoFail
         });
     };
 
@@ -266,17 +267,19 @@ var rcOAuth2LoginBar = (function (window) {
         var height = el.clientHeight;
         el.style.display = "none";
         el.style.height = "0px";
-
+         
         addEvent($("widgetLogin"), "click", function (event) {
             preventDefault(event);
             toggleSlide(el, height);
             toggleClass(arrowEl, "flecheToggleRotate");
         });
-        addEvent(window.document, "click", function () {
+        addEvent(window.document, "click", function (event) {
             el.style.display = "none";
             removeClass(arrowEl, "flecheToggleRotate");
-        });
+        }); 
+       
     };
+
 
     var getUserInfoDone = function (httpStatus, data) {
         log("getUserInfoDone");
@@ -302,36 +305,36 @@ var rcOAuth2LoginBar = (function (window) {
 
     var login = function (event) {
         if (config.modalMode) {
-            oauthClient.login(loginDelegate);
+            oauthClient.login(urlHandler);
         } else {
             oauthClient.login();
         };
     };
-    var loginDelegate = function (url) {
+    var urlHandler = function (url) {
         //
         //temporary pop-up window functionality. Will be replaced with properly branded modal
         window.open(url, "pop", "scrollbars=yes,resizable=yes,,width=600,height=800");
     };
-    var logout = function (event) {
-
-        oauthClient.logout(
-             function (httpStatus, data) {
-                 log("logout");
-
-                 if (data) {
-                     var result = data.result;
-                 }
-                 if (isVf()) {
-                     window.viafoura.session.logout();
-                 }
-                 injectLoginMarkup(getLoginMarkup());
-
-                 if (isFunction(config.logoutComplete)) {
-                     config.logoutComplete(event);
-                 }
-             }
-        );
+    var logout = function (event) { 
+        oauthClient.logout(logoutComplete);
     };
+
+    var logoutComplete = function (httpStatus, data) {
+        log("logout");
+
+        if (data) {
+            var result = data.result;
+        }
+        if (isVf()) {
+            window.viafoura.session.logout();
+        }
+        injectLoginMarkup(getLoginMarkup());
+
+        if (isFunction(config.logoutComplete)) {
+            config.logoutComplete();
+        }
+    };
+
     return {
         init: init
     };

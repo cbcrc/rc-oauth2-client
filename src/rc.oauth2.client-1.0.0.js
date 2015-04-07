@@ -15,39 +15,39 @@ var rcOAuth2Client = (function (window) {
     var useLocalStorage = true;
     var callbackKeys = {
         accessToken: "access_token"
-        ,expiresIn: "expires_in"
-        ,tokenType: "token_type"
-        ,state: "state"
-        ,scope: "scope"
-        ,error: "error"
-        ,vfsession: "vfsession" /*viafoura session id*/
+        , expiresIn: "expires_in"
+        , tokenType: "token_type"
+        , state: "state"
+        , scope: "scope"
+        , error: "error"
+        , vfsession: "vfsession" /*viafoura session id*/
     };
-    var persistedDataKeyNames = {
+    var persistedDataKeys = {
         accessToken: "at"
-        ,userInfo: "ui"
+        , userInfo: "ui"
     };
     var vfSessionCookieName = "VfSess";
     var config = {
         clientId: ""
-        ,responseType: "token"
+        , responseType: "token"
     };
     var callConfig = {
         domain: "dev-services.radio-canada.ca"
-        ,authorizePath: "/auth/oauth/v2/authorize"
-        ,logoutPath: "/auth/oauth/v2/logout"
-        ,userInfoPath: "/openid/connect/v1/userinfo"
-        ,redirectUri: ""
-        ,scope: ""
-        ,state: ""
+        , authorizePath: "/auth/oauth/v2/authorize"
+        , logoutPath: "/auth/oauth/v2/logout"
+        , userInfoPath: "/openid/connect/v1/userinfo"
+        , redirectUri: ""
+        , scope: ""
+        , state: ""
     };
     var callbackConfig = {
-        vfDependant:false
-        ,done: null
-        ,fail: null
+        vfDependant: false
+        , done: null
+        , fail: null
     };
 
     var log = function (msg) {
-        if ((debugActive===true) && console) {console.log("rcOauth2Client: " + msg);}
+        if ((debugActive === true) && console) { console.log("rcOauth2Client: " + msg); }
     };
     var isFunction = function (fn) {
         return (typeof fn === "function");
@@ -61,7 +61,7 @@ var rcOAuth2Client = (function (window) {
                 }
             }
         }
-    }; 
+    };
     var setCookie = function (key, value, expireDate) {
         var cookieValue = escape(value) + "; expires=" + expireDate + "; path=/";
         window.document.cookie = key + "=" + cookieValue;
@@ -89,8 +89,8 @@ var rcOAuth2Client = (function (window) {
         var date = new Date();
         date.setDate(date.getDate() - 1);
         window.document.cookie = escape(key) + '=;expires=' + date;
-    }; 
-    var isLocalStorageSupported = function () {
+    };
+    var isLocalStorage = function () {
         try {
             return (useLocalStorage && ('localStorage' in window) && (window['localStorage'] !== null));
         } catch (e) {
@@ -99,7 +99,11 @@ var rcOAuth2Client = (function (window) {
 
     };
     var parseUrl = function (url) {
-        var div, a, addToBody, props, details;
+        var div;
+        var a;
+        var addToBody;
+        var props;
+        var details;
 
         props = ['protocol', 'hostname', 'port', 'pathname', 'search', 'hash', 'host'];
 
@@ -137,9 +141,13 @@ var rcOAuth2Client = (function (window) {
     var ajax = function (settings) {
 
         //
-        //settings supported:  done fail method bearerToken withCredentials
+        //settings supported:  async done fail method bearerToken withCredentials
         //
-        var fileUrl, request, urlInfo, winLoc, crossOrigin;
+        var fileUrl;
+        var request;
+        var urlInfo;
+        var winLoc;
+        var crossOrigin;
 
         //onError = settings.fail || function () { };
 
@@ -201,7 +209,7 @@ var rcOAuth2Client = (function (window) {
         // open the connection
         try {
             // Third arg is async, or ignored by XDomainRequest
-            request.open(settings.method, settings.url, ((settings.async === false)?false:true));
+            request.open(settings.method, settings.url, ((settings.async === false) ? false : true));
             if (typeof (settings.bearerToken) === "string") {
                 request.setRequestHeader("Authorization", "Bearer " + settings.bearerToken);
                 request.setRequestHeader("Content-Type", "application/json;charset=utf-8");
@@ -230,20 +238,23 @@ var rcOAuth2Client = (function (window) {
 
         if (debug === true) {
             debugActive = true;
-            log("init");
         }
 
+        log("init");
+
+        //
         //init hidden settings
         if (!clientId || clientId == " ") {
             throw new Error("clientId parameter: Please provide a valid client id.");
         }
         config.clientId = clientId;
 
-
+        //
         // init login call context
         if (context == 1) {
             setConfig(callConfig, settings);
         }
+            //
             //callback mode
         else if (context == 2) {
             setConfig(callbackConfig, settings);
@@ -252,15 +263,15 @@ var rcOAuth2Client = (function (window) {
             throw new Error("context parameter: Please provide a valid context.");
         }
     };
-  
-
     var actOnCallback = function () {
         var url = parseUrl(window.document.location.href);
         var urlHash = getCallbackUrlKeyValues(url.hash);
         var urlSearch = getCallbackUrlKeyValues(url.search);
         var stateEchoed;
+        var isPersisted;
+
         if (typeof (urlHash[callbackKeys.accessToken]) === "string") {
-            var isPersisted = tryPersistAccessToken(urlHash);
+            isPersisted = tryPersistAccessToken(urlHash);
             stateEchoed = decodeURIComponent(urlHash[callbackKeys.state]).toString();
             if (isPersisted) {
                 if (isFunction(callbackConfig.done)) {
@@ -281,16 +292,18 @@ var rcOAuth2Client = (function (window) {
         }
 
     };
-    var getPersistDataBaseKey = function (persistedDataKeyName) {
-        return "rcoac." + config.clientId + "." + persistedDataKeyName;
+
+    var getPersistedDataKey = function (persistedDataKey) {
+        return "rcoac." + config.clientId + "." + persistedDataKey;
     };
     var getCallbackUrlKeyValues = function (urlSegment) {
         var kvs = {};
         var hash = urlSegment.substring(1);
-        hash = typeof (hash) === "string" ? hash.split("&") : [];
-        if (hash.length >= 1 && hash[0] != "") {
 
-            //loop through keys
+        //
+        //loop through keys
+        hash = typeof (hash) === "string" ? hash.split("&") : [];
+        if (hash.length >= 1 && hash[0] != "") { 
             for (var h in hash) {
                 for (var k in callbackKeys) {
                     var key = callbackKeys[k];
@@ -316,15 +329,17 @@ var rcOAuth2Client = (function (window) {
         return out;
     };
 
-
     var getAccessToken = function () {
         log("getAccessToken");
-        var accessTokenPersistKey = getPersistDataBaseKey(persistedDataKeyNames.accessToken);
+
+        var accessTokenPersistKey = getPersistedDataKey(persistedDataKeys.accessToken);
         var at;
         var result;
         var now;
+        var cookie;
+
         //check local storage or cookie
-        if (isLocalStorageSupported()) {
+        if (isLocalStorage()) {
             // set access token
             at = localStorage.getItem(accessTokenPersistKey);
             at = JSON.parse(at);
@@ -333,7 +348,7 @@ var rcOAuth2Client = (function (window) {
                 result = at.token;
             }
         } else {
-            var cookie = getCookie(accessTokenPersistKey);
+            cookie = getCookie(accessTokenPersistKey);
             if (typeof (cookie) === "string") {
                 at = JSON.parse(cookie);
                 if (at) {
@@ -348,18 +363,21 @@ var rcOAuth2Client = (function (window) {
         var expiresIn = urlHash[callbackKeys.expiresIn];
         var scope = urlHash[callbackKeys.scope];
         var viafouraSession = urlHash[callbackKeys.vfsession];
+        var accessTokenPersistKey;
+        var expireDate;
+        var dataToPersist;
 
         //all values must be present for persistance
         if (typeof accessToken === "string" && accessToken != "" && accessToken != " " && typeof expiresIn === "string" && typeof scope === "string") {
-            var accessTokenPersistKey = getPersistDataBaseKey(persistedDataKeyNames.accessToken);
-            var expireDate = new Date();
+            accessTokenPersistKey = getPersistedDataKey(persistedDataKeys.accessToken);
+            expireDate = new Date();
             expireDate.setSeconds(parseInt(expiresIn));
             expireDate = expireDate.toUTCString();
-            var dataToPersist = JSON.stringify({ token: accessToken, expires: expireDate });
+            dataToPersist = JSON.stringify({ token: accessToken, expires: expireDate });
 
 
             //persist access token to localstorage or cookie 
-            if (isLocalStorageSupported()) {
+            if (isLocalStorage()) {
                 localStorage.setItem(accessTokenPersistKey, dataToPersist);
             } else {
                 setCookie(accessTokenPersistKey, dataToPersist, expireDate);
@@ -377,10 +395,11 @@ var rcOAuth2Client = (function (window) {
         }
     };
     var deletePersistedAccessToken = function (httpStatus) {
-        var key = getPersistDataBaseKey(persistedDataKeyNames.accessToken);
+        var key = getPersistedDataKey(persistedDataKeys.accessToken);
+
         //check local storage or cookie
         if (httpStatus === 401) {
-            if (isLocalStorageSupported()) {
+            if (isLocalStorage()) {
                 localStorage.removeItem(key);
             } else {
                 deleteCookie(key);
@@ -395,15 +414,15 @@ var rcOAuth2Client = (function (window) {
 
     var getUserInfo = function (settings) {
         log("getUserInfo");
+
         //
         //settings supported: async done fail forceRefresh
         //
-        settings = settings || {}; 
+        settings = settings || {};
+
         var done = settings.done;
         var fail = settings.fail;
         var forceRefresh = settings.forceRefresh || false;
-                  
-
         var accessToken = getAccessToken();
         var userInfo;
 
@@ -424,23 +443,23 @@ var rcOAuth2Client = (function (window) {
                     done(200, userInfo);
                 }
 
-            // else get info from server
+                // else get info from server
             } else {
-               
+
                 //
                 //configure settings for ajax call settings:  done fail method bearerToken withCredentials
                 // 
                 settings.method = "GET";
-                settings.url = "https://" + callConfig.domain  + callConfig.userInfoPath;
+                settings.url = "https://" + callConfig.domain + callConfig.userInfoPath;
                 settings.bearerToken = accessToken;
-                settings.withCredentials = false; 
+                settings.withCredentials = false;
                 settings.async = (settings.async === false) ? false : true;
                 settings.done = function (old, oldIsFunction) {
                     return function (httpStatus, data) {
                         data = JSON.parse(data);
                         if (!data) data = {};
                         if (httpStatus == 200) {
-                            var userInfoPersisted = tryPersistUserInfo(data);
+                            tryPersistUserInfo(data);
                         }
                         if (oldIsFunction) {
                             old(httpStatus, data);
@@ -465,10 +484,12 @@ var rcOAuth2Client = (function (window) {
     };
     var getPersistedUserInfo = function () {
         log("getPersistedUserInfo");
+
         var userInfo;
         var result;
-        var key = getPersistDataBaseKey(persistedDataKeyNames.userInfo);
-        if (isLocalStorageSupported()) {
+        var key = getPersistedDataKey(persistedDataKeys.userInfo);
+
+        if (isLocalStorage()) {
             userInfo = sessionStorage.getItem(key);
         } else {
             userInfo = getCookie(key);
@@ -479,14 +500,18 @@ var rcOAuth2Client = (function (window) {
         return result;
     };
     var tryPersistUserInfo = function (data) {
+        var key;
+        var dataToPersist;
+
+        //
         //all values must be present for persistance
         if (data) {
-            var key = getPersistDataBaseKey(persistedDataKeyNames.userInfo);
-            var dataToPersist = (typeof (data) !== "string") ? JSON.stringify(data) : data;
+            key = getPersistedDataKey(persistedDataKeys.userInfo);
+            dataToPersist = (typeof (data) !== "string") ? JSON.stringify(data) : data;
 
             //
             //we want to persist userinfo data only for duration of browser session
-            if (isLocalStorageSupported()) {
+            if (isLocalStorage()) {
                 sessionStorage.setItem(key, dataToPersist);
             } else {
                 setCookie(key, dataToPersist, "");
@@ -498,10 +523,10 @@ var rcOAuth2Client = (function (window) {
         }
     };
     var deletePersistedUserInfo = function (httpStatus) {
-        var key = getPersistDataBaseKey(persistedDataKeyNames.userInfo);
+        var key = getPersistedDataKey(persistedDataKeys.userInfo);
         //check local storage or cookie
         if (httpStatus === 401) {
-            if (isLocalStorageSupported()) {
+            if (isLocalStorage()) {
                 sessionStorage.removeItem(key);
             } else {
                 deleteCookie(key);
@@ -512,7 +537,9 @@ var rcOAuth2Client = (function (window) {
 
     var login = function (urlHandler) {
         log("login");
+
         var url = getAuthorizeUrl();
+
         if (isFunction(urlHandler)) {
             urlHandler(url);
         }
@@ -522,15 +549,19 @@ var rcOAuth2Client = (function (window) {
     };
     var logout = function (complete) {
         log("logout");
+
         var accessToken = getAccessToken();
+        var iframe;
+
         //
-        //call session logout endpoint
-        var iframe = document.createElement('iframe');
+        //call session logout endpoint 
+        iframe = document.createElement('iframe');
         if (!debugActive) iframe.style.display = "none";
         iframe.src = "https://" + callConfig.domain + callConfig.logoutPath + "?access_token=" + accessToken;
         document.body.appendChild(iframe);
 
-
+        //
+        //take mandatory action...
         deletePersistedAccessToken(401);//we always want to revoke the token, even if the auth server faulted on this 
         deletePersistedUserInfo(401);//we always want to remove user info, even if the auth server faulted on this 
         if (isFunction(complete)) {
