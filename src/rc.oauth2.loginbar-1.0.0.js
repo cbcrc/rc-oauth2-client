@@ -335,6 +335,7 @@ var rcOAuth2LoginBar = (function (window) {
     };
     var logoutComplete = function (httpStatus, data) {
         log("logout");
+        log(">> httpStatus="+httpStatus + ", result:" + data.result);
 
         if (data) {
             var result = data.result;

@@ -526,19 +526,33 @@ var rcOAuth2Client = (function (window) {
         var iframe;
 
         //
-        //call session logout endpoint 
-        iframe = document.createElement('iframe');
-        if (!debugActive) iframe.style.display = "none";
-        iframe.src = "https://" + callConfig.domain + callConfig.logoutPath + "?access_token=" + accessToken;
-        document.body.appendChild(iframe);
+        //take mandatory action...
+        deletePersistedAccessToken(401);//we always want to revoke the token, even if the auth server faulted on logout call
+        deletePersistedUserInfo(401);//we always want to remove user info, even if the auth server faulted on logout call 
 
         //
-        //take mandatory action...
-        deletePersistedAccessToken(401);//we always want to revoke the token, even if the auth server faulted on this 
-        deletePersistedUserInfo(401);//we always want to remove user info, even if the auth server faulted on this 
-        if (isFunction(complete)) {
-            complete(200, { "result": "ok" });
-        }
+        //call auth server session logout endpoint 
+        iframe = document.createElement('iframe');
+        if (!debugActive) iframe.style.display = "none";
+        iframe.height = "1px";
+        iframe.width = "1px";
+
+        //
+        //setting the ‘onload’ event function before setting source and appending to the page. In this case it cannot be loaded before the callback is set; 
+        iframe.onload = function (iframe, complete, isFunction) {
+            return function () {
+                document.body.removeChild(iframe);
+                iframe = null;
+                if (isFunction) {
+                    complete(200, { "result": "ok" });
+                }
+            };
+        }(iframe, complete, isFunction(complete));
+
+
+        iframe.src = "https://" + callConfig.domain + callConfig.logoutPath + "?access_token=" + accessToken;
+
+        document.body.appendChild(iframe);
     };
 
     return {
