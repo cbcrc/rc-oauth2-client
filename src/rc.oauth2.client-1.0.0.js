@@ -139,20 +139,16 @@ var rcOAuth2Client = (function (window) {
         return details;
     };
     var ajax = function (settings) {
-
         //
         //settings supported:  async done fail method bearerToken withCredentials
-        //
-        var fileUrl;
+        // 
+
         var request;
-        var urlInfo;
-        var winLoc;
-        var crossOrigin;
 
-        //onError = settings.fail || function () { };
-
+        //
+        // XMLHttpRequest is compatible with IE7+, Firefox, Chrome, Opera, Safari
+        // Shim XMLHttpRequest for older IEs 
         if (!XMLHttpRequest) {
-            // Shim XMLHttpRequest for older IEs
             window.XMLHttpRequest = function () {
                 try {
                     return new window.ActiveXObject('Msxml2.XMLHTTP.6.0');
@@ -171,44 +167,19 @@ var rcOAuth2Client = (function (window) {
         }
 
         request = new XMLHttpRequest();
-
-        urlInfo = parseUrl(settings.url);
-        winLoc = window.location;
-        // check if url is for another domain/origin
-        // ie8 doesn't know location.origin, so we won't rely on it here
-        crossOrigin = (urlInfo.protocol + urlInfo.host) !== (winLoc.protocol + winLoc.host);
-
-        // Use XDomainRequest for IE if XMLHTTPRequest2 isn't available
-        // 'withCredentials' is only available in XMLHTTPRequest2
-        // Also XDomainRequest has a lot of gotchas, so only use if cross domain
-        if (crossOrigin && window.XDomainRequest && !('withCredentials' in request)) {
-            request = new window.XDomainRequest();
-            request.onload = function () {
-                settings.done(request.responseText);
-            };
-            request.onerror = function () { settings.fail(request.status, request.statusText, "client: ajax onerror"); };
-            // these blank handlers need to be set to fix ie9 http://cypressnorth.com/programming/internet-explorer-aborting-ajax-requests-fixed/
-            request.onprogress = function () { };
-            request.ontimeout = function () { settings.fail(request.status, request.statusText, "client: ajax ontimeout"); };
-
-            // XMLHTTPRequest
-        } else {
-            fileUrl = (urlInfo.protocol == 'file:' || winLoc.protocol == 'file:');
-
-            request.onreadystatechange = function () {
-                if (request.readyState === 4) {
-                    if (request.status === 200 || request.status === 401 || fileUrl && request.status === 0) {
-                        settings.done(request.status, request.responseText);
-                    } else {
-                        settings.fail(request.status, request.statusText, "client: ajax onreadystatechange");
-                    }
+        request.onreadystatechange = function () {
+            if (request.readyState === 4) {
+                if (request.status === 200 || request.status === 401) {
+                    settings.done(request.status, request.responseText);
+                } else {
+                    settings.fail(request.status, request.statusText, "client: ajax onreadystatechange");
                 }
-            };
-        }
+            }
+        };
+
 
         // open the connection
         try {
-            // Third arg is async, or ignored by XDomainRequest
             request.open(settings.method, settings.url, ((settings.async === false) ? false : true));
             if (typeof (settings.bearerToken) === "string") {
                 request.setRequestHeader("Authorization", "Bearer " + settings.bearerToken);
@@ -303,7 +274,7 @@ var rcOAuth2Client = (function (window) {
         //
         //loop through keys
         hash = typeof (hash) === "string" ? hash.split("&") : [];
-        if (hash.length >= 1 && hash[0] != "") { 
+        if (hash.length >= 1 && hash[0] != "") {
             for (var h in hash) {
                 for (var k in callbackKeys) {
                     var key = callbackKeys[k];
@@ -334,7 +305,7 @@ var rcOAuth2Client = (function (window) {
 
         var accessTokenPersistKey = getPersistedDataKey(persistedDataKeys.accessToken);
         var at;
-        var result;
+        var result = "";
         var now;
         var cookie;
 
@@ -454,26 +425,27 @@ var rcOAuth2Client = (function (window) {
                 settings.bearerToken = accessToken;
                 settings.withCredentials = false;
                 settings.async = (settings.async === false) ? false : true;
-                settings.done = function (old, oldIsFunction) {
+                settings.done = function (done, isFunction) {
                     return function (httpStatus, data) {
                         data = JSON.parse(data);
                         if (!data) data = {};
                         if (httpStatus == 200) {
                             tryPersistUserInfo(data);
                         }
-                        if (oldIsFunction) {
-                            old(httpStatus, data);
+                        if (isFunction) {
+                            done(httpStatus, data);
                         }
                     };
                 }(done, isFunction(done));
-                settings.fail = function (old, oldIsFunction) {
+                settings.fail = function (fail, isFunction) {
                     return function (httpStatus, statusText, caseLabel) {
                         deletePersistedAccessToken(httpStatus);
-                        if (oldIsFunction) {
-                            old(httpStatus, statusText, caseLabel);
+                        if (isFunction) {
+                            fail(httpStatus, statusText, caseLabel);
                         }
                     };
                 }(fail, isFunction(fail));
+
                 ajax(settings);
             }
         } else {
