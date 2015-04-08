@@ -82,9 +82,9 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
         forceRefresh: false     //optional - refresh cached user info by forcing a call to the 
                                 //user info endpoint; this option should be judicially used
                                 //Default = false
-        ,done: null             //function delegate with signature function(httpStatus,data){}
+        ,done: null             //function delegate with signature function(httpStatus /*number*/, data /*user info object*/){}
                                 //called on ajax call success
-        ,fail: null             //function delegate with signature function(httpStatus, statusText, caseLabel){}
+        ,fail: null             //function delegate with signature function(httpStatus /*number*/, statusText /*string*/, caseLabel /*string*/){}
                                 //called on ajax call error
     }
     ```
@@ -168,6 +168,28 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
 
        An optional parameter that when set to true, will output messages to the console. 
  
++ **refresh()**
+
+    Updates (force refreshes) the user info displayed on screen with a call to the authorization server's userinfo endpoint.
+     
+    Returns: ---
+  
+    Returns: Please see *Parameters* section below for return values. 
+    
+    Parameters:
+    + `settings` //*Object literal*
+    
+     The parameter takes the following object:
+    ```javascript
+    {
+        done: null             //function delegate with signature function(httpStatus /*number*/, data /*user info object*/){}
+                                //called on ajax call success
+        ,fail: null             //function delegate with signature function(httpStatus /*number*/, statusText /*string*/, caseLabel /*string*/){}
+                                //called on ajax call error
+    }
+    ```
+    
+
 ##Integration
 
 Because the code is AMD ready (!) , you have 3 integration options:

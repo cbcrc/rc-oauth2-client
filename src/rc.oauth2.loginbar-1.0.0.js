@@ -18,6 +18,7 @@ var rcOAuth2LoginBar = (function (window) {
     var containerId = "rc-oauth2-loginbar";
     var loginLinkId = "rc-oauth2-login-link";
     var logoutLinkId = "rc-oauth2-logout-link";
+    var userNameElemClassName = "wgt_userName";
     var config = {
         locale: "fr"
         , i18n: {}
@@ -32,8 +33,10 @@ var rcOAuth2LoginBar = (function (window) {
     var $ = function (needle) {
         if (needle.indexOf(".") === 0) {
             return window.document.getElementsByClassName(needle.split(".")[1]);
+        } else if (needle.indexOf("#") === 0) {
+            return window.document.getElementById(needle.split("#")[1]);
         } else {
-            return window.document.getElementById(needle);
+            return window.document.getElementsByTagName(needle);
         }
     };
     var log = function (msg) {
@@ -169,7 +172,7 @@ var rcOAuth2LoginBar = (function (window) {
         }
 
         // check for receiving container
-        container = $(containerId);
+        container = $("#" + containerId);
         if (container == null) {
             throw new Error("Please ensure that you have defined a container element with id " + containerId);
         }
@@ -181,10 +184,7 @@ var rcOAuth2LoginBar = (function (window) {
         setI18n();
 
         //start markup insertion flow
-        oauthClient.getUserInfo({
-            done: getUserInfoDone,
-            fail: getUserInfoFail
-        });
+        getUserInfo();
     };
 
     var getLoginMarkup = function () {
@@ -196,19 +196,19 @@ var rcOAuth2LoginBar = (function (window) {
     };
     var injectLoginMarkup = function () {
         container.innerHTML = getLoginMarkup();
-        addEvent($(loginLinkId), "click", login);
+        addEvent($("#" + loginLinkId), "click", login);
     };
 
-    var getLoggedInMarkup = function (data) {
+    var getLoggedInMarkup = function (userInfo) {
         var locale = config.locale;
         var i18n = config.i18n;
         var html = '<div id="widgetLogin">'
             + '<div id="widgetLogin_MainContainer">'
             + '<div id="widgetLogin_containerUserInfo">'
-            + '<span class="wgt_userName">' + i18n[locale].loggedInMessage.replace(/\{0\}/gi, ((data.given_name) ? data.given_name : ((data.name) ? data.name.split(" ")[0] : ""))) + '</span>'
+            + '<span class="'+userNameElemClassName+'">' + getLoggedInMessage(userInfo) + '</span>'
             + '<span class="wgt_userImg">';
-        if (data.picture) {
-            html += '<span class="wgt_userProfileImage"><img id="smallProfilPict" class="smallCircular" width="37" alt="' + data.name + '" src="' + data.picture + '"/></span>';
+        if (userInfo.picture) {
+            html += '<span class="wgt_userProfileImage"><img id="smallProfilPict" class="smallCircular" width="37" alt="' + userInfo.name + '" src="' + userInfo.picture + '"/></span>';
         }
         html += '</span>'
         + '<span class="wgt_containerIconeFleche">'
@@ -232,7 +232,7 @@ var rcOAuth2LoginBar = (function (window) {
     var injectLoggedInMarkup = function (userInfo) {
         container.innerHTML = getLoggedInMarkup(userInfo);
         injectLoggedInMarkupDropMenuItems();
-        addEvent($(logoutLinkId), "click", logout);
+        addEvent($("#" + logoutLinkId), "click", logout);
         addDropMenuEvents();
     };
     var injectLoggedInMarkupDropMenuItems = function () {
@@ -242,7 +242,7 @@ var rcOAuth2LoginBar = (function (window) {
         var items = config.dropMenuItems;
         var l = items.length - 1;
         var n = l;
-        var itemsContainer = $("widgetLogin_DropMenuItems");
+        var itemsContainer = $("#widgetLogin_DropMenuItems");
         var i18n = config.i18n;
         var locale = config.locale;
         for (n; n >= 0; n--) {
@@ -260,15 +260,25 @@ var rcOAuth2LoginBar = (function (window) {
             itemsContainer.insertBefore(liElem, itemsContainer.lastElementChild);
         }
     };
+    var getLoggedInMessage = function (userInfo) {
+        var locale = config.locale;
+        var i18n = config.i18n;
+        var msg = i18n[locale].loggedInMessage.replace(/\{0\}/gi, ((userInfo.given_name) ? userInfo.given_name : ((userInfo.name) ? userInfo.name.split(" ")[0] : "")));
+        return msg;
+    };
+    var updateLoggedInMarkup = function (userInfo) {
+        var elem = $("." + userNameElemClassName)[0];
+        elem.innerHTML = getLoggedInMessage(userInfo);
+    };
     var addDropMenuEvents = function () {
-        var el = $("widgetLogin_containerSousMenu");
+        var el = $("#widgetLogin_containerSousMenu");
         var arrowEl = $(".wgt_iconeFleche")[0];
         el.style.display = "block";
         var height = el.clientHeight;
         el.style.display = "none";
         el.style.height = "0px";
-         
-        addEvent($("widgetLogin"), "click", function (event) {
+
+        addEvent($("#widgetLogin"), "click", function (event) {
             preventDefault(event);
             toggleSlide(el, height);
             toggleClass(arrowEl, "flecheToggleRotate");
@@ -276,11 +286,15 @@ var rcOAuth2LoginBar = (function (window) {
         addEvent(window.document, "click", function (event) {
             el.style.display = "none";
             removeClass(arrowEl, "flecheToggleRotate");
-        }); 
-       
+        });
     };
 
-
+    var getUserInfo = function () {
+        oauthClient.getUserInfo({
+            done: getUserInfoDone,
+            fail: getUserInfoFail
+        });
+    };
     var getUserInfoDone = function (httpStatus, data) {
         log("getUserInfoDone");
         if (httpStatus === 200) {
@@ -315,10 +329,10 @@ var rcOAuth2LoginBar = (function (window) {
         //temporary pop-up window functionality. Will be replaced with properly branded modal
         window.open(url, "pop", "scrollbars=yes,resizable=yes,,width=600,height=800");
     };
-    var logout = function (event) { 
+
+    var logout = function (event) {
         oauthClient.logout(logoutComplete);
     };
-
     var logoutComplete = function (httpStatus, data) {
         log("logout");
 
@@ -335,8 +349,58 @@ var rcOAuth2LoginBar = (function (window) {
         }
     };
 
+    var refresh = function (settings) {
+        //
+        //settings supported: done fail
+        //   
+        settings = settings || {};
+
+        log("refresh");
+
+        // if user is logged in
+        if (!$("." + userNameElemClassName)[0]) {
+            if (isFunction(settings.fail)) {
+                settings.fail(403, "user is not logged in; refresh call not applicable", "loginbar: refresh");
+            }
+        } else {
+            oauthClient.getUserInfo({
+                forceRefresh: true,
+                done: (function (settings) {
+                    return function (httpStatus, data) {
+                        refreshDone(httpStatus, data, settings);
+                    };
+                })(settings),
+                fail: (function (settings) {
+                    return function (httpStatus, statusText, caseLabel) {
+                        refreshFail(httpStatus, statusText, caseLabel, settings);
+                    };
+                })(settings)
+            });
+        }
+    };
+    var refreshDone = function (httpStatus, data, settings) {
+        log("refreshDone");
+        log(">> status = " + httpStatus);
+        if (httpStatus === 200) {
+            updateLoggedInMarkup(data);
+            if (settings && isFunction(settings.done)) {
+                settings.done(httpStatus, data);
+            }
+        } else { //4xx (401) or 5xx
+            refreshFail(httpStatus, "refreshDone called with a 4xx/5xx HTTP status", "loginbar: refreshDone", settings);
+        }
+    };
+    var refreshFail = function (httpStatus, statusText, caseLabel, settings) {
+        log("refreshFail");
+        log(">> status = " + httpStatus + ", text= " + statusText + ", case= " + caseLabel);
+        if (settings && isFunction(settings.fail)) {
+            settings.fail(httpStatus, statusText, caseLabel);
+        }
+    };
+
     return {
-        init: init
+        init: init,
+        refresh: refresh
     };
 }(window));
 
