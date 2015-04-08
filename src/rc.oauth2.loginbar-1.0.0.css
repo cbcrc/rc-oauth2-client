@@ -1,93 +1,101 @@
-﻿ /* WIDGET CSS */
-            #widgetLogin_btnLogin {
-                width: 150px;
-                line-height: 25px;
-                height: 25px;
-                text-align: center;
-                font-size: 14px;
-                color: #000;
-                border: 1px solid #000;
-                -webkit-border-radius: 6px;
-                -moz-border-radius: 6px;
-                -ms-border-radius: 6px;
-                border-radius: 6px;
+﻿/* WIDGET CSS */
+#widgetLogin_btnLogin {
+    width: 150px;
+    line-height: 25px;
+    height: 25px;
+    text-align: center;
+    font-size: 14px;
+    color: #000;
+    border: 1px solid #000;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -ms-border-radius: 6px;
+    border-radius: 6px;
+}
+
+    #widgetLogin_btnLogin a {
+        display: block;
+        height: 25px;
+        text-decoration: none;
+        color: #000;
+    }
+
+#widgetLogin {
+    position: absolute;
+    /******************************************************************/
+    /*** position � changer pour chaque zone  (left ou right, top ou bottom) ***/
+    /*****************************************************************/
+    font-size: 14px;
+    cursor: pointer;
+    height: 48px;
+    width: 240px;
+    z-index: 1;
+}
+
+    #widgetLogin table, #widgetLogin ul, #widgetLogin li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+#widgetLogin_MainContainer {
+    position: relative;
+}
+
+#widgetLogin_containerUserInfo {
+    display: table;
+    height: 48px;
+    width: 240px;
+    text-align: right;
+}
+
+    #widgetLogin_containerUserInfo span {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    #widgetLogin_containerUserInfo .wgt_userName {
+        text-align: right;
+        width: 167px;
+    }
+
+    #widgetLogin_containerUserInfo .wgt_userImg {
+        display: inline-block;
+        margin: 6px 10px 0 10px;
+        width: 37px;
+    }
+
+        #widgetLogin_containerUserInfo .wgt_userImg .wgt_userProfileImage {
+            border: 2px solid #000;
+            display: inline-block;
+            height: 34px;
+            width: 34px;
+            -webkit-border-radius: 20px;
+            -moz-border-radius: 20px;
+            -ms-border-radius: 20px;
+            border-radius: 20px;
+        }
+
+            #widgetLogin_containerUserInfo .wgt_userImg .wgt_userProfileImage .smallCircular {
+                width: 34px;
+                height: 34px;
+                border-radius: 16px;
+                -webkit-border-radius: 16px;
+                -moz-border-radius: 16px;
             }
 
-            #widgetLogin_btnLogin a {
-                display: block;
-                height: 25px;
-                text-decoration: none;
-                color: #000;
-            }
-            
-            #widgetLogin {
-                position: absolute;
-                /******************************************************************/
-                /*** position � changer pour chaque zone  (left ou right, top ou bottom) ***/
-                /*****************************************************************/
-                font-size: 14px;
-                cursor: pointer;
-                height: 48px;
-                width: 240px;
-                z-index: 1;
-            }
+    #widgetLogin_containerUserInfo .wgt_containerIconeFleche {
+        width: 16px;
+    }
 
-            #widgetLogin table, #widgetLogin ul, #widgetLogin li {
-                margin: 0;
-                padding: 0;
-                list-style: none;
-            }
-
-            #widgetLogin_MainContainer {
-                position: relative;
-            }
-
-            #widgetLogin_containerUserInfo {
-                display: table;
-                height: 48px;
-                width: 240px;
-                text-align: right;
-            }
-
-            #widgetLogin_containerUserInfo span {
-                display: table-cell;
-                vertical-align: middle;
-            }
-
-            #widgetLogin_containerUserInfo .wgt_userName {
-                text-align: right;
-                width: 167px;
-            }
-
-            #widgetLogin_containerUserInfo .wgt_userImg {
-                display: inline-block;
-                margin: 6px 10px 0 10px;
-                width: 37px;
-            }
-
-                #widgetLogin_containerUserInfo .wgt_userImg .wgt_userProfileImage {
-                    border: 2px solid #000;
-                    display: inline-block;
-                    height: 34px;
-                    width: 34px;
-                    -webkit-border-radius: 20px;
-                    -moz-border-radius: 20px;
-                    -ms-border-radius: 20px;
-                    border-radius: 20px;
-                }
-
-            #widgetLogin_containerUserInfo .wgt_containerIconeFleche {
-                width: 16px;
-            }
-
-            #widgetLogin_containerUserInfo .wgt_containerIconeFleche .wgt_iconeFleche {
-                /*arrow*/
-                width: 0;
-                height: 0;
-                border-style: solid;
-                border-width: 9px 8px 0 8px;
-                border-color: #000000 transparent transparent transparent;
-            }
+        #widgetLogin_containerUserInfo .wgt_containerIconeFleche .wgt_iconeFleche {
+            /*arrow*/
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 9px 8px 0 8px;
+            border-color: #000000 transparent transparent transparent;
+        }
 
             #widgetLogin_containerUserInfo .wgt_containerIconeFleche .wgt_iconeFleche.flecheToggleRotate {
                 /*rotation de la fleche*/
@@ -96,26 +104,26 @@
                 transform: rotate(180deg);
             }
 
-            #widgetLogin_containerSousMenu {
-                display: none;
-                background: #000;
-                color: #fff;
-                text-align: right;
-                width: 90%;
-                position: absolute;
-                top: 48px;
-                right: 0;
-                z-index: 2;
-            }
+#widgetLogin_containerSousMenu {
+    display: none;
+    background: #000;
+    color: #fff;
+    text-align: right;
+    width: 90%;
+    position: absolute;
+    top: 48px;
+    right: 0;
+    z-index: 2;
+}
 
-            #widgetLogin_containerSousMenu .wgt_sousMenuWrapper {
-                position: relative;
-            }
+    #widgetLogin_containerSousMenu .wgt_sousMenuWrapper {
+        position: relative;
+    }
 
-            #widgetLogin_containerSousMenu .wgt_sousMenuWrapper ul li {
-                display: block;
-                border-bottom: 1px solid #666;
-            }
+        #widgetLogin_containerSousMenu .wgt_sousMenuWrapper ul li {
+            display: block;
+            border-bottom: 1px solid #666;
+        }
 
             #widgetLogin_containerSousMenu .wgt_sousMenuWrapper ul li:last-child {
                 border-bottom: none;
@@ -131,21 +139,21 @@
                 text-decoration: none;
             }
 
-            #widgetLogin_containerSousMenu .wgt_sousMenuWrapper ul li a:hover {
-                background-color: #333;
-                color: #ededed;
-            }
+                #widgetLogin_containerSousMenu .wgt_sousMenuWrapper ul li a:hover {
+                    background-color: #333;
+                    color: #ededed;
+                }
 
-            #widgetLogin_containerSousMenu .wgt_sousMenuWrapper .wgt_arrow {
-                left: 100px;
-                position: absolute;
-                top: -6px;
-                z-index: 3;
-                /*arrow subMenu*/
-                width: 0;
-                height: 0;
-                border-style: solid;
-                border-width: 0 11px 7px 11px;
-                border-color: transparent transparent #0e0e0e transparent;
-            }
-            /* WIDGET CSS */
+        #widgetLogin_containerSousMenu .wgt_sousMenuWrapper .wgt_arrow {
+            left: 100px;
+            position: absolute;
+            top: -6px;
+            z-index: 3;
+            /*arrow subMenu*/
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 11px 7px 11px;
+            border-color: transparent transparent #0e0e0e transparent;
+        }
+/* WIDGET CSS */
