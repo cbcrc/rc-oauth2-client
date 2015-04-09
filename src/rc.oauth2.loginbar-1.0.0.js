@@ -77,8 +77,8 @@ var rcOAuth2LoginBar = (function (window) {
     };
     var toggleSlide = function (elem, height) {
         if (elem) {
-            var initSpeed = config.dropMenuItems.length || 1;
-            var initIncrement = config.dropMenuItems.length || 1;
+            var initSpeed = 1;//config.dropMenuItems.length || 1;
+            var initIncrement = 8;//config.dropMenuItems.length || 1;
             var show =
                 function () {
                     var currHeight = 0;
@@ -96,6 +96,7 @@ var rcOAuth2LoginBar = (function (window) {
                             increment = 1;
                         }
                         elem.style.height = (currHeight + increment) + "px";
+                        //log( toggleSlide: "speed:" + speed + ", "increment:"  + increment);
                         setTimeout(show, speed);
                     } else {
                         elem.style.overflow = "";
