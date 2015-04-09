@@ -31,12 +31,13 @@ var rcOAuth2LoginBar = (function (window) {
     };
 
     var $ = function (needle) {
+        var scope = container || window.document;//limit searching to our container!
         if (needle.indexOf(".") === 0) {
-            return window.document.getElementsByClassName(needle.split(".")[1]);
+            return scope.getElementsByClassName(needle.split(".")[1]);
         } else if (needle.indexOf("#") === 0) {
-            return window.document.getElementById(needle.split("#")[1]);
+            return window.document.getElementById(needle.split("#")[1]);// get by Id must use window.document
         } else {
-            return window.document.getElementsByTagName(needle);
+            return scope.getElementsByTagName(needle);
         }
     };
     var log = function (msg) {
