@@ -234,7 +234,7 @@ Because the code is AMD ready (!) , you have 3 integration options:
                 dropMenuItems: [{ i18nLabel: "help", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }, 
                                 { i18nLabel: "faq", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }],
                 loginComplete: function(accessToken){ console.log("my access token: " + accessToken); },
-                logoutComplete: function( ){ "my logoutComplete called!"); }
+                logoutComplete: function( ){ console.log("my logoutComplete called!"); }
 
                  }, 
                  false
