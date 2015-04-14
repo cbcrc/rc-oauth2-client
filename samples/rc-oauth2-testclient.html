@@ -5,9 +5,9 @@
     <link type="text/css" rel="stylesheet" href="../src/rc.oauth2.loginbar-1.0.0.css" />
     <script src="requirejs-2.1.16.js"></script>
 </head>
-<body>
-    <div id="rc-oauth2-loginbar"></div>
-</body>
+    <body>
+        <div id="rc-oauth2-loginbar"></div>
+    </body>
 </html>
 <script>
     require.config({
@@ -36,19 +36,20 @@
             {
                 locale: "fr",
                 i18n: {
-                    fr: { loggedInMessage: "Bonjour {0}!", help: "Aide", faq: "FAQ" },
-                    en: { loggedInMessage: "Hello {0}!", help: "Help", faq: "FAQ" }
+                    fr: { loggedInMessage: "Bonjour {0}!", help: "Aide", faq: "FAQ", faqTitle: "Liste de questions les plus fréquentes" },
+                    en: { loggedInMessage: "Hello {0}!", help: "Help", faq: "FAQ", faqTitle: "List of frequesntly asked questions" }
                 },
-                forceLogin: false,
-                modalMode: false,
-                dropMenuItems: [{ i18nLabel: "help", action: function (evt) { console.log(evt.currentTarget.innerHTML); } },
-                                { i18nLabel: "faq", action: function (evt) { console.log(evt.currentTarget.innerHTML); } }],
+                forceLogin: false, 
+                dropMenuItems: [{ label: "help", action: function (evt) { console.log(evt.currentTarget.innerHTML); } },
+                                { label: "faq", title: "faqTitle", action: function (evt) { console.log(evt.currentTarget.innerHTML); } }
+                
+                ],
                 loginComplete: function (accessToken) { console.log("my access token: " + accessToken); },
                 logoutComplete: function () { console.log("my logoutComplete called!"); }
             },
             false);
     });
- 
+
 </script>
 
 

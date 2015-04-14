@@ -141,8 +141,8 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                 // Default = "fr"
         ,i18n:{}                // optional - 
                                 // Default: 
-                                //      { fr:{loggedInMessage:"{0}", signin:"Connexion", signout:"Déconnexion"},
-                                //        en : {loggedInMessage:"{0}", signin:"Sign-in", signout:"Sign-out"}
+                                //      { fr:{loggedInMessage:"{0}"},
+                                //        en : {loggedInMessage:"{0}"}
                                 //      }
                                 // Note: the {0} token is replaced by the logged-in user's display name
         ,forceLogin: false      // optional -  if true, the user will be automatically  prompted to login
@@ -152,8 +152,10 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
         ,modalMode: false       // optional - whether or not the login page should be shown in a modal
                                 // Default = false (a redirection to the login page will occur)
         ,dropMenuItems: []      // optional - an array of user action objects to add to the base action of 'Logout'
-                                // An action object has the following properties: i18nLabel, action 
-                                // i18nLabel: the name of the property in your i18n configuration object above 
+                                // An action object has the following properties: label, title, action 
+                                // label: the name of the property in your i18n configuration object above 
+                                // title: optional - the name of the property in your i18n configuration object above
+                                //        This property should only be set for a11y purposes: when the item's label/text used is not descriptive enough.
                                 // action: supports either a string (will create a href attribute) or a function 
                                 // (will create an onclick attribute and your function will recieve the click event object as a parameter)
         ,loginComplete:null    // optional - a function to be invoked when the user has succesfully logged in to the client application, with signature
@@ -226,13 +228,13 @@ Because the code is AMD ready (!) , you have 3 integration options:
                  {
                 locale: "en",
                 i18n: {
-                    fr: { loggedInMessage: "Bonjour {0}!", help: "Aide" , faq:"FAQ"},
-                    en: { loggedInMessage: "Hello {0}!", help: "Help", faq:"FAQ" }
+                    fr: { loggedInMessage: "Bonjour {0}!", help: "Aide" , faq:"FAQ", faqTitle:"Liste de questions les plus fréquentes"},
+                    en: { loggedInMessage: "Hello {0}!", help: "Help", faq:"FAQ", faqTitle:"List of frequesntly asked questions" }
                 },
                 forceLogin: false,
                 modalMode: true,
-                dropMenuItems: [{ i18nLabel: "help", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }, 
-                                { i18nLabel: "faq", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }],
+                dropMenuItems: [{ label: "help", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }, 
+                                { label: "faq", title:"faqTitle",  action: function(evt) { console.log(evt.currentTarget.innerHTML); } }],
                 loginComplete: function(accessToken){ console.log("my access token: " + accessToken); },
                 logoutComplete: function( ){ console.log("my logoutComplete called!"); }
 

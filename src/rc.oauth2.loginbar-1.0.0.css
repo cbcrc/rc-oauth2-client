@@ -13,12 +13,18 @@
     border-radius: 6px;
 }
 
-    #widgetLogin_btnLogin a {
-        display: block;
+    #widgetLogin_btnLogin button {
         height: 25px;
-        text-decoration: none;
         color: #000;
+        border: none;
+        background: none;
+        text-align: center;
+        cursor: pointer;
     }
+
+        #widgetLogin_btnLogin button:focus {
+            outline: thin dotted;
+        }
 
 #widgetLogin {
     position: absolute;
@@ -28,9 +34,16 @@
     font-size: 14px;
     cursor: pointer;
     height: 48px;
-    width: 240px;
+    /*width: 240px;*/
     z-index: 1;
 }
+
+    #widgetLogin a:focus,
+    #widgetLogin button:focus,
+    #widgetLogin input:focus,
+    #widgetLogin select:focus {
+        outline: thin dotted;
+    }
 
     #widgetLogin table, #widgetLogin ul, #widgetLogin li {
         margin: 0;
@@ -45,9 +58,18 @@
 #widgetLogin_containerUserInfo {
     display: table;
     height: 48px;
-    width: 240px;
+    /*width: 240px;*/
     text-align: right;
 }
+
+  
+    #widgetLogin_containerUserInfo #widgetLogin_DropMenuToggler {
+        display: inherit;
+        cursor: pointer;
+        border: none;
+        background: none;
+        padding: 0;
+    }
 
     #widgetLogin_containerUserInfo span {
         display: table-cell;
@@ -56,12 +78,13 @@
 
     #widgetLogin_containerUserInfo .wgt_userName {
         text-align: right;
-        width: 167px;
+        /*width: 167px;*/
+        padding: 0 10px;
     }
 
     #widgetLogin_containerUserInfo .wgt_userImg {
         display: inline-block;
-        margin: 6px 10px 0 10px;
+        margin: 5px 0;
         width: 37px;
     }
 
@@ -87,23 +110,33 @@
 
     #widgetLogin_containerUserInfo .wgt_containerIconeFleche {
         width: 16px;
+        display: inline-block;
     }
 
-        #widgetLogin_containerUserInfo .wgt_containerIconeFleche .wgt_iconeFleche {
-            /*arrow*/
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 6px 6px 0 6px;
-            border-color: #000000 transparent transparent transparent;
+    #widgetLogin_containerUserInfo .wgt_label {
+        
+        position: absolute;
+        text-indent: -4000px;
+    }
+
+
+    #widgetLogin_containerUserInfo .wgt_containerIconeFleche .wgt_iconeFleche {
+        /*arrow*/
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 6px 6px 0 6px;
+        border-color: #000000 transparent transparent transparent;
+    }
+
+        #widgetLogin_containerUserInfo .wgt_containerIconeFleche .wgt_iconeFleche.flecheToggleRotate {
+            /*rotation de la fleche*/
+            -ms-transform: rotate(180deg); /* IE 9 */
+            -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+            transform: rotate(180deg);
         }
 
-            #widgetLogin_containerUserInfo .wgt_containerIconeFleche .wgt_iconeFleche.flecheToggleRotate {
-                /*rotation de la fleche*/
-                -ms-transform: rotate(180deg); /* IE 9 */
-                -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
-                transform: rotate(180deg);
-            }
+
 
 #widgetLogin_containerSousMenu {
     display: none;
@@ -140,9 +173,23 @@
                 text-decoration: none;
             }
 
-                #widgetLogin_containerSousMenu .wgt_sousMenuWrapper ul li a:hover {
+            #widgetLogin_containerSousMenu .wgt_sousMenuWrapper ul li button {
+                border: none;
+                background: none;
+                color: #ededed;
+                font-size: 12px;
+                line-height: 14px;
+                padding: 14px 10px;
+                width: 100%;
+                text-align: right;
+                cursor: pointer;
+            }
+
+                #widgetLogin_containerSousMenu .wgt_sousMenuWrapper ul li a:hover,
+                #widgetLogin_containerSousMenu .wgt_sousMenuWrapper ul li button:hover {
                     background-color: #333;
                     color: #ededed;
+                    cursor: pointer;
                 }
 
         #widgetLogin_containerSousMenu .wgt_sousMenuWrapper .wgt_arrow {
