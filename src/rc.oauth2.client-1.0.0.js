@@ -303,7 +303,7 @@ var rcOAuth2Client = (function (window) {
         out += "?client_id=" + config.clientId;
         out += "&redirect_uri=" + encodeURIComponent(callConfig.redirectUri);
         out += "&response_type=" + config.responseType;
-        out += "&scope=" + callConfig.scope.replace(/\W/gi, '+');
+        out += "&scope=" + callConfig.scope.replace(/\s/gi, '+');
         if (typeof (callConfig.state) === "string") {
             out += "&state=" + encodeURIComponent(callConfig.state);
         }
