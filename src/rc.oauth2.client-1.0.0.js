@@ -25,8 +25,9 @@ var rcOAuth2Client = (function (window) {
     var persistedDataKeys = {
         accessToken: "at"
         , userInfo: "ui"
+        ,vfSession :"VfSess"
+            
     };
-    var vfSessionCookieName = "VfSess";
     var config = {
         clientId: ""
         , responseType: "token"
@@ -46,6 +47,9 @@ var rcOAuth2Client = (function (window) {
         , fail: null
     };
 
+    //
+    // Utilities / Helpers
+    //
     var log = function (msg) {
         if ((debugActive === true) && console) { console.log("rcOauth2Client: " + msg); }
     };
@@ -205,6 +209,9 @@ var rcOAuth2Client = (function (window) {
         return (callbackConfig.vfDependant === true) /*&& window.viafoura*/;
     };
 
+    //
+    // Intitialization
+    //
     var init = function (clientId, context, settings, debug) {
 
         if (debug === true) {
@@ -264,6 +271,9 @@ var rcOAuth2Client = (function (window) {
 
     };
 
+    //
+    // Logic
+    //
     var getPersistedDataKey = function (persistedDataKey) {
         return "rcoac." + config.clientId + "." + persistedDataKey;
     };
@@ -357,7 +367,7 @@ var rcOAuth2Client = (function (window) {
 
             // viafoura session support
             if (isVf()) {
-                setCookie(vfSessionCookieName, viafouraSession, expireDate);
+                setCookie(persistedDataKeys.vfSession, viafouraSession, expireDate);
             }
 
             return true;
@@ -378,7 +388,7 @@ var rcOAuth2Client = (function (window) {
 
             // viafoura session support
             if (isVf()) {
-                deleteCookie(vfSessionCookieName);
+                deleteCookie(persistedDataKeys.vfSession);
             }
         }
     };
@@ -505,7 +515,6 @@ var rcOAuth2Client = (function (window) {
             }
         }
     };
-
 
     var login = function (urlHandler) {
         log("login");
