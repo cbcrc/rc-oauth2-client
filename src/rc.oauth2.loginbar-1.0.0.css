@@ -20,6 +20,7 @@
         background: none;
         text-align: center;
         cursor: pointer;
+        width: 100%;
     }
 
         #widgetLogin_btnLogin button:focus {
@@ -62,7 +63,7 @@
     text-align: right;
 }
 
-  
+
     #widgetLogin_containerUserInfo #widgetLogin_DropMenuToggler {
         display: inherit;
         cursor: pointer;
@@ -72,7 +73,7 @@
     }
 
     #widgetLogin_containerUserInfo span {
-        display: table-cell;
+        /*display: table-cell;*/
         vertical-align: middle;
     }
 
@@ -114,7 +115,6 @@
     }
 
     #widgetLogin_containerUserInfo .wgt_label {
-        
         position: absolute;
         text-indent: -4000px;
     }
@@ -127,6 +127,7 @@
         border-style: solid;
         border-width: 6px 6px 0 6px;
         border-color: #000000 transparent transparent transparent;
+        display: table-cell;
     }
 
         #widgetLogin_containerUserInfo .wgt_containerIconeFleche .wgt_iconeFleche.flecheToggleRotate {
@@ -143,7 +144,7 @@
     background: #000;
     color: #fff;
     text-align: right;
-    width: 90%;
+    width: 100%;
     position: absolute;
     top: 48px;
     right: 0;

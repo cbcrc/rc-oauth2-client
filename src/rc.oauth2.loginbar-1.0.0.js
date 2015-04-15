@@ -255,31 +255,31 @@ var rcOAuth2LoginBar = (function (window) {
         var html = '<div id="' + markupElemSelector.id.loginWidget + '" aria-label="' + i18n[locale].loginWidgetAriaLabel + '">'
             + '<div id="widgetLogin_MainContainer">'
             + '<div id="widgetLogin_containerUserInfo">'
+            + '<button type="button" id="' + markupElemSelector.id.dropMenuToggler + '" aria-controls="' + markupElemSelector.id.dropMenuContainer + '" aria-expanded="false">'
             + '<span class="wgt_userImg">';
-            if (userInfo.picture) {
-                html += '<span class="wgt_userProfileImage"><img id="smallProfilPict" class="smallCircular" width="37" alt="' + i18n[locale].profileImgAlt + " " + userInfo.name + '" src="' + userInfo.picture + '"/></span>';
-            }
-            html += '</span>'
-            + '<span class="' + markupElemSelector.className.userName + '">' + getLoggedInMessage(userInfo) + '</span>'
-            + '<button type="button" id="' + markupElemSelector.id.dropMenuToggler + '" aria-controls="' + markupElemSelector.id.dropMenuContainer + '" aria-expanded="false">'  
-            +   '<span class="wgt_label">' + i18n[locale].dropMenuTogglerLabel + '</span>'
-            +   '<span class="' + markupElemSelector.className.arrowContainer + '" >'
-            +       '<span class="' + markupElemSelector.className.arrowIcon + '"></span>'
-            +   '</span>'
-            + '</button>'
+        if (userInfo.picture) {
+            html += '<span class="wgt_userProfileImage"><img id="smallProfilPict" class="smallCircular" width="37" alt="' + i18n[locale].profileImgAlt + " " + userInfo.name + '" src="' + userInfo.picture + '"/></span>';
+        }
+        html += '</span>'
+        + '<span class="' + markupElemSelector.className.userName + '">' + getLoggedInMessage(userInfo) + '</span>'
+        + '<span class="wgt_label">' + i18n[locale].dropMenuTogglerLabel + '</span>'
+        + '<span class="' + markupElemSelector.className.arrowContainer + '" >'
+        + '<span class="' + markupElemSelector.className.arrowIcon + '"></span>'
+        + '</span>'
+        + '</button>'
+       + '</div>'
+       + '<div id="' + markupElemSelector.id.dropMenuContainer + '" aria-label="' + i18n[locale].dropMenuContainerAriaLabel + '">'
+       + '<div class="wgt_sousMenuWrapper">'
+       + '<ul id="' + markupElemSelector.id.dropMenuItems + '" role="menu">'
+            // + '<li>'
+            //+ '<div class="wgt_arrow"></div>'
+            // + '</li>'
+       + '<li role="menuitem"><button type="button" id ="' + markupElemSelector.id.logoutLink + '"  title="' + i18n[locale].logoutLinkTitle + '">' + i18n[locale].logoutLinkLabel + '</button></li>'
+               + '</ul>'
            + '</div>'
-           + '<div id="' + markupElemSelector.id.dropMenuContainer + '" aria-label="' + i18n[locale].dropMenuContainerAriaLabel + '">'
-           + '<div class="wgt_sousMenuWrapper">'
-           + '<ul id="' + markupElemSelector.id.dropMenuItems + '" role="menu">'
-                // + '<li>'
-                //+ '<div class="wgt_arrow"></div>'
-                // + '</li>'
-           + '<li role="menuitem"><button type="button" id ="' + markupElemSelector.id.logoutLink + '"  title="' + i18n[locale].logoutLinkTitle + '">' + i18n[locale].logoutLinkLabel + '</button></li>'
-                   + '</ul>'
-               + '</div>'
-           + '</div>'
-           + '</div>'
-           + '</div>';
+       + '</div>'
+       + '</div>'
+       + '</div>';
         return html;
     };
     var injectLoggedInMarkup = function (userInfo) {
