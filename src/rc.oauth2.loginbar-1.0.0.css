@@ -7,7 +7,7 @@
     font-style: normal;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="icon-avatar_default"], [class*=" icon-avatar_default"] {
     font-family: 'IcomoonCentreDesMembres';
     speak: none;
     font-style: normal;
