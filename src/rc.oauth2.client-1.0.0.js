@@ -25,8 +25,8 @@ var rcOAuth2Client = (function (window) {
     var persistedDataKeys = {
         accessToken: "at"
         , userInfo: "ui"
-        ,vfSession :"VfSess"
-            
+        , vfSession: "VfSess"
+
     };
     var config = {
         clientId: ""
@@ -323,14 +323,19 @@ var rcOAuth2Client = (function (window) {
         if (isLocalStorage()) {
             // set access token
             at = localStorage.getItem(accessTokenPersistKey);
-            at = JSON.parse(at);
-            now = new Date();
-            if (at && Date.parse(at.expires) > now) {
-                result = at.token;
+            //Attention: Safari on MAC throws EOF error when attempting JSON.parse on empty strings
+            if (at && at != " ") {
+                at = JSON.parse(at);
+                now = new Date();
+                if (at && Date.parse(at.expires) > now) {
+                    result = at.token;
+                }
             }
+
         } else {
             cookie = getCookie(accessTokenPersistKey);
-            if (typeof (cookie) === "string") {
+            //Attention: Safari on MAC throws EOF error when attempting JSON.parse on empty strings
+            if (cookie && typeof (cookie) === "string" && cookie != " ") {
                 at = JSON.parse(cookie);
                 if (at) {
                     result = at.token;
@@ -419,8 +424,6 @@ var rcOAuth2Client = (function (window) {
             //if we got persisted user info
             if (userInfo) {
                 if (isFunction(done)) {
-                    //userInfo = JSON.parse(userInfo);
-                    //if (!userInfo) userInfo = {};
                     done(200, userInfo);
                 }
 
@@ -437,8 +440,13 @@ var rcOAuth2Client = (function (window) {
                 settings.async = (settings.async === false) ? false : true;
                 settings.done = function (done, isFunction) {
                     return function (httpStatus, data) {
-                        data = JSON.parse(data);
-                        if (!data) data = {};
+                        //Attention: Safari on MAC throws EOF error when attempting JSON.parse on empty strings
+                        if (data && data != " ") {
+                            data = JSON.parse(data);
+                        }
+                        if (!data) {
+                            data = {};
+                        }
                         if (httpStatus == 200) {
                             tryPersistUserInfo(data);
                         }
@@ -468,7 +476,7 @@ var rcOAuth2Client = (function (window) {
         log("getPersistedUserInfo");
 
         var userInfo;
-        var result;
+        var result="";
         var key = getPersistedDataKey(persistedDataKeys.userInfo);
 
         if (isLocalStorage()) {
@@ -476,7 +484,8 @@ var rcOAuth2Client = (function (window) {
         } else {
             userInfo = getCookie(key);
         }
-        if (userInfo) {
+        //Attention: Safari on MAC throws EOF error when attempting JSON.parse on empty strings
+        if (userInfo && userInfo != " ") {
             result = JSON.parse(userInfo);
         }
         return result;
