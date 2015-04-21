@@ -361,6 +361,7 @@ var rcOAuth2LoginBar = (function (window) {
 
     var getUserInfo = function () {
         oauthClient.getUserInfo({
+            forceRefresh:true,
             done: getUserInfoDone,
             fail: getUserInfoFail
         });

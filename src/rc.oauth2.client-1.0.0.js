@@ -434,7 +434,7 @@ var rcOAuth2Client = (function (window) {
                 //configure settings for ajax call settings:  done fail method bearerToken withCredentials
                 // 
                 settings.method = "GET";
-                settings.url = "https://" + callConfig.domain + callConfig.userInfoPath;
+                settings.url = "https://" + callConfig.domain + callConfig.userInfoPath + (forceRefresh == true ? "?forceRefresh=true" : "");
                 settings.bearerToken = accessToken;
                 settings.withCredentials = false;
                 settings.async = (settings.async === false) ? false : true;
@@ -465,7 +465,7 @@ var rcOAuth2Client = (function (window) {
                 }(fail, isFunction(fail));
 
                 ajax(settings);
-            }
+            }// END else get info from server
         } else {
             if (isFunction(fail)) {
                 fail(401, "No valid access token found", "client: getUserInfo");
@@ -476,7 +476,7 @@ var rcOAuth2Client = (function (window) {
         log("getPersistedUserInfo");
 
         var userInfo;
-        var result="";
+        var result = "";
         var key = getPersistedDataKey(persistedDataKeys.userInfo);
 
         if (isLocalStorage()) {
