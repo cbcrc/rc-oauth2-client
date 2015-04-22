@@ -47,21 +47,27 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                 //           than the default (and recommended!) local storage mechanism
                                 //           The setting is only used if persistUserInfo setting is set to true 
                                 //default = false 
+        cookieDomain:undefined  //optional - define the domain value to which peristed data will be bound
+                                //default = undefined (therfore, the current request's domain)
+                                //Attention: the value of cookieDomain MUST be the same in as context #2 settings 
     }
     ```
       If you have set *context* to 2, then the settings will accept the following object: 
     ```javascript
     {
-        vfDependant: false, //if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
-                            //default = false
-         done: null,        //a function/delegate with signature function(state /*String*/){}
-                            //called when an access token has been granted 
-         fail: null,        //a function/delegate with signature 
-                            //function(errorMessage /*String*/, state /*String*/){}
-                            //on access token grant error
-        cookieMode:false    //optional - persist access token payload using cookies rather 
-                            //           than the default (and recommended!) local storage mechanism
-                            //default = false 
+        vfDependant: false,     //if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
+                                //default = false
+         done: null,            //a function/delegate with signature function(state /*String*/){}
+                                //called when an access token has been granted 
+         fail: null,            //a function/delegate with signature 
+                                //function(errorMessage /*String*/, state /*String*/){}
+                                //on access token grant error
+        cookieMode:false        //optional - persist access token payload using cookies rather 
+                                //           than the default (and recommended!) local storage mechanism
+                                //default = false 
+        cookieDomain:undefined  //optional - define the domain value to which peristed data will be bound
+                                //default = undefined (therfore, the current request's domain)
+                                //Attention: the value of cookieDomain MUST be the same as context #1 settings 
     }
     ```
 

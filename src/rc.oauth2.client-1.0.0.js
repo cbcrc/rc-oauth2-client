@@ -42,12 +42,14 @@ var rcOAuth2Client = (function (window) {
         , state: ""
         , persistUserInfo: false
         , cookieMode: false
+        , cookieDomain : undefined
     };
     var callbackConfig = {
         vfDependant: false
         , done: null
         , fail: null
         , cookieMode: false
+        , cookieDomain: undefined
     };
 
     //
@@ -69,8 +71,8 @@ var rcOAuth2Client = (function (window) {
             }
         }
     };
-    var setCookie = function (key, value, expireDate) {
-        var cookieValue = escape(value) + "; expires=" + expireDate + "; path=/";
+    var setCookie = function (key, value, expireDate, domain) {
+        var cookieValue = escape(value) + "; expires=" + expireDate + "; path=/" + (domain ? "; domain="+domain : "");
         window.document.cookie = key + "=" + cookieValue;
     };
     var getCookie = function (key) {
@@ -91,11 +93,8 @@ var rcOAuth2Client = (function (window) {
         }
         return cookie;
     };
-    var deleteCookie = function (key) {
-        // Delete a cookie by setting the date of expiry to yesterday
-        var date = new Date();
-        date.setDate(date.getDate() - 1);
-        window.document.cookie = escape(key) + '=;expires=' + date;
+    var deleteCookie = function (key,domain) {
+        window.document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/' + (domain ? "; domain="+domain : "");
     };
     var isLocalStorage = function () {
         try {
@@ -358,6 +357,7 @@ var rcOAuth2Client = (function (window) {
 
         } else {
             cookie = getCookie(accessTokenPersistKey);
+            cookie = decode(cookie);
             //Attention: Safari on MAC throws EOF error when attempting JSON.parse on empty strings
             if (cookie && typeof (cookie) === "string" && cookie != " ") {
                 at = JSON.parse(cookie);
@@ -390,7 +390,7 @@ var rcOAuth2Client = (function (window) {
             if (isLocalStorage()) {
                 localStorage.setItem(accessTokenPersistKey, dataToPersist);
             } else {
-                setCookie(accessTokenPersistKey, dataToPersist, expireDate);
+                setCookie(accessTokenPersistKey, dataToPersist, expireDate, callbackConfig.cookieDomain);
             }
 
 
@@ -412,7 +412,7 @@ var rcOAuth2Client = (function (window) {
             if (isLocalStorage()) {
                 localStorage.removeItem(key);
             } else {
-                deleteCookie(key);
+                deleteCookie(key, callConfig.cookieDomain);
             }
 
             // viafoura session support
@@ -532,7 +532,7 @@ var rcOAuth2Client = (function (window) {
             if (isLocalStorage()) {
                 sessionStorage.setItem(key, dataToPersist);
             } else {
-                setCookie(key, dataToPersist, "");
+                setCookie(key, dataToPersist, "", callConfig.cookieDomain);
             }
 
             return true;
@@ -547,7 +547,7 @@ var rcOAuth2Client = (function (window) {
             if (isLocalStorage()) {
                 sessionStorage.removeItem(key);
             } else {
-                deleteCookie(key);
+                deleteCookie(key, callConfig.cookieDomain);
             }
         }
     };
