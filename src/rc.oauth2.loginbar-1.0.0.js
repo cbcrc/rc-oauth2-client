@@ -260,7 +260,7 @@ var rcOAuth2LoginBar = (function (window) {
             + '     <span class="wgt_userProfileImage">';
         if (userInfo.picture && userInfo.picture != " " && userInfo.picture.indexOf("avatar_default") == -1) {
             html += '<img id="smallProfilPict" class="smallCircular" width="37" alt="' + i18n[locale].profileImgAlt + " " + userInfo.name + '" src="' + userInfo.picture + '"/>';
-        } else { 
+        } else {
             html += '<span class="icon-avatar_default"></span>';
         }
         html += '</span>'
@@ -361,7 +361,7 @@ var rcOAuth2LoginBar = (function (window) {
 
     var getUserInfo = function () {
         oauthClient.getUserInfo({
-            forceRefresh:true,
+            forceRefresh: config.forceLogin,
             done: getUserInfoDone,
             fail: getUserInfoFail
         });
@@ -467,6 +467,10 @@ var rcOAuth2LoginBar = (function (window) {
         log(">> status = " + httpStatus + ", text= " + statusText + ", case= " + caseLabel);
         if (settings && isFunction(settings.fail)) {
             settings.fail(httpStatus, statusText, caseLabel);
+        }
+        injectLoginMarkup();
+        if (config.forceLogin === true) {
+            login();
         }
     };
 
