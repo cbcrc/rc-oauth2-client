@@ -101,25 +101,19 @@
 
     #widgetLogin_containerUserInfo .wgt_userName {
         text-align: right;
-        /*width: 167px;*/
-        padding: 0 10px;
+        padding: 0 5px;
     }
 
     #widgetLogin_containerUserInfo .wgt_userImg {
         display: inline-block;
         margin: 5px 0;
-        width: 37px;
+        width: 34px;
     }
 
-        #widgetLogin_containerUserInfo .wgt_userImg .wgt_userProfileImage {
-            border: 2px solid #000;
+        #widgetLogin_containerUserInfo .wgt_userImg .wgt_userProfileImage { 
             display: inline-block;
             height: 34px;
-            width: 34px;
-            -webkit-border-radius: 20px;
-            -moz-border-radius: 20px;
-            -ms-border-radius: 20px;
-            border-radius: 20px;
+            width: 34px; 
             box-sizing: content-box;
             overflow: hidden;
         }
@@ -162,7 +156,7 @@
         width: 0;
         height: 0;
         border-style: solid;
-        border-width: 6px 6px 0 6px;
+        border-width: 4px 4px 0 4px;
         border-color: #000000 transparent transparent transparent;
         display: table-cell;
     }
