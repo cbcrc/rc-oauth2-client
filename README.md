@@ -40,18 +40,25 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
         scope: "",          //oauth 2.0 scope paramter
         state: "",          //optional - oauth 2.0 state paramter
                             //default = ""
+        cookieMode:false    //optional - persist userinfo payload using cookies rather than the default local storage mechanism
+                            //default = false
+                            //Attention: cookies are not recommended and should only be used if you have a compelling reason not to use local storage
     }
     ```
       If you have set *context* to 2, then the settings will accept the following object: 
     ```javascript
     {
-        vfDependant: false  //if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
-                            //Default = false
-         done: null         //a function/delegate with signature function(state /*String*/){}
-                            //called when an access token has been granted 
-         fail: null         //a function/delegate with signature 
-                            //function(errorMessage /*String*/, state /*String*/){}
-                            //on access token grant error
+        vfDependant: false,  //if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
+                             //default = false
+         done: null,         //a function/delegate with signature function(state /*String*/){}
+                             //called when an access token has been granted 
+         fail: null,         //a function/delegate with signature 
+                             //function(errorMessage /*String*/, state /*String*/){}
+                             //on access token grant error
+        cookieMode:false     //optional - persist access token payload using cookies rather than the default local storage mechanism
+                             //default = false
+                             //Attention: cookies are not recommended and should only be used if you have a compelling reason not to use local storage
+    
     }
     ```
 

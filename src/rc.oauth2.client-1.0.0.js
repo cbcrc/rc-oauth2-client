@@ -12,7 +12,6 @@
 var rcOAuth2Client = (function (window) {
     //"use strict";
     var debugActive = false;
-    var useLocalStorage = true;
     var callbackKeys = {
         accessToken: "access_token"
         , expiresIn: "expires_in"
@@ -31,6 +30,7 @@ var rcOAuth2Client = (function (window) {
     var config = {
         clientId: ""
         , responseType: "token"
+        , context: 1 // 1=init login call, 2=callback
     };
     var callConfig = {
         domain: "dev-services.radio-canada.ca"
@@ -40,11 +40,13 @@ var rcOAuth2Client = (function (window) {
         , redirectUri: ""
         , scope: ""
         , state: ""
+        , cookieMode: false
     };
     var callbackConfig = {
         vfDependant: false
         , done: null
         , fail: null
+        , cookieMode: false
     };
 
     //
@@ -96,7 +98,8 @@ var rcOAuth2Client = (function (window) {
     };
     var isLocalStorage = function () {
         try {
-            return (useLocalStorage && ('localStorage' in window) && (window['localStorage'] !== null));
+            var cookieMode = (config.context == 1 && callConfig.cookieMode == true) || (config.context == 2 && callbackConfig.cookieMode == true);
+            return (!cookieMode && ('localStorage' in window) && (window['localStorage'] !== null));
         } catch (e) {
             return false;
         }
@@ -226,15 +229,18 @@ var rcOAuth2Client = (function (window) {
             throw new Error("clientId parameter: Please provide a valid client id.");
         }
         config.clientId = clientId;
+        config.context = context;
+        
 
         //
         // init login call context
-        if (context == 1) {
+
+        if (config.context == 1) {
             setConfig(callConfig, settings);
         }
             //
             //callback mode
-        else if (context == 2) {
+        else if (config.context == 2) {
             setConfig(callbackConfig, settings);
             actOnCallback();
         } else {
