@@ -40,6 +40,7 @@ var rcOAuth2Client = (function (window) {
         , redirectUri: ""
         , scope: ""
         , state: ""
+        , persistUserInfo: false
         , cookieMode: false
     };
     var callbackConfig = {
@@ -211,6 +212,22 @@ var rcOAuth2Client = (function (window) {
     var isVf = function () {
         return (callbackConfig.vfDependant === true) /*&& window.viafoura*/;
     };
+    var encode = function (value) {
+        var out = value;
+        try {
+            if (window.btoa && value && value != " ") out = window.btoa(value);
+        } catch (e) {
+        }
+        return out;
+    };
+    var decode = function (value) {
+        var out = value;
+        try {
+            if (window.atob && value && value != " ") out = window.atob(value);
+        } catch (e) {
+        }
+        return out;
+    };
 
     //
     // Intitialization
@@ -230,7 +247,7 @@ var rcOAuth2Client = (function (window) {
         }
         config.clientId = clientId;
         config.context = context;
-        
+
 
         //
         // init login call context
@@ -329,6 +346,7 @@ var rcOAuth2Client = (function (window) {
         if (isLocalStorage()) {
             // set access token
             at = localStorage.getItem(accessTokenPersistKey);
+            at = decode(at);
             //Attention: Safari on MAC throws EOF error when attempting JSON.parse on empty strings
             if (at && at != " ") {
                 at = JSON.parse(at);
@@ -366,7 +384,7 @@ var rcOAuth2Client = (function (window) {
             expireDate.setSeconds(parseInt(expiresIn));
             expireDate = expireDate.toUTCString();
             dataToPersist = JSON.stringify({ token: accessToken, expires: expireDate });
-
+            dataToPersist = encode(dataToPersist);
 
             //persist access token to localstorage or cookie 
             if (isLocalStorage()) {
@@ -490,6 +508,8 @@ var rcOAuth2Client = (function (window) {
         } else {
             userInfo = getCookie(key);
         }
+
+        userInfo = decode(userInfo);
         //Attention: Safari on MAC throws EOF error when attempting JSON.parse on empty strings
         if (userInfo && userInfo != " ") {
             result = JSON.parse(userInfo);
@@ -502,9 +522,10 @@ var rcOAuth2Client = (function (window) {
 
         //
         //all values must be present for persistance
-        if (data) {
+        if (data && callConfig.persistUserInfo) {
             key = getPersistedDataKey(persistedDataKeys.userInfo);
             dataToPersist = (typeof (data) !== "string") ? JSON.stringify(data) : data;
+            dataToPersist = encode(dataToPersist);
 
             //
             //we want to persist userinfo data only for duration of browser session

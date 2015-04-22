@@ -28,37 +28,40 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     If you have set *context* to 1, then the settings will accept the following object:
     ```javascript
     {
-        domain: "",         //optional - oauth 2.0 server domain.
-                            //default = dev-services.radio-canada.ca
-        authorizePath: "",  //optional - oauth 2.0 server authorize path
-                            //default = /auth/oauth/v2/authorize
-        logoutPath: "",     //optional - oauth 2.0 server logout path
-                            //default = /auth/oauth/v2/logout
-        userInfoPath: "",   //optional - oauth 2.0 server oidc userinfo path
-                            //default = /openid/connect/v1/userinfo
-        redirectUri: "",    //oauth 2.0 redirect_uri parameter
-        scope: "",          //oauth 2.0 scope paramter
-        state: "",          //optional - oauth 2.0 state paramter
-                            //default = ""
-        cookieMode:false    //optional - persist userinfo payload using cookies rather than the default local storage mechanism
-                            //default = false
-                            //Attention: cookies are not recommended and should only be used if you have a compelling reason not to use local storage
+        domain: "",             //optional - oauth 2.0 server domain.
+                                //default = dev-services.radio-canada.ca
+        authorizePath: "",      //optional - oauth 2.0 server authorize path
+                                //default = /auth/oauth/v2/authorize
+        logoutPath: "",         //optional - oauth 2.0 server logout path
+                                //default = /auth/oauth/v2/logout
+        userInfoPath: "",       //optional - oauth 2.0 server oidc userinfo path
+                                //default = /openid/connect/v1/userinfo
+        redirectUri: "",        //oauth 2.0 redirect_uri parameter
+        scope: "",              //oauth 2.0 scope paramter
+        state: "",              //optional - oauth 2.0 state paramter
+                                //default = ""
+        persistUserInfo:false,  //optional - if we should locally persist (cache) userinfo payload. 
+                                //           A value of true places emphasis on performance over data consistancy
+                                //default = false 
+        cookieMode:false        //optional - persist userinfo payload using cookies rather 
+                                //           than the default (and recommended!) local storage mechanism
+                                //           The setting is only used if persistUserInfo setting is set to true 
+                                //default = false 
     }
     ```
       If you have set *context* to 2, then the settings will accept the following object: 
     ```javascript
     {
-        vfDependant: false,  //if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
-                             //default = false
-         done: null,         //a function/delegate with signature function(state /*String*/){}
-                             //called when an access token has been granted 
-         fail: null,         //a function/delegate with signature 
-                             //function(errorMessage /*String*/, state /*String*/){}
-                             //on access token grant error
-        cookieMode:false     //optional - persist access token payload using cookies rather than the default local storage mechanism
-                             //default = false
-                             //Attention: cookies are not recommended and should only be used if you have a compelling reason not to use local storage
-    
+        vfDependant: false, //if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
+                            //default = false
+         done: null,        //a function/delegate with signature function(state /*String*/){}
+                            //called when an access token has been granted 
+         fail: null,        //a function/delegate with signature 
+                            //function(errorMessage /*String*/, state /*String*/){}
+                            //on access token grant error
+        cookieMode:false    //optional - persist access token payload using cookies rather 
+                            //           than the default (and recommended!) local storage mechanism
+                            //default = false 
     }
     ```
 
