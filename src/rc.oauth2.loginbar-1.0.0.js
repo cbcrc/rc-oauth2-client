@@ -191,6 +191,7 @@ var rcOAuth2LoginBar = (function (window) {
         config.i18n.fr.dropMenuTogglerLabel = "Ouvrez le menu d'options de compte";
         config.i18n.fr.dropMenuContainerAriaLabel = "Menu d'options de compte";
         config.i18n.fr.profileImgAlt = "Avatar d'utilisateur";
+        config.i18n.fr.targetBlankText = "(nouvelle fenêtre)";
         if (!config.i18n.fr.loggedInMessage) config.i18n.fr.loggedInMessage = "{0}";
 
         if (!config.i18n.en) config.i18n.en = {};
@@ -202,6 +203,7 @@ var rcOAuth2LoginBar = (function (window) {
         config.i18n.en.dropMenuTogglerLabel = "Expand the account options menu";
         config.i18n.en.dropMenuContainerAriaLabel = "Account options menu";
         config.i18n.en.profileImgAlt = "User profile picture";
+        config.i18n.en.targetBlankText = "(new window)";
         if (!config.i18n.en.loggedInMessage) config.i18n.en.loggedInMessage = "{0}";
 
     };
@@ -320,9 +322,18 @@ var rcOAuth2LoginBar = (function (window) {
             var aText = window.document.createTextNode(i18n[locale][item.label]);
             aElem.appendChild(aText);
             var aTitle = i18n[locale][item.title];
+            var aTarget = item.target;
+            var targetBlankText = i18n[locale]["targetBlankText"];
             if (aTitle) { // a11y note: title is not needed if label is descriptive enough
-                aElem.setAttribute("title", i18n[locale][item.title]); //a11y prop
+                if (aTarget) {
+                    aElem.setAttribute("target", aTarget);
+                    if (targetBlankText && aTarget == "_blank") {
+                        aTitle += " " + targetBlankText; //a11y 
+                    }
+                }
+                aElem.setAttribute("title", aTitle); //a11y prop
             }
+
             liElem.appendChild(aElem);
             ulElem.insertBefore(liElem, ulElem.lastElementChild);
         }

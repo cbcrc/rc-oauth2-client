@@ -171,13 +171,18 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                 // An action object has the following properties: label, title, action 
                                 // label: the name of the property in your i18n configuration object above 
                                 // title: optional - the name of the property in your i18n configuration object above
-                                //        This property should only be set for a11y purposes: when the item's label/text used is not descriptive enough.
-                                // action: supports either a string (will create a href attribute) or a function 
-                                // (will create an onclick attribute and your function will recieve the click event object as a parameter)
-        ,loginComplete:null    // optional - a function to be invoked when the user has succesfully logged in to the client application, with signature
-                                // function(accessToken){}
+                                //        This property should only be set for a11y purposes: when the item's label/text 
+                                //        used is not descriptive enough.
+                                // action: supports either a URL string (will create <a href="{action}"> tag) or a function 
+                                //         (will create <button> tag  with an click event and your function will recieve the
+                                //         click event object as a parameter)
+                                // target: optional - the value of a the target attribute that will be added to 
+                                //         your <a href="{action}> tag 
+        ,loginComplete:null     // optional - a function to be invoked when the user has succesfully logged
+                                //            in to the client application, with signature
+                                //            function(accessToken){}
         ,logoutComplete:null    // optional - a function to be invoked when hte logout process completes, with signature
-                                // function(){}
+                                //            function(){}
     }
   ```
     
