@@ -115,7 +115,8 @@ var rcOAuth2LoginBar = (function (window) {
                         setTimeout(show, speed);
                     } else {
                         elem.style.overflow = "";
-                        elem.style.height = "";
+                        elem.style.height = ""; 
+                        elem.style.display = "block";
                     }
                 };
             var hide = function () {
