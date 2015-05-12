@@ -47,7 +47,8 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                 //           than the default (and recommended!) local storage mechanism
                                 //           The setting is only used if persistUserInfo setting is set to true 
                                 //default = false 
-        cookieDomain:undefined  //optional - define the domain value to which peristed data will be bound
+        cookieDomain:undefined  //optional - define the domain value to which cookies will be bound
+                                //           The setting is used to persist userinfo payload cookie (if cookieMode is set to true) 
                                 //default = undefined (therfore, the current request's domain)
                                 //Attention: the value of cookieDomain MUST be the same in as context #2 settings 
     }
@@ -65,7 +66,9 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
         cookieMode:false        //optional - persist access token payload using cookies rather 
                                 //           than the default (and recommended!) local storage mechanism
                                 //default = false 
-        cookieDomain:undefined  //optional - define the domain value to which peristed data will be bound
+        cookieDomain:undefined  //optional - define the domain value to which cookies will be bound
+                                //           The setting is used to persist viafoura session cookie (if vfDependant is set to true) 
+                                //           and/or the access token payload cookie (if cookieMode is set to true) 
                                 //default = undefined (therfore, the current request's domain)
                                 //Attention: the value of cookieDomain MUST be the same as context #1 settings 
     }

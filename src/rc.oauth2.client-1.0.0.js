@@ -396,7 +396,7 @@ var rcOAuth2Client = (function (window) {
 
             // viafoura session support
             if (isVf()) {
-                setCookie(persistedDataKeys.vfSession, viafouraSession, expireDate);
+                setCookie(persistedDataKeys.vfSession, viafouraSession, expireDate, callbackConfig.cookieDomain);
             }
 
             return true;
