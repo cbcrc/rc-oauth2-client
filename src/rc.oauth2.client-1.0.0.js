@@ -417,7 +417,7 @@ var rcOAuth2Client = (function (window) {
 
             // viafoura session support
             if (isVf()) {
-                deleteCookie(persistedDataKeys.vfSession);
+                deleteCookie(persistedDataKeys.vfSession, callConfig.cookieDomain);
             }
         }
     };
