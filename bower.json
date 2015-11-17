@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "rc-oauth2-client",
   "description": "A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) login-bar widget.",
   "moduleType": [
