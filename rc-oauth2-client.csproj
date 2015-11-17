@@ -43,6 +43,9 @@
     <Content Include="src\rc.oauth2.loginbar-1.0.0.js" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="bower.json">
+      <SubType>Component</SubType>
+    </None>
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
