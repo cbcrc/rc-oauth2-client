@@ -108,7 +108,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     }
     ```
 
-  + **login(** urlHandler **, ** locale **)**
+  + **login(** urlHandler, locale **)**
 
     Generates the OAuth 2.0 authorize URL and will, by default, redirect the user's browser to the endpoint in question.
     The default behaviour can be altered using the optional *urlHandler* parameter.
