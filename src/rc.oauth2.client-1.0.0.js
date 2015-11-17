@@ -586,7 +586,7 @@ var rcOAuth2Client = (function (window) {
         //setting the ‘onload’ event function before setting source and appending to the page. In this case it cannot be loaded before the callback is set; 
         iframe.onload = function (iframe, complete, isFunction) {
             return function () {
-                document.body.removeChild(iframe);
+                setTimeout(function() {document.body.removeChild(iframe);}, 2000);//in case, give iframe time to execute its content 
                 iframe = null;
                 if (isFunction) {
                     complete(200, { "result": "ok" });
