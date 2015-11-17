@@ -6,10 +6,9 @@
     "globals"
   ],
   "keywords": [
-    "oauth 2.0",
-    "implicit code flow",
+    "oauth",
     "rc"
-],
+  ],
   "authors": [
     { "name": "BrunoRovito", "email": "bruno.rovito@radio-canada.ca" }
   ],
