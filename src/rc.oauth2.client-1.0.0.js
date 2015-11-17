@@ -42,7 +42,7 @@ var rcOAuth2Client = (function (window) {
         , state: ""
         , persistUserInfo: false
         , cookieMode: false
-        , cookieDomain : undefined
+        , cookieDomain: undefined
     };
     var callbackConfig = {
         vfDependant: false
@@ -72,7 +72,7 @@ var rcOAuth2Client = (function (window) {
         }
     };
     var setCookie = function (key, value, expireDate, domain) {
-        var cookieValue = escape(value) + "; expires=" + expireDate + "; path=/" + (domain ? "; domain="+domain : "");
+        var cookieValue = escape(value) + "; expires=" + expireDate + "; path=/" + (domain ? "; domain=" + domain : "");
         window.document.cookie = key + "=" + cookieValue;
     };
     var getCookie = function (key) {
@@ -93,8 +93,8 @@ var rcOAuth2Client = (function (window) {
         }
         return cookie;
     };
-    var deleteCookie = function (key,domain) {
-        window.document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/' + (domain ? "; domain="+domain : "");
+    var deleteCookie = function (key, domain) {
+        window.document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/' + (domain ? "; domain=" + domain : "");
     };
     var isLocalStorage = function () {
         try {
@@ -320,15 +320,19 @@ var rcOAuth2Client = (function (window) {
         return kvs;
     };
 
-    var getAuthorizeUrl = function () {
+    var getAuthorizeUrl = function (locale) {
         var out = "https://" + callConfig.domain + callConfig.authorizePath;
         out += "?client_id=" + config.clientId;
         out += "&redirect_uri=" + encodeURIComponent(callConfig.redirectUri);
         out += "&response_type=" + config.responseType;
         out += "&scope=" + callConfig.scope.replace(/\s/gi, '+');
+        //add state
         if (typeof (callConfig.state) === "string") {
             out += "&state=" + encodeURIComponent(callConfig.state);
         }
+        //add lang
+        out += ("&lang=" + ((locale === "en") ? "en" : "fr")); //note: "fr" default server-side value
+
         return out;
     };
 
@@ -552,10 +556,10 @@ var rcOAuth2Client = (function (window) {
         }
     };
 
-    var login = function (urlHandler) {
+    var login = function (urlHandler, locale) {
         log("login");
 
-        var url = getAuthorizeUrl();
+        var url = getAuthorizeUrl(locale);
 
         if (isFunction(urlHandler)) {
             urlHandler(url);
@@ -586,7 +590,7 @@ var rcOAuth2Client = (function (window) {
         //setting the ‘onload’ event function before setting source and appending to the page. In this case it cannot be loaded before the callback is set; 
         iframe.onload = function (iframe, complete, isFunction) {
             return function () {
-                setTimeout(function() {document.body.removeChild(iframe);}, 2000);//in case, give iframe time to execute its content 
+                setTimeout(function () { document.body.removeChild(iframe); }, 2000);//in case, give iframe time to execute its content 
                 iframe = null;
                 if (isFunction) {
                     complete(200, { "result": "ok" });

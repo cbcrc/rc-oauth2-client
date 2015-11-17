@@ -108,7 +108,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     }
     ```
 
-  + **login(** [urlHandler] **)**
+  + **login(** urlHandler **, ** locale **)**
 
     Generates the OAuth 2.0 authorize URL and will, by default, redirect the user's browser to the endpoint in question.
     The default behaviour can be altered using the optional *urlHandler* parameter.
@@ -118,11 +118,14 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     Parameters:
     + `urlHandler` //*Function*
       
-       Optional - If set, the function delegate is called to handle the display of the authorize url/endpoint, with signature:
+      If set, the function delegate is called to handle the display of the authorize url/endpoint, with signature:
     ```javascript 
     function(url /*String*/){} 
     ```
     
+    + `locale` //*String*
+	   If set, the authorize url/endpoint will be displayed in the specified locale. Valid values: "fr" | "en". Default = "fr".
+	    
   + **logout(** [complete] **)**
 
     This function will clear the user's session with the authorization server and revoke the client's access token
@@ -230,6 +233,8 @@ Because the code is AMD ready (!) , you have 3 integration options:
        <html>
        <head> 
            <link type="text/css" rel="stylesheet" href="/src/rc.oauth2.loginbar-1.0.0.css" />
+		   <script type="text/javascript" href="/src/rc.oauth2.client-1.0.0.js"></script>
+		   <script type="text/javascript" href="/src/rc.oauth2.loginbar-1.0.0.js"></script>
        </head>
        <body>
          <div id="rc-oauth2-loginbar"></div>

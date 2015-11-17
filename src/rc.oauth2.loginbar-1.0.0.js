@@ -402,9 +402,9 @@ var rcOAuth2LoginBar = (function (window) {
 
     var login = function (event) {
         if (config.modalMode) {
-            oauthClient.login(loginUrlHandler);
+            oauthClient.login(loginUrlHandler, config.locale);
         } else {
-            oauthClient.login();
+            oauthClient.login(null, config.locale);
         };
     };
     var loginUrlHandler = function (url) {
