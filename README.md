@@ -228,81 +228,19 @@ Because the code is AMD ready (!) , you have 3 integration options:
   + RequireJS modules
 
 #### Standard JS file includes
-
-   ```html  
-       <html>
-       <head> 
-           <link type="text/css" rel="stylesheet" href="/src/rc.oauth2.loginbar-1.0.0.css" />
-		   <script type="text/javascript" href="/src/rc.oauth2.client-1.0.0.js"></script>
-		   <script type="text/javascript" href="/src/rc.oauth2.loginbar-1.0.0.js"></script>
-       </head>
-       <body>
-         <div id="rc-oauth2-loginbar"></div>
-       </body>
-       <script>
-            rcOAuth2Client.init( 
-                "my OAuth2.0 client id",
-                1,
-                {
-                    domain: "my.oauth2.server.com",
-                    redirectUri: "http://my.domain.com/callback.html",
-                    scope: "openid profile email",
-                    state: "myTargetPageOnCallback"
-                },
-                false
-            );
-             
-	rcOAuth2LoginBar.init(
-                 rcOAuth2Client,  
-                 {
-                locale: "en",
-                i18n: {
-                    fr: { loggedInMessage: "Bonjour {0}!", help: "Aide" , faq:"FAQ", faqTitle:"Liste de questions les plus fréquentes"},
-                    en: { loggedInMessage: "Hello {0}!", help: "Help", faq:"FAQ", faqTitle:"List of frequesntly asked questions" }
-                },
-                forceLogin: false,
-                modalMode: true,
-                dropMenuItems: [{ label: "help", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }, 
-                                { label: "faq", title:"faqTitle",  action: function(evt) { console.log(evt.currentTarget.innerHTML); } }],
-                loginComplete: function(accessToken){ console.log("my access token: " + accessToken); },
-                logoutComplete: function( ){ console.log("my logoutComplete called!"); }
-
-                 }, 
-                 false
-              );
-       </script>
-       </html>
-   ```
+ 
+samples/js-includes.html
+samples/js-includes-callback.html 
 
 #### RequireJS wrapper
 
 Please see the 
-samples/rc-oauth2-testclient.html 
-samples/rc-oauth2-testclient-callback.html 
+samples/requirejs.wrapper.html 
+samples/requirejs.wrapper-callback.html  
 
 #### RequireJS modules
 
 Please see the 
-samples/require.rc-oauth2-testclient.html 
-samples/require.rc-oauth2-testclient-callback.html 
-
-*Note*: 
-You will have to activate the modules by uncommenting the `define( )` declarations in both source JS files:
-
-#####rcOAuth2Client
-  ```javascript
-    define(["module"],function(module) { 
-        [...]
-        rcOAuth2Client.init(module.config().clientId, module.config().context, module.config().settings, module.config().debug);
-        return rcOAuth2Client;
-    });
-  ``` 
-
-#####rcOAuth2LoginBar
-  ```javascript
-    define(["module","rcOAuth2Client"], function (module, rcOAuth2Client) {
-         [...]
-         rcOAuth2LoginBar.init( rcOAuth2Client, module.config().settings, module.config().debug);
-         return rcOAuth2LoginBar;
-     });
-  ``` 
+samples/requirejs.module.html 
+samples/requirejs.module-callback.html 
+ 

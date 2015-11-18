@@ -2,19 +2,28 @@
 <html>
 <head>
     <title>Sample - RC OAuth 2.0 Client Callback</title>
+    <script type="text/javascript" src="requirejs-2.1.16.js"></script>
 </head>
 <body>
 </body>
 </html>
-<script src="../src/rc.oauth2.client-1.0.0.js"></script>
 <script>
     //use:
     //Set RcOAuthClient settings
-    rcOAuth2Client.init(
-        "my OAuth 2.0 Client ID",
+    debugger;
+    require.config({
+        baseUrl: "../",
+        paths: {
+            rcOAuth2ClientDep: 'src/rc.oauth2.client'
+        }
+    });
+
+    require(["rcOAuth2ClientDep"], function (rcOAuth2Client) {
+        rcOAuth2Client.init(
+              "76eeee04-f2a9-4401-9f35-d004172fbfad",
         2,
         {
-            vfDependant:true,
+            vfDependant: true,
             done: function (state) {
                 window.location.href = state;
             },
@@ -23,7 +32,9 @@
             }
         },
         false
-    );
+            );
+    });
+
 </script>
 
 

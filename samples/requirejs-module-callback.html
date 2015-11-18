@@ -11,12 +11,12 @@
     require.config({
         baseUrl: "../",
         paths: {
-            rcOAuth2Client: 'src/rc.oauth2.client-1.0.0'
+            rcOAuth2ClientDep: 'src/rc.oauth2.client'
         }
         ,
         config: {
-            'rcOAuth2Client': {
-                clientId: "my OAuth 2.0 Client ID",
+            'rcOAuth2ClientDep': {
+                clientId: "76eeee04-f2a9-4401-9f35-d004172fbfad",
                 context: 2,
                 settings: {
                     done: function (state) {
@@ -30,7 +30,7 @@
             }  
         }
     });
-    require(["rcOAuth2Client"], function () { });
+    require(["rcOAuth2ClientDep"], function () { });
 </script>
 
 

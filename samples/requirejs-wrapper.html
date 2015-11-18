@@ -1,48 +1,45 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Sample using RequireJS - RC OAuth 2.0 Client</title>
-    <link type="text/css" rel="stylesheet" href="../src/rc.oauth2.loginbar-1.0.0.css" />
-    <script src="requirejs-2.1.16.js"></script>
+    <title>Sample using RequireJS to wrap modules - RC OAuth 2.0 Client</title>
+    <link type="text/css" rel="stylesheet" href="../src/rc.oauth2.loginbar.css" />
+    <script type="text/javascript" src="requirejs-2.1.16.js"></script>
 </head>
-    <body>
-        <div id="rc-oauth2-loginbar"></div>
-    </body>
+<body>
+    <div id="rc-oauth2-loginbar"></div>
+</body>
 </html>
 <script>
     require.config({
         baseUrl: "../",
         paths: {
-            rcOAuth2Client: 'src/rc.oauth2.client-1.0.0',
-            rcOAuth2LoginBar: 'src/rc.oauth2.loginbar-1.0.0'
+            rcOAuth2ClientDep: 'src/rc.oauth2.client',
+            rcOAuth2LoginBarDep: 'src/rc.oauth2.loginbar'
         }
     });
-    require(["rcOAuth2Client", "rcOAuth2LoginBar"], function () {
+    require(["rcOAuth2ClientDep", "rcOAuth2LoginBarDep"], function (rcOAuth2Client, rcOAuth2LoginBar) {
         rcOAuth2Client.init(
-              "my OAuth 2.0 Client ID",
+             "76eeee04-f2a9-4401-9f35-d004172fbfad",
              1,
              {
-                 domain: "my.oauth2.server.com",
-                 authorizePath: "/auth/oauth/v2/authorize",
-                 logoutPath: "/auth/oauth/v2/logout",
-                 userInfoPath: "/openid/connect/v1/userinfo",
-                 redirectUri: "http://my.oauth2.server.com/callback.html",
+                 domain: "dev-services.radio-canada.ca", 
+                 redirectUri: "http://lcl-rcoauth2client.radio-canada.ca/samples/requirejs-wrapper-callback.html",
                  scope: "openid profile email",
-                 state: "http://my.oauth2.server.com/callback.html?state=myPageState"
+                 state: "http://lcl-rcoauth2client.radio-canada.ca/samples/requirejs-wrapper.html?state=myPageState"
              },
              false);
         rcOAuth2LoginBar.init(
-            rcOAuth2Client,
+             rcOAuth2Client,
             {
-                locale: "fr",
+                locale: "en",
                 i18n: {
                     fr: { loggedInMessage: "Bonjour {0}!", help: "Aide", faq: "FAQ", faqTitle: "Liste de questions les plus fréquentes" },
                     en: { loggedInMessage: "Hello {0}!", help: "Help", faq: "FAQ", faqTitle: "List of frequesntly asked questions" }
                 },
-                forceLogin: false, 
+                forceLogin: false,
                 dropMenuItems: [{ label: "help", action: function (evt) { console.log(evt.currentTarget.innerHTML); } },
                                 { label: "faq", title: "faqTitle", action: function (evt) { console.log(evt.currentTarget.innerHTML); } }
-                
+
                 ],
                 loginComplete: function (accessToken) { console.log("my access token: " + accessToken); },
                 logoutComplete: function () { console.log("my logoutComplete called!"); }

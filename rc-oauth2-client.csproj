@@ -33,14 +33,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <Content Include="samples\require.rc-oauth2-testclient.html" />
-    <Content Include="samples\require.rc-oauth2-testclient-callback.html" />
-    <Content Include="samples\rc-oauth2-testclient-callback.html" />
-    <Content Include="samples\rc-oauth2-testclient.html" />
+    <Content Include="samples\js-includes-callback.html" />
+    <Content Include="samples\js-includes.html">
+      <SubType>Component</SubType>
+    </Content>
+    <Content Include="samples\requirejs-module.html" />
+    <Content Include="samples\requirejs-module-callback.html" />
+    <Content Include="samples\requirejs-wrapper-callback.html" />
+    <Content Include="samples\requirejs-wrapper.html" />
     <Content Include="samples\requirejs-2.1.16.js" />
-    <Content Include="src\rc.oauth2.client-1.0.0.js" />
-    <Content Include="src\rc.oauth2.loginbar-1.0.0.css" />
-    <Content Include="src\rc.oauth2.loginbar-1.0.0.js" />
+    <Content Include="src\rc.oauth2.client.js" />
+    <Content Include="src\rc.oauth2.loginbar.css" />
+    <Content Include="src\rc.oauth2.loginbar.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bower.json">
