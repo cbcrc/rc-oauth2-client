@@ -124,6 +124,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     ```
     
     + `locale` //*String*
+
 	   If set, the authorize url/endpoint will be displayed in the specified locale. Valid values: "fr" | "en". Default = "fr".
 	    
   + **logout(** [complete] **)**
