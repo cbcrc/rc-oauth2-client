@@ -187,7 +187,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                 //         your <a href="{action}> tag 
         ,loginComplete:null     // optional - a function to be invoked when the user has succesfully logged
                                 //            in to the client application, with signature
-                                //            function(accessToken){}
+                                //            function(accessToken, userInfoData){}
         ,logoutComplete:null    // optional - a function to be invoked when hte logout process completes, with signature
                                 //            function(){}
     }

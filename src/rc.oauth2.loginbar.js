@@ -406,7 +406,7 @@
              injectLoggedInMarkup(data);
              if (isFunction(config.loginComplete)) {
                  var accessToken = oauthClient.getAccessToken();
-                 config.loginComplete(accessToken);
+                 config.loginComplete(accessToken, data);
              }
          } else { //4xx (401) or 5xx
              getUserInfoFail(httpStatus, "getUserInfoDone called with a 4xx/5xx HTTP status", "loginbar: getUserInfoDone");
@@ -415,10 +415,10 @@
      var getUserInfoFail = function (httpStatus, statusText, caseLabel) {
          log("getUserInfoFail");
          log(">> status= " + httpStatus + ", text= " + statusText + ", case= " + caseLabel);
-         injectLoginMarkup();
          if (config.forceLogin === true) {
              login();
          }
+         injectLoginMarkup();
      };
 
      var login = function (event) {
