@@ -11,11 +11,8 @@
     //AMD support
     //
     if (typeof define === "function" && define.amd) {
-        define(["module", "rcOAuth2ClientDep"], function (module, rcOAuth2Client) {
+        define(["module"], function (module) {
             var instance = factory;
-            if (module.config().hasOwnProperty("settings")) {
-                instance.init(rcOAuth2Client, module.config().settings, module.config().debug);
-            }
             return instance;
         });
         //

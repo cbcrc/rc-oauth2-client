@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Sample using solely RequireJS modules without module 'rcOAuth2ClientDep' - RC OAuth 2.0 Client</title>
+    <link type="text/css" rel="stylesheet" href="../src/rc.oauth2.loginbar.css" />
+    <script src="requirejs-2.1.16.js"></script>
+</head>
+<body>
+    <div id="rc-oauth2-loginbar"></div>
+</body>
+</html>
+<script>
+
+	require.config({
+        baseUrl: "../src"
+	});
+
+	// Configurations defined in module 'rcOAuth2ClientDep' should not be IMO a module
+	// Configurations should be passed only with init method calls
+	require(['rc.oauth2.client', 'rc.oauth2.loginbar'], function(client, loginbar) {
+	
+		/* Init calls */
+			// rcOAuth2Client.init(
+			// rcOAuth2LoginBar.init(
+		if(console && console.log) console.log("init");
+			
+	});
+</script>
