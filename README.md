@@ -43,7 +43,9 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
         persistUserInfo:false,  //optional - if we should locally persist (cache) userinfo payload. 
                                 //           A value of true places emphasis on performance over data consistancy
                                 //default = false 
-        cookieMode:false        //optional - persist userinfo payload using cookies rather 
+		vfDependant: false,     //if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
+                                //default = false
+        cookieMode:false,        //optional - persist userinfo payload using cookies rather 
                                 //           than the default (and recommended!) local storage mechanism
                                 //           The setting is only used if persistUserInfo setting is set to true 
                                 //default = false 

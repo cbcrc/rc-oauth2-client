@@ -32,6 +32,7 @@
   (function (window) {
       //"use strict";
       var debugActive = false;
+      var useLocalStorage; /*set in isLocalStorage()*/
       var callbackKeys = {
           accessToken: "access_token"
           , expiresIn: "expires_in"
@@ -63,6 +64,7 @@
           , persistUserInfo: false
           , cookieMode: false
           , cookieDomain: undefined
+          , vfDependant: false
       };
       var callbackConfig = {
           vfDependant: false
@@ -92,8 +94,10 @@
           }
       };
       var setCookie = function (key, value, expireDate, domain) {
-          var cookieValue = escape(value) + "; expires=" + expireDate + "; path=/" + (domain ? "; domain=" + domain : "");
-          window.document.cookie = key + "=" + cookieValue;
+          log("setCookie");
+          var cookieValue = key + "=" + escape(value) + "; expires=" + expireDate + "; path=/" + (domain ? "; domain=" + domain : "");
+          window.document.cookie = cookieValue;
+          log(">> " + cookieValue);
       };
       var getCookie = function (key) {
           var cookie = window.document.cookie;
@@ -114,16 +118,37 @@
           return cookie;
       };
       var deleteCookie = function (key, domain) {
-          window.document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/' + (domain ? "; domain=" + domain : "");
+          log("deleteCookie");
+          var cookieValue = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/' + (domain ? "; domain=" + domain : "");
+          window.document.cookie = cookieValue;
+          log(">> " + cookieValue);
       };
       var isLocalStorage = function () {
-          try {
-              var cookieMode = (config.context == 1 && callConfig.cookieMode == true) || (config.context == 2 && callbackConfig.cookieMode == true);
-              return (!cookieMode && ('localStorage' in window) && (window['localStorage'] !== null));
-          } catch (e) {
-              return false;
-          }
 
+          //try {
+          //    var cookieMode = (config.context == 1 && callConfig.cookieMode == true) || (config.context == 2 && callbackConfig.cookieMode == true);
+          //    return (!cookieMode && ('localStorage' in window) && (window['localStorage'] !== null));
+          //} catch (e) {
+          //    return false;
+          //} 
+
+          //
+          //certain browsers dont't work as expected...example: http://www.owenkelly.net/2391/webkit-localstorage-obscure-bug/
+          if (useLocalStorage === undefined) {
+              useLocalStorage = (config.context === 1 && callConfig.cookieMode === false) || (config.context === 2 && callbackConfig.cookieMode === false);
+              if (useLocalStorage) {
+                  try {
+                      var uid = new Date;
+                      localStorage.setItem(uid, uid);
+                      var result = localStorage.getItem(uid) == uid;
+                      localStorage.removeItem(uid);
+                      useLocalStorage = result && localStorage;
+                  } catch (e) {
+                      useLocalStorage = false;
+                  }
+              }
+          }
+          return useLocalStorage;
       };
       var parseUrl = function (url) {
           var div;
@@ -229,7 +254,7 @@
           }
       };
       var isVf = function () {
-          return (callbackConfig.vfDependant === true) /*&& window.viafoura*/;
+          return (callbackConfig.vfDependant === true || callConfig.vfDependant === true) /*&& window.viafoura*/;
       };
       var encode = function (value) {
           var out = value;
@@ -393,6 +418,7 @@
           return result;
       };
       var tryPersistAccessToken = function (urlHash) {
+          log("tryPersistAccessToken");
           var accessToken = urlHash[callbackKeys.accessToken];
           var expiresIn = urlHash[callbackKeys.expiresIn];
           var scope = urlHash[callbackKeys.scope];
@@ -412,6 +438,7 @@
 
               //persist access token to localstorage or cookie 
               if (isLocalStorage()) {
+                  log(">> set localStorage item: " + accessTokenPersistKey);
                   localStorage.setItem(accessTokenPersistKey, dataToPersist);
               } else {
                   setCookie(accessTokenPersistKey, dataToPersist, expireDate, callbackConfig.cookieDomain);
@@ -429,11 +456,13 @@
           }
       };
       var deletePersistedAccessToken = function (httpStatus) {
+          log("deletePersistedAccessToken");
           var key = getPersistedDataKey(persistedDataKeys.accessToken);
 
           //check local storage or cookie
           if (httpStatus === 401) {
               if (isLocalStorage()) {
+                  log(">> remove localStorage item: " + key);
                   localStorage.removeItem(key);
               } else {
                   deleteCookie(key, callConfig.cookieDomain);
@@ -541,6 +570,7 @@
           return result;
       };
       var tryPersistUserInfo = function (data) {
+          log("tryPersistUserInfo");
           var key;
           var dataToPersist;
 
@@ -554,6 +584,7 @@
               //
               //we want to persist userinfo data only for duration of browser session
               if (isLocalStorage()) {
+                  log(">> set localStorage item: " + key);
                   sessionStorage.setItem(key, dataToPersist);
               } else {
                   setCookie(key, dataToPersist, "", callConfig.cookieDomain);
@@ -565,10 +596,12 @@
           }
       };
       var deletePersistedUserInfo = function (httpStatus) {
+          log("deletePersistedUserInfo");
           var key = getPersistedDataKey(persistedDataKeys.userInfo);
           //check local storage or cookie
           if (httpStatus === 401) {
               if (isLocalStorage()) {
+                  log(" >> remove localStorage item: " + key);
                   sessionStorage.removeItem(key);
               } else {
                   deleteCookie(key, callConfig.cookieDomain);
