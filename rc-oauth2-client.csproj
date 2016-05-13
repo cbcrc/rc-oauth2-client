@@ -45,6 +45,11 @@
     <Content Include="src\rc.oauth2.client.js" />
     <Content Include="src\rc.oauth2.loginbar.css" />
     <Content Include="src\rc.oauth2.loginbar.js" />
+    <Content Include="tests\client-test-oauth-callback.html" />
+    <Content Include="tests\client-test.html" />
+    <Content Include="tests\cors-test.html" />
+    <Content Include="tests\requirejs-module-callback.html" />
+    <Content Include="tests\requirejs-module.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bower.json">
