@@ -1,0 +1,13 @@
+{
+  "name": "rc-oauth2-client",
+  "version": "2.0.2",
+  "authors": [
+    "Bruno Rovito <bruno.rovito@radio-canada.ca>"
+  ],
+  "description": "RC OAuth 2.0 client",
+  "keywords": [
+    "OAuth",
+    "rc"
+  ],
+  "license": "MIT"
+}
