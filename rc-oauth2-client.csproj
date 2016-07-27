@@ -55,6 +55,7 @@
     <None Include="bower.json">
       <SubType>Component</SubType>
     </None>
+    <None Include="package.json" />
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
