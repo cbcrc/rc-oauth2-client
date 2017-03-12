@@ -1,0 +1,134 @@
+﻿/* WIDGET CSS */
+
+/* Roboto - Unit */
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900,900i);
+
+/* CBCRC - Icônes */
+@font-face {
+    font-family: 'IcomoonCentreDesMembres';
+    src: url("https://s.radio-canada.ca/_font/cbcrc/fonts/cbcrc.eot?5jaik");
+    src: url("https://s.radio-canada.ca/_font/cbcrc/fonts/cbcrc.eot?#iefix5jaik") format("embedded-opentype"), 
+         url("https://s.radio-canada.ca/_font/cbcrc/fonts/cbcrc.woff?5jaik") format("woff"), 
+         url("https://s.radio-canada.ca/_font/cbcrc/fonts/cbcrc.ttf?5jaik") format("truetype"), 
+         url("https://s.radio-canada.ca/_font/cbcrc/fonts/cbcrc.svg?5jaik#cbcrc") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="cbcrc-"]:before, [class*="cbcrc-"]:before {
+    font-family: 'IcomoonCentreDesMembres';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+    .cbcrc-icon-profile:before { content: "\e923"; }
+        
+    .cbcrc-icon-exit:before { content: "\e9a9"; }
+
+    .cbcrc-icon-profile-circle-outline:before { content: "\e922"; }
+
+/* ----------------------------------- */
+
+
+
+
+/* ----------------------------------- */
+/* -------->> Connect button <<------- */
+/* ----------------------------------- */
+
+.cdm-button {
+    border: none;
+    background: rgb(204,0,0);
+    color: #fff;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    height: 60px;
+    padding-left: 24px;
+    text-align: left;
+    -moz-transition: background-color ease .4s;
+    -webkit-transition: background-color ease .4s;
+    transition: background-color ease .4s;
+    width: 100%;
+}
+
+    .cdm-button:before {
+        color: #fff;
+        padding-right: 6px;
+    }
+
+    .cdm-button:hover, 
+    .cdm-button:focus {
+        background-color: rgb(221,0,0);     
+    }
+
+/* ----------------------------------- */
+
+
+
+/* ----------------------------------- */
+/* ------>> Disconnect button <<------ */
+/* ----------------------------------- */
+
+#rc-oauth2-disconnect-link{ height: 48px; }
+
+/* ----------------------------------- */
+
+
+
+/* ----------------------------------- */
+/* -------->> Connected link <<------- */
+/* ----------------------------------- */
+#rc-oauth2-connected-link {
+    box-sizing: border-box;
+    display: table;
+    text-decoration: none;
+}
+
+    #rc-oauth2-connected-link .wgt-connected-content {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    /* Avatar user */
+    #rc-oauth2-connected-link .wgt_userAvatar {
+        font-size: 30px;
+        float: left;
+        margin-right: 12px;
+    }
+
+        /* Without avatar */
+        #rc-oauth2-connected-link .wgt_userAvatar:before {
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* With avatar */
+        #rc-oauth2-connected-link .wgt_userAvatar img {
+            border: #fff solid 1px;
+            height: 34px;
+            width: 34px;
+        }
+    
+    /* user name */
+    #rc-oauth2-connected-link .wgt_userName {
+        font-size: 14px;
+        font-weight: 400;
+        display: block;
+        line-height: 1.6;
+    }
+
+    /* link My space */
+    #rc-oauth2-connected-link .wgt_mySpace {
+        font-size: 12px;
+        text-decoration: underline;
+    }
+
+/* ----------------------------------- */

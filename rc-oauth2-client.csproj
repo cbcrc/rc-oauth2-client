@@ -43,6 +43,7 @@
     <Content Include="samples\requirejs-wrapper.html" />
     <Content Include="samples\requirejs-2.1.16.js" />
     <Content Include="src\rc.oauth2.client.js" />
+    <Content Include="src\rc.oauth2.loginbar.v2.css" />
     <Content Include="src\rc.oauth2.loginbar.css" />
     <Content Include="src\rc.oauth2.loginbar.js" />
     <Content Include="tests\client-test-oauth-callback.html" />
