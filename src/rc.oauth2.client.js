@@ -3,6 +3,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
+//
+// CLient JS 
+//
 (function (root, factory) {
     //
     //AMD support
@@ -30,7 +33,7 @@
 }(this,
 
   (function (window) {
-      //"use strict";
+      "use strict";
       var debugActive = false;
       var useLocalStorage; /*set in isLocalStorage()*/
       var callbackKeys = {
