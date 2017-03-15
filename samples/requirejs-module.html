@@ -2,11 +2,13 @@
 <html>
 <head>
     <title>Sample using solely RequireJS modules - RC OAuth 2.0 Client</title>
-    <link type="text/css" rel="stylesheet" href="../src/rc.oauth2.loginbar.css" />
+    <link type="text/css" rel="stylesheet" href="../src/views/v2/rc.oauth2.loginbar.css" />
     <script src="requirejs-2.1.16.js"></script>
 </head>
 <body>
     <div id="rc-oauth2-loginbar"></div>
+    <!--The logout div is optional. If included, the library will display and manage a logout button-->
+    <div id="rc-oauth2-loginbar-logout"></div>
 </body>
 </html>
 <script>
@@ -14,7 +16,8 @@
         baseUrl: "../",
         paths: {
             rcOAuth2ClientDep: 'src/rc.oauth2.client',
-            rcOAuth2LoginBarDep: 'src/rc.oauth2.loginbar'
+            rcOAuth2LoginBarDep: 'src/rc.oauth2.loginbar',
+            rcOAuth2LoginBarViewDep: 'src/views/v2/rc.oauth2.loginbar.view'
         }
         ,
         config: {
@@ -27,25 +30,25 @@
                     scope: "openid profile email",
                     state: "http://lcl-rcoauth2client.radio-canada.ca/samples/requirejs-module.html?state=myPageState" 
                 },
-                debug: false
-            }
-            ,
-            'rcOAuth2LoginBarDep': {
+                debug: true
+            },
+            'rcOAuth2LoginBarViewDep': {
                 settings: {
-                    locale: "fr",
+                    locale: "en",
                     i18n: {
                         fr: { loggedInMessage: "Bonjour {0}!", help: "Aide", faq: "FAQ", faqTitle: "Liste de questions les plus fréquentes" },
                         en: { loggedInMessage: "Hello {0}!", help: "Help", faq: "FAQ", faqTitle: "List of frequesntly asked questions" }
-                    },
-                    forceLogin: false,
-                    dropMenuItems: [{ label: "help", action: function (evt) { console.log(evt.currentTarget.innerHTML); } },
-                                    { label: "faq", title: "faqTitle", action: function (evt) { console.log(evt.currentTarget.innerHTML); } }
-
-                    ],
+                    } 
+                },
+                debug: true
+            },
+            'rcOAuth2LoginBarDep': {
+                settings: { 
+                    forceLogin: false, 
                     loginComplete: function (accessToken) { console.log("my access token: " + accessToken); },
                     logoutComplete: function () { console.log("my logoutComplete called!"); }
                 },
-                debug: false
+                debug: true
             }
         }
     });

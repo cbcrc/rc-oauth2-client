@@ -1,16 +1,17 @@
 ﻿ <html>
  <title>Sample using standard JS includes - RC OAuth 2.0 Client</title>
  <head>
-     <link type="text/css" rel="stylesheet" href="/src/rc.oauth2.loginbar.v2.css"/>
+     <link type="text/css" rel="stylesheet" href="/src/views/v1/rc.oauth2.loginbar.css"/>
+     <script type="text/javascript" src="/src/views/v1/rc.oauth2.loginbar.view.js"></script>
      <script type="text/javascript" src="/src/rc.oauth2.client.js"></script>
      <script type="text/javascript" src="/src/rc.oauth2.loginbar.js"></script>
  </head>
  <body>
  <div id="rc-oauth2-loginbar"></div>
  </body>
-<!--<script>
+ <script>
      window.rcOAuth2Client.init(
-         "06eeee04-f2a9-4401-9f35-d004172fbfad",
+         "76eeee04-f2a9-4401-9f35-d004172fbfad",
          1,
          {
              domain: "dev-services.radio-canada.ca",
@@ -18,11 +19,10 @@
              scope: "openid profile email",
              state: "http://lcl-rcoauth2client.radio-canada.ca/samples/js-includes.html?state=myPageState"
          },
-         false
+         true
      );
 
-     window.rcOAuth2LoginBar.init(
-         window.rcOAuth2Client,
+ window.rcOAuth2LoginBarView.init( 
          {
              locale: "fr",
              i18n: {
@@ -38,50 +38,24 @@
                      faq: "FAQ",
                      faqTitle: "List of frequesntly asked questions"
                  }
-             },
-             forceLogin: false,
-             modalMode: false,
-             //dropMenuItems: [
-             //    { label: "help", action: function(evt) { console.log(evt.currentTarget.innerHTML); } },
-             //    { label: "faq", title: "faqTitle", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }
-             //],
-             loginComplete: function(accessToken) { console.log("my access token: " + accessToken); },
-             logoutComplete: function() { console.log("my logoutComplete called!"); }
-
+             }, 
+             dropMenuItems: [
+                { label: "help", action: function(evt) { console.log(evt.currentTarget.innerHTML); } },
+                { label: "faq", title: "faqTitle", action: function(evt) { console.log(evt.currentTarget.innerHTML); } }
+             ]
          },
-         false
+         true
      );
- </script>-->
-
-     <div id="widgetLogin_btnLogin">
-         <button type="button" id="rc-oauth2-login-link" class="cdm-button cbcrc-icon-profile" aria-label="Connexion au centre des membres">Connexion</button>
-     </div>
-
-     <hr/>
-
-     <div id="widgetLogin">
-
-         <a href="#" class="cdm-button" id="rc-oauth2-connected-link">
-             <span class="wgt-connected-content">
-                 <!-- With avatar
-                 <span class="wgt_userAvatar">
-                     <img src="https://images.radio-canada.ca/w_100/v1/ici-info/1x1/nicholas-tsouflidis-president-cora-restaurants.jpg" alt=""/>
-                 </span> -->
-             
-                 <!-- Without avatar  -->
-                 <span class="wgt_userAvatar  cbcrc-icon-profile-circle-outline"></span>
-
-                 <strong class="wgt_userName">ICI Nom de l'utilisateur</strong>
-                 <span class="wgt_MySpace">Mon espace</span>
-             </span>
-         </a>
-
-     </div>
-
-      <hr/>
-
-     <div id="widgetLogin_btnDisconnect">
-         <button type="button" id="rc-oauth2-disconnect-link" class="cdm-button cbcrc-icon-exit" aria-label="Déconnexion au centre des membres">Déconnexion</button>
-     </div>
-
+     window.rcOAuth2LoginBar.init(
+         window.rcOAuth2Client,
+         window.rcOAuth2LoginBarView,
+         {
+             forceLogin: false,
+             modalMode: false, 
+             loginComplete: function(accessToken) { console.log("my access token: " + accessToken); },
+             logoutComplete: function() { console.log("my logoutComplete called!"); } 
+         },
+         true
+     );
+ </script> 
  </html>
