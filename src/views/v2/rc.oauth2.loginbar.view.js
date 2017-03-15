@@ -46,10 +46,10 @@
                 container: "rc-oauth2-loginbar", 
                 loginLink: "rc-oauth2-login-link",
                 logoutLink: "rc-oauth2-logout-link",
-                connectedLink: "rc-oauth2-connected-link"
+                connectedLink: "rc-oauth2-connected-link",
+                username: "rc-oauth2-username"
             },
-            className: {
-               userName: "wgt_userName"
+            className: { 
             }
         };
 
@@ -151,7 +151,8 @@
             config.i18n.fr.logoutLinkAriaLabel = "Déconnexion du centre des membres"; 
             config.i18n.fr.profileImgAlt = "Avatar d'utilisateur";
            // config.i18n.fr.targetBlankText = "(nouvelle fenêtre)";
-            config.i18n.fr.myAccountSpaceLabel = "Mon espace"; 
+            config.i18n.fr.myAccountSpaceLabel = "Mon espace";  
+            config.i18n.fr.myAccountLink = "https://ici.radio-canada.ca/mon-espace/";
             if (!config.i18n.fr.loggedInMessage) config.i18n.fr.loggedInMessage = "{0}";
 
             if (!config.i18n.en) config.i18n.en = {};
@@ -161,8 +162,9 @@
             config.i18n.en.logoutLinkLabel = "Sign-out";
             config.i18n.en.logoutLinkAriaLabel = "Sign-out of the members center"; 
             config.i18n.en.profileImgAlt = "User profile picture";
-           // config.i18n.en.targetBlankText = "(new window)";
-            config.i18n.fr.myAccountSpaceLabel = "My account"; 
+            //config.i18n.en.targetBlankText = "(new window)";
+            config.i18n.en.myAccountSpaceLabel = "My account"; 
+            config.i18n.en.myAccountLink = "https://ici.radio-canada.ca/mon-espace/";
             if (!config.i18n.en.loggedInMessage) config.i18n.en.loggedInMessage = "{0}";
         };
 
@@ -184,6 +186,10 @@
                 throw new Error("Please ensure that you have defined a container element with id " + markupElemSelector.id.container);
             } 
 
+            //a11y concerns on main HMTL element
+             container.setAttribute("aria-live","assertive");
+
+
             //update module settings 
             setConfig(config, settings);
 
@@ -194,27 +200,21 @@
         var getLoginMarkup = function () {
             var locale = config.locale;
             var i18n = config.i18n;
-            var html =
-                 '<div>'
-                 + '<button type="button" id="' + markupElemSelector.id.loginLink + '" class="cdm-button cbcrc-icon-profile" aria-label="' + i18n[locale].loginLinkAriaLabel + '">' + i18n[locale].loginLinkLabel + '</button>'
-                 +'</div>';
+            var html = '<button type="button" id="' + markupElemSelector.id.loginLink + '" class="cdm-button cbcrc-icon-profile" aria-label="' + i18n[locale].loginLinkAriaLabel + '">' + i18n[locale].loginLinkLabel + '</button>';
             return html;
         };
 
        var getLogoutMarkup = function () {
             var locale = config.locale;
             var i18n = config.i18n;
-            var html = '<div>'
-                +       '<button type="button" id="' + markupElemSelector.id.logoutLink + '" class="cdm-button cbcrc-icon-exit" aria-label="' + i18n[locale].logoutLinkAriaLabel + '">' + i18n[locale].logoutLinkLabel + '</button>'
-                +   '</div>'
+            var html = '<button type="button" id="' + markupElemSelector.id.logoutLink + '" class="cdm-button cbcrc-icon-exit" aria-label="' + i18n[locale].logoutLinkAriaLabel + '">' + i18n[locale].logoutLinkLabel + '</button>';
             return html;
         };
 
         var getLoggedInMarkup = function (userInfo) {
             var locale = config.locale;
             var i18n = config.i18n;
-            var html = '<div>' 
-            + '<a href="#" class="cdm-button" id="'+markupElemSelector.id.connectedLink+'">'
+            var html =  '<a href="' + i18n[locale].myAccountLink + '" class="cdm-button" id="'+markupElemSelector.id.connectedLink+'">'
             +   '<span class="wgt-connected-content">';
              if (userInfo.picture && userInfo.picture != " " && userInfo.picture.indexOf("avatar_default") == -1) {
             html += '<span class="wgt_userAvatar">'
@@ -223,11 +223,10 @@
              } else {
                   html += '<span class="wgt_userAvatar  cbcrc-icon-profile-circle-outline"></span>';
               }
-            html +=   '<strong class="wgt_userName">'+getLoggedInMessage(userInfo) +'</strong>'
+            html +=   '<strong id="' + markupElemSelector.id.username + '" class="wgt_userName">'+getLoggedInMessage(userInfo) +'</strong>'
                  + '<span class="wgt_MySpace">'+i18n[locale].myAccountSpaceLabel+'</span>'
                     '</span>'
-                 +   '</a>'
-                 +'</div>';  
+                 +   '</a>';  
             return html;
         };
 
@@ -260,7 +259,7 @@
 
         var updateLoggedInMarkup = function (userInfo) {
             log("updateLoggedInMarkup");
-            var elem = $("." + markupElemSelector.className.userName)[0];
+            var elem = $("#" + markupElemSelector.id.username);
             elem.innerHTML = getLoggedInMessage(userInfo);
         };
 

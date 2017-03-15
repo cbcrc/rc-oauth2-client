@@ -47,10 +47,10 @@
               dropMenuToggler: "widgetLogin_DropMenuToggler",
               loginWidget: "widgetLogin",
               loginLink: "rc-oauth2-login-link",
-              logoutLink: "rc-oauth2-logout-link"
+              logoutLink: "rc-oauth2-logout-link",
+              username: "rc-oauth2-username"
           },
-          className: {
-              userName: "wgt_userName",
+          className: { 
               arrowIcon: "wgt_iconeFleche",
               arrowContainer: "wgt_containerIconeFleche"
           }
@@ -234,6 +234,8 @@
           if (container == null) {
               throw new Error("Please ensure that you have defined a container element with id " + markupElemSelector.id.container);
           }
+          //a11y concerns on main HMTL element
+          container.setAttribute("aria-live","assertive");
 
           //update module settings 
           setConfig(config, settings);
@@ -266,7 +268,7 @@
           }
           html += '</span>'
               + '     </span>'
-              + '<span class="' + markupElemSelector.className.userName + '">' + getLoggedInMessage(userInfo) + '</span>'
+              + '<span id="' + markupElemSelector.id.username + '" class="wgt_userName">' + getLoggedInMessage(userInfo) + '</span>'
               + '<span class="wgt_label">' + i18n[locale].dropMenuTogglerLabel + '</span>'
               + '<span class="' + markupElemSelector.className.arrowContainer + '" >'
               + '<span class="' + markupElemSelector.className.arrowIcon + '"></span>'
@@ -378,7 +380,7 @@
 
       var updateLoggedInMarkup = function (userInfo) {
           log("updateLoggedInMarkup");
-          var elem = $("." + markupElemSelector.className.userName)[0];
+          var elem = $("#" + markupElemSelector.id.username);
           elem.innerHTML = getLoggedInMessage(userInfo);
       };
 
