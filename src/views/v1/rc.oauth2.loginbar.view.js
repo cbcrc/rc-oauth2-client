@@ -386,13 +386,7 @@
           init: init,
           injectLoginMarkup: injectLoginMarkup,
           injectLoggedInMarkup: injectLoggedInMarkup,
-          updateLoggedInMarkup: updateLoggedInMarkup
-          //  markupElemSelector: markupElemSelector,
-          //  getLogInMarkup: getLogInMarkup,
-          //getLoggedInMarkup:getLoggedInMarkup,
-          //getLoggedInMessage: getLoggedInMessage,
-          //injectLoggedInMarkupDropMenuItems: injectLoggedInMarkupDropMenuItems,
-          //addDropMenuEvents :addDropMenuEvents
+          updateLoggedInMarkup: updateLoggedInMarkup 
       };
   }(window))
 
