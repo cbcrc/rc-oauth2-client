@@ -39,7 +39,7 @@
         var containerLogout;
         var config = {
             locale: "fr"
-           // ,i18n: {} 
+         ,i18n: {} 
         };
         var markupElemSelector = {
             id: {
