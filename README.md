@@ -2,9 +2,9 @@
 ======================
 A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) login-bar widget.
 
-##APIs
+# Modules 
 
-### rcOAuth2Client
+## rcOAuth2Client
 
   + **init(** clientId, context, settings, [debug] **)**
 
@@ -23,11 +23,11 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
 
     + `settings` //*Object literal*
 
-    The settings parameter will differ depending on what *mode* is used.
+      The settings parameter will differ depending on what *mode* is used.
 
-    If you have set *context* to 1, then the settings will accept the following object:
-    ```javascript
-    {
+      If you have set *context* to 1, then the settings will accept the following object:
+      ```javascript
+      {
         domain: "",             //optional - oauth 2.0 server domain.
                                 //default = dev-services.radio-canada.ca
         authorizePath: "",      //optional - oauth 2.0 server authorize path
@@ -43,7 +43,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
         persistUserInfo:false,  //optional - if we should locally persist (cache) userinfo payload. 
                                 //           A value of true places emphasis on performance over data consistancy
                                 //default = false 
-		vfDependant: false,     //if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
+		    vfDependant: false,     //if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
                                 //default = false
         cookieMode:false,        //optional - persist userinfo payload using cookies rather 
                                 //           than the default (and recommended!) local storage mechanism
@@ -53,11 +53,11 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                 //           The setting is used to persist userinfo payload cookie (if cookieMode is set to true) 
                                 //default = undefined (therfore, the current request's domain)
                                 //Attention: the value of cookieDomain MUST be the same in as context #2 settings 
-    }
-    ```
-      If you have set *context* to 2, then the settings will accept the following object: 
-    ```javascript
-    {
+     }
+     ```
+     If you have set *context* to 2, then the settings will accept the following object: 
+     ```javascript
+     {
         vfDependant: false,     //if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
                                 //default = false
          done: null,            //a function/delegate with signature function(state /*String*/){}
@@ -73,12 +73,13 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                 //           and/or the access token payload cookie (if cookieMode is set to true) 
                                 //default = undefined (therfore, the current request's domain)
                                 //Attention: the value of cookieDomain MUST be the same as context #1 settings 
-    }
-    ```
+     }
+     ```
 
     + `debug` //*Boolean*
 
-     Optional - When set to true, will output data to the console for debugging. 
+      Optional - When set to true, will output data to the console for debugging. 
+
 
   + **getAccessToken()**
 
@@ -88,18 +89,19 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
    
     Returns: Empty string or an access token
 
+
   + **getUserInfo(settings)**
 
-     Wraps a call to the authorization server's OpenId Connect userinfo endpoint.
+    Wraps a call to the authorization server's OpenId Connect userinfo endpoint.
    
     Returns: Please see *Parameters* section below for return values. 
     
     Parameters:
     + `settings` //*Object literal*
     
-     The parameter takes the following object:
-    ```javascript
-    {
+      The parameter takes the following object:
+      ```javascript
+        {
         forceRefresh: false     //optional - refresh cached user info by forcing a call to the 
                                 //user info endpoint; this option should be judicially used
                                 //Default = false
@@ -107,8 +109,9 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                 //called on ajax call success
         ,fail: null             //function delegate with signature function(httpStatus /*number*/, statusText /*string*/, caseLabel /*string*/){}
                                 //called on ajax call error
-    }
-    ```
+      }
+      ```
+
 
   + **login(** urlHandler, locale **)**
 
@@ -121,14 +124,15 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     + `urlHandler` //*Function*
       
       If set, the function delegate is called to handle the display of the authorize url/endpoint, with signature:
-    ```javascript 
-    function(url /*String*/){} 
-    ```
+      ```javascript 
+      function(url /*String*/){} 
+      ```
     
     + `locale` //*String*
 
-	   If set, the authorize url/endpoint will be displayed in the specified locale. Valid values: "fr" | "en". Default = "fr".
+	    If set, the authorize url/endpoint will be displayed in the specified locale. Valid values: "fr" | "en". Default = "fr".
 	    
+
   + **logout(** [complete] **)**
 
     This function will clear the user's session with the authorization server and revoke the client's access token
@@ -139,29 +143,30 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     + `complete` //*Function*
 
       Optional - If set, the function delegate will be called once logout has completed, with signature
-   ```javascript 
-    function(){}
-    ``` 
+      ```javascript 
+      function(){}
+      ``` 
 
 
-### rcOAuth2LoginBar 
 
-  + **init(** rcOAuth2Client, settings, [debug] **)**
+
+
+## rcOAuth2LoginBarView 
+
+  + **init(** settings, [debug] **)**
 
     Point of entry.
      
     Returns: ---
   
     Parameters:
-    + `rcOAuth2Client` //*Object*
-
-       rcOAuth2Client object.
-    
     + `settings` //*Object literal*
 
-    The parameter takes the following object:
-  ```javascript 
-   {
+      The settings parameter will differ depending on what view version is used.
+      
+      V1 view settings object:
+      ```javascript 
+      {
         locale: "fr"            // optional -  i18n settings that should be used.
                                 // Default = "fr"
         ,i18n:{}                // optional - 
@@ -170,12 +175,6 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                 //        en : {loggedInMessage:"{0}"}
                                 //      }
                                 // Note: the {0} token is replaced by the logged-in user's display name
-        ,forceLogin: false      // optional -  if true, the user will be automatically  prompted to login
-                                // Default = false
-        ,vfDependant: false     // if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
-                                // Default = false
-        ,modalMode: false       // optional - whether or not the login page should be shown in a modal
-                                // Default = false (a redirection to the login page will occur)
         ,dropMenuItems: []      // optional - an array of user action objects to add to the base action of 'Logout'
                                 // An action object has the following properties: label, title, action 
                                 // label: the name of the property in your i18n configuration object above 
@@ -186,20 +185,75 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                 //         (will create <button> tag  with an click event and your function will recieve the
                                 //         click event object as a parameter)
                                 // target: optional - the value of a the target attribute that will be added to 
-                                //         your <a href="{action}> tag 
+                                //         your <a href="{action}> tag
+      }
+      ```
+    
+     V2 view settings object:
+     ```javascript 
+     {
+        locale: "fr"            // optional -  i18n settings that should be used.
+                                // Default = "fr"
+        ,i18n:{}                // optional - 
+                                // Default: 
+                                //      { fr:{loggedInMessage:"{0}"},
+                                //        en : {loggedInMessage:"{0}"}
+                                //      }
+                                // Note: the {0} token is replaced by the logged-in user's display name
+     }
+     ``` 
+
+   + `debug` //*Boolean*
+
+     An optional parameter that when set to true, will output messages to the console. 
+
+
+
+
+
+## rcOAuth2LoginBar 
+
+  + **init(** rcOAuth2Client, rcOAuth2LoginBarView, settings, [debug] **)**
+
+    Point of entry.
+     
+    Returns: ---
+  
+    Parameters:
+    + `rcOAuth2Client` //*Object*
+
+       rcOAuth2Client object.
+
+    + `rcOAuth2LoginBarView` //*Object*
+
+       rcOAuth2LoginBarView object.
+
+    + `settings` //*Object literal*
+
+      The settings parameter takes the follwoing object:
+
+      ```javascript 
+      {
+        forceLogin: false      // optional -  if true, the user will be automatically  prompted to login
+                                // Default = false
+        ,vfDependant: false     // if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
+                                // Default = false
+        ,modalMode: false       // optional - whether or not the login page should be shown in a modal
+                                // Default = false (a redirection to the login page will occur)
         ,loginComplete:null     // optional - a function to be invoked when the user has succesfully logged
                                 //            in to the client application, with signature
                                 //            function(accessToken, userInfoData){}
         ,logoutComplete:null    // optional - a function to be invoked when hte logout process completes, with signature
                                 //            function(){}
-    }
-  ```
-    
+      } 
+      ```
     
    + `debug` //*Boolean*
 
        An optional parameter that when set to true, will output messages to the console. 
  
+
+
 + **refresh()**
 
     Updates (force refreshes) the user info displayed on screen with a call to the authorization server's userinfo endpoint.
@@ -212,38 +266,35 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     + `settings` //*Object literal*
     
      The parameter takes the following object:
-    ```javascript
-    {
+     ```javascript
+     {
         done: null             //function delegate with signature function(httpStatus /*number*/, data /*user info object*/){}
                                 //called on ajax call success
         ,fail: null             //function delegate with signature function(httpStatus /*number*/, statusText /*string*/, caseLabel /*string*/){}
                                 //called on ajax call error
-    }
-    ```
-    
+     }
+     ```    
 
-##Integration
+
+
+
+
+## Integration
 
 Because the code is AMD ready (!) , you have 3 integration options:
 
-  + Standard JS file includes
-  + RequireJS wrapper
-  + RequireJS modules
-
-#### Standard JS file includes
+### Standard JS file includes (uses V1 view)
  
-samples/js-includes.html
-samples/js-includes-callback.html 
++ samples/js-includes.html
++ samples/js-includes-callback.html 
 
-#### RequireJS wrapper
+### RequireJS wrapper (uses V1 view)
 
-Please see the 
-samples/requirejs.wrapper.html 
-samples/requirejs.wrapper-callback.html  
++ samples/requirejs.wrapper.html 
++ samples/requirejs.wrapper-callback.html  
 
-#### RequireJS modules
+### RequireJS modules (uses V2 view)
 
-Please see the 
-samples/requirejs.module.html 
-samples/requirejs.module-callback.html 
++ samples/requirejs.module.html 
++ samples/requirejs.module-callback.html 
  
