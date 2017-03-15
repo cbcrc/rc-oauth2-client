@@ -207,14 +207,14 @@
        var getLogoutMarkup = function () {
             var locale = config.locale;
             var i18n = config.i18n;
-            var html = '<button type="button" id="' + markupElemSelector.id.logoutLink + '" class="cdm-button cbcrc-icon-exit" aria-label="' + i18n[locale].logoutLinkAriaLabel + '">' + i18n[locale].logoutLinkLabel + '</button>';
+            var html = '<button type="button" id="' + markupElemSelector.id.logoutLink + '" class="cdm-button logout-link cbcrc-icon-exit" aria-label="' + i18n[locale].logoutLinkAriaLabel + '">' + i18n[locale].logoutLinkLabel + '</button>';
             return html;
         };
 
         var getLoggedInMarkup = function (userInfo) {
             var locale = config.locale;
             var i18n = config.i18n;
-            var html =  '<a href="' + i18n[locale].myAccountLink + '" class="cdm-button" id="'+markupElemSelector.id.connectedLink+'">'
+            var html = '<a href="' + i18n[locale].myAccountLink + '" class="cdm-button login-link" id="' + markupElemSelector.id.connectedLink + '">'
             +   '<span class="wgt-connected-content">';
              if (userInfo.picture && userInfo.picture != " " && userInfo.picture.indexOf("avatar_default") == -1) {
             html += '<span class="wgt_userAvatar">'
