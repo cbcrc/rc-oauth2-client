@@ -52,12 +52,12 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
         cookieDomain:undefined  //optional - define the domain value to which cookies will be bound
                                 //           The setting is used to persist userinfo payload cookie (if cookieMode is set to true) 
                                 //default = undefined (therfore, the current request's domain)
-                                //Attention: the value of cookieDomain MUST be the same in as context #2 settings 
-     }
-     ```
-     If you have set *context* to 2, then the settings will accept the following object: 
-     ```javascript
-     {
+                                //Attention: the value of cookieDomain MUST be the same in as context #2 settings
+      }
+      ```
+      If you have set *context* to 2, then the settings will accept the following object: 
+      ```javascript
+      {
         vfDependant: false,     //if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
                                 //default = false
          done: null,            //a function/delegate with signature function(state /*String*/){}
@@ -73,8 +73,8 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                 //           and/or the access token payload cookie (if cookieMode is set to true) 
                                 //default = undefined (therfore, the current request's domain)
                                 //Attention: the value of cookieDomain MUST be the same as context #1 settings 
-     }
-     ```
+      }
+      ```
 
     + `debug` //*Boolean*
 
@@ -189,9 +189,9 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
       }
       ```
     
-     V2 view settings object:
-     ```javascript 
-     {
+      V2 view settings object:
+      ```javascript 
+      {
         locale: "fr"            // optional -  i18n settings that should be used.
                                 // Default = "fr"
         ,i18n:{}                // optional - 
@@ -200,12 +200,12 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
                                 //        en : {loggedInMessage:"{0}"}
                                 //      }
                                 // Note: the {0} token is replaced by the logged-in user's display name
-     }
-     ``` 
+      }
+      ``` 
 
-   + `debug` //*Boolean*
+    + `debug` //*Boolean*
 
-     An optional parameter that when set to true, will output messages to the console. 
+      An optional parameter that when set to true, will output messages to the console. 
 
 
 
@@ -248,9 +248,9 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
       } 
       ```
     
-   + `debug` //*Boolean*
+    + `debug` //*Boolean*
 
-       An optional parameter that when set to true, will output messages to the console. 
+      An optional parameter that when set to true, will output messages to the console. 
  
 
 
