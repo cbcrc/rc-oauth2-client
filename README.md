@@ -1,8 +1,28 @@
 **rc-oauth2-client**
 ======================
-A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) login-bar widget.
+A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) login-bar component.
 
-# Modules 
+# Integration
+
+Because the code is AMD ready (!) , you have 3 integration options:
+
+### Standard JS file includes (uses V1 view)
+ 
++ samples/js-includes.html
++ samples/js-includes-callback.html 
+
+### RequireJS wrapper (uses V1 view)
+
++ samples/requirejs.wrapper.html 
++ samples/requirejs.wrapper-callback.html  
+
+### RequireJS modules (uses V2 view)
+
++ samples/requirejs.module.html 
++ samples/requirejs.module-callback.html 
+
+
+# Components
 
 ## rcOAuth2Client
 
@@ -101,7 +121,7 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
     
       The parameter takes the following object:
       ```javascript
-        {
+      {
         forceRefresh: false     //optional - refresh cached user info by forcing a call to the 
                                 //user info endpoint; this option should be judicially used
                                 //Default = false
@@ -273,28 +293,6 @@ A JavaScript OAuth 2.0 Implicit Code Flow client with accompanying (optional) lo
         ,fail: null             //function delegate with signature function(httpStatus /*number*/, statusText /*string*/, caseLabel /*string*/){}
                                 //called on ajax call error
      }
-     ```    
+     ```
 
-
-
-
-
-## Integration
-
-Because the code is AMD ready (!) , you have 3 integration options:
-
-### Standard JS file includes (uses V1 view)
- 
-+ samples/js-includes.html
-+ samples/js-includes-callback.html 
-
-### RequireJS wrapper (uses V1 view)
-
-+ samples/requirejs.wrapper.html 
-+ samples/requirejs.wrapper-callback.html  
-
-### RequireJS modules (uses V2 view)
-
-+ samples/requirejs.module.html 
-+ samples/requirejs.module-callback.html 
  
