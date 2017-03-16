@@ -16,7 +16,7 @@ Because the code is AMD ready (!) , you have 3 integration options:
 + samples/requirejs.wrapper.html 
 + samples/requirejs.wrapper-callback.html  
 
-### RequireJS modules (uses V2 view)
+### RequireJS module (uses V2 view)
 
 + samples/requirejs.module.html 
 + samples/requirejs.module-callback.html 
