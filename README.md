@@ -191,12 +191,13 @@ Because the code is AMD ready (!) , you have 3 integration options:
                                 // Default = "fr"
         ,i18n:{}                // optional - 
                                 // Default: 
-                                //      { fr:{loggedInMessage:"{0}"},
+                                //      { 
+                                //        fr : {loggedInMessage:"{0}"},
                                 //        en : {loggedInMessage:"{0}"}
                                 //      }
                                 // Note: the {0} token is replaced by the logged-in user's display name
         ,dropMenuItems: []      // optional - an array of user action objects to add to the base action of 'Logout'
-                                // An action object has the following properties: label, title, action 
+                                // An action object has the following properties:  
                                 // label: the name of the property in your i18n configuration object above 
                                 // title: optional - the name of the property in your i18n configuration object above
                                 //        This property should only be set for a11y purposes: when the item's label/text 
@@ -216,8 +217,9 @@ Because the code is AMD ready (!) , you have 3 integration options:
                                 // Default = "fr"
         ,i18n:{}                // optional - 
                                 // Default: 
-                                //      { fr:{loggedInMessage:"{0}"},
-                                //        en : {loggedInMessage:"{0}"}
+                                //      { 
+                                //        fr : {loggedInMessage:"{0}", myAccountLinkLabel:"Mon espace", myAccountLink:"https://ici.radio-canada.ca/mon-espace/"},
+                                //        en : {loggedInMessage:"{0}", myAccountLinkLabel:"My account", myAccountLink:"https://ici.radio-canada.ca/mon-espace/"}
                                 //      }
                                 // Note: the {0} token is replaced by the logged-in user's display name
       }

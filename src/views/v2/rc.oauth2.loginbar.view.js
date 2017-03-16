@@ -149,10 +149,10 @@
             config.i18n.fr.loginLinkAriaLabel = "Connexion au centre des membres";
             config.i18n.fr.logoutLinkLabel = "Déconnexion";
             config.i18n.fr.logoutLinkAriaLabel = "Déconnexion du centre des membres"; 
-            config.i18n.fr.profileImgAlt = "Avatar d'utilisateur";
-           // config.i18n.fr.targetBlankText = "(nouvelle fenêtre)";
-            config.i18n.fr.myAccountSpaceLabel = "Mon espace";  
-            config.i18n.fr.myAccountLink = "https://ici.radio-canada.ca/mon-espace/";
+            config.i18n.fr.profileImgAlt = "Avatar d'utilisateur"; 
+            // config.i18n.fr.targetBlankText = "(nouvelle fenêtre)";
+            if (!config.i18n.fr.myAccountLinkLabel) config.i18n.fr.myAccountLinkLabel = "Mon espace";
+            if (!config.i18n.fr.myAccountLink) config.i18n.fr.myAccountLink = "https://ici.radio-canada.ca/mon-espace/";
             if (!config.i18n.fr.loggedInMessage) config.i18n.fr.loggedInMessage = "{0}";
 
             if (!config.i18n.en) config.i18n.en = {};
@@ -162,9 +162,9 @@
             config.i18n.en.logoutLinkLabel = "Sign-out";
             config.i18n.en.logoutLinkAriaLabel = "Sign-out of the members center"; 
             config.i18n.en.profileImgAlt = "User profile picture";
-            //config.i18n.en.targetBlankText = "(new window)";
-            config.i18n.en.myAccountSpaceLabel = "My account"; 
-            config.i18n.en.myAccountLink = "https://ici.radio-canada.ca/mon-espace/";
+            //config.i18n.en.targetBlankText = "(new window)";  
+            if (!config.i18n.en.myAccountLinkLabel) config.i18n.en.myAccountLinkLabel = "My Account";
+            if (!config.i18n.en.myAccountLink) config.i18n.en.myAccountLink = "https://ici.radio-canada.ca/mon-espace/";
             if (!config.i18n.en.loggedInMessage) config.i18n.en.loggedInMessage = "{0}";
         };
 
@@ -215,17 +215,15 @@
             var locale = config.locale;
             var i18n = config.i18n;
             var html = '<a href="' + i18n[locale].myAccountLink + '" class="cdm-button login-link" id="' + markupElemSelector.id.connectedLink + '">'
-            +   '<span class="wgt-connected-content">';
+                     +  '<span class="wgt-connected-content">';
              if (userInfo.picture && userInfo.picture != " " && userInfo.picture.indexOf("avatar_default") == -1) {
-            html += '<span class="wgt_userAvatar">'
-                 +  '<img alt="' + i18n[locale].profileImgAlt + " " + userInfo.name + '" src="' + userInfo.picture + '"/>';
-                 +  '</span>'
+                html +=     '<span class="wgt_userAvatar"><img alt="' + i18n[locale].profileImgAlt + " " + userInfo.name + '" src="' + userInfo.picture + '"/></span>';
              } else {
-                  html += '<span class="wgt_userAvatar  cbcrc-icon-profile-circle-outline"></span>';
-              }
-            html +=   '<strong id="' + markupElemSelector.id.username + '" class="wgt_userName">'+getLoggedInMessage(userInfo) +'</strong>'
-                 + '<span class="wgt_MySpace">'+i18n[locale].myAccountSpaceLabel+'</span>'
-                    '</span>'
+                html +=     '<span class="wgt_userAvatar  cbcrc-icon-profile-circle-outline"></span>';
+            }
+            html +=         '<strong id="' + markupElemSelector.id.username + '" class="wgt_userName">'+getLoggedInMessage(userInfo) +'</strong>'
+                 +          '<span class="wgt_MySpace">'+i18n[locale].myAccountLinkLabel+'</span>'
+                 +      '</span>'
                  +   '</a>';  
             return html;
         };
