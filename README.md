@@ -48,28 +48,28 @@ Because the code is AMD ready (!) , you have 3 integration options:
       If you have set *context* to 1, then the settings will accept the following object:
       ```javascript
       {
-        domain: "",             //optional - oauth 2.0 server domain.
+        domain: ""              //optional - oauth 2.0 server domain.
                                 //default = dev-services.radio-canada.ca
-        authorizePath: "",      //optional - oauth 2.0 server authorize path
+        ,authorizePath: ""      //optional - oauth 2.0 server authorize path
                                 //default = /auth/oauth/v2/authorize
-        logoutPath: "",         //optional - oauth 2.0 server logout path
+        ,logoutPath: ""         //optional - oauth 2.0 server logout path
                                 //default = /auth/oauth/v2/logout
-        userInfoPath: "",       //optional - oauth 2.0 server oidc userinfo path
+        ,userInfoPath: ""       //optional - oauth 2.0 server oidc userinfo path
                                 //default = /openid/connect/v1/userinfo
-        redirectUri: "",        //oauth 2.0 redirect_uri parameter
-        scope: "",              //oauth 2.0 scope paramter
-        state: "",              //optional - oauth 2.0 state paramter
+        ,redirectUri: ""        //oauth 2.0 redirect_uri parameter
+        ,scope: ""              //oauth 2.0 scope paramter
+        ,state: ""              //optional - oauth 2.0 state paramter
                                 //default = ""
-        persistUserInfo:false,  //optional - if we should locally persist (cache) userinfo payload. 
+        ,persistUserInfo:false  //optional - if we should locally persist (cache) userinfo payload. 
                                 //           A value of true places emphasis on performance over data consistancy
                                 //default = false 
-		    vfDependant: false,     //if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
+		    ,vfDependant: false     //if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
                                 //default = false
-        cookieMode:false,        //optional - persist userinfo payload using cookies rather 
+        ,cookieMode:false       //optional - persist userinfo payload using cookies rather 
                                 //           than the default (and recommended!) local storage mechanism
                                 //           The setting is only used if persistUserInfo setting is set to true 
                                 //default = false 
-        cookieDomain:undefined  //optional - define the domain value to which cookies will be bound
+        ,cookieDomain:undefined //optional - define the domain value to which cookies will be bound
                                 //           The setting is used to persist userinfo payload cookie (if cookieMode is set to true) 
                                 //default = undefined (therfore, the current request's domain)
                                 //Attention: the value of cookieDomain MUST be the same in as context #2 settings
@@ -78,17 +78,17 @@ Because the code is AMD ready (!) , you have 3 integration options:
       If you have set *context* to 2, then the settings will accept the following object: 
       ```javascript
       {
-        vfDependant: false,     //if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
+        vfDependant: false      //if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
                                 //default = false
-         done: null,            //a function/delegate with signature function(state /*String*/){}
+        ,done: null             //a function/delegate with signature function(state /*String*/){}
                                 //called when an access token has been granted 
-         fail: null,            //a function/delegate with signature 
+        ,fail: null             //a function/delegate with signature 
                                 //function(errorMessage /*String*/, state /*String*/){}
                                 //on access token grant error
-        cookieMode:false        //optional - persist access token payload using cookies rather 
+        ,cookieMode:false       //optional - persist access token payload using cookies rather 
                                 //           than the default (and recommended!) local storage mechanism
                                 //default = false 
-        cookieDomain:undefined  //optional - define the domain value to which cookies will be bound
+        ,cookieDomain:undefined //optional - define the domain value to which cookies will be bound
                                 //           The setting is used to persist viafoura session cookie (if vfDependant is set to true) 
                                 //           and/or the access token payload cookie (if cookieMode is set to true) 
                                 //default = undefined (therfore, the current request's domain)
@@ -256,7 +256,7 @@ Because the code is AMD ready (!) , you have 3 integration options:
 
       ```javascript 
       {
-        forceLogin: false      // optional -  if true, the user will be automatically  prompted to login
+        forceLogin: false       // optional -  if true, the user will be automatically  prompted to login
                                 // Default = false
         ,vfDependant: false     // if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
                                 // Default = false
@@ -291,9 +291,9 @@ Because the code is AMD ready (!) , you have 3 integration options:
      ```javascript
      {
         done: null             //function delegate with signature function(httpStatus /*number*/, data /*user info object*/){}
-                                //called on ajax call success
-        ,fail: null             //function delegate with signature function(httpStatus /*number*/, statusText /*string*/, caseLabel /*string*/){}
-                                //called on ajax call error
+                               //called on ajax call success
+        ,fail: null            //function delegate with signature function(httpStatus /*number*/, statusText /*string*/, caseLabel /*string*/){}
+                               //called on ajax call error
      }
      ```
 
