@@ -16,7 +16,7 @@
 
 /* CBCRC - Icônes */
 @font-face {
-    font-family: 'IcomoonCentreDesMembres';
+    font-family: 'cbcrc';
     src: url("https://s.radio-canada.ca/_font/cbcrc/fonts/cbcrc.eot?5jaik");
     src: url("https://s.radio-canada.ca/_font/cbcrc/fonts/cbcrc.eot?#iefix5jaik") format("embedded-opentype"), 
          url("https://s.radio-canada.ca/_font/cbcrc/fonts/cbcrc.woff?5jaik") format("woff"), 
@@ -27,7 +27,7 @@
 }
 
 [class^="cbcrc-"]:before, [class*="cbcrc-"]:before {
-    font-family: 'IcomoonCentreDesMembres';
+    font-family: 'cbcrc';
     speak: none;
     font-style: normal;
     font-weight: normal;
@@ -54,15 +54,15 @@
 /* -------->> Connect button <<------- */
 /* ----------------------------------- */
 
-.cdm-button {
+body .cdm-button {
     border: none;
     background: rgb(204,0,0);
-    color: #fff;
+    color: #fff !important;
     cursor: pointer;
     font-family: 'Roboto', sans-serif;
     font-size: 13px;
     height: 60px;
-    padding-left: 24px;
+    padding: 6px 6px 6px 24px;
     text-align: left;
     -moz-transition: background-color ease .4s;
     -webkit-transition: background-color ease .4s;
@@ -70,14 +70,16 @@
     width: 100%;
 }
 
-    .cdm-button:before {
+    body .cdm-button:before {
         color: #fff;
         padding-right: 6px;
     }
 
-    .cdm-button:hover, 
-    .cdm-button:focus {
-        background-color: rgb(221,0,0);     
+    body .cdm-button:hover, 
+    body .cdm-button:focus {
+        color: #fff;
+        background-color: rgb(221,0,0) !important;
+        text-decoration: none !important; 
     }
 
 /* ----------------------------------- */
@@ -88,7 +90,7 @@
 /* ------>> Disconnect button <<------ */
 /* ----------------------------------- */
 
-.logout-link{ height: 48px; }
+body .logout-link{ height: 48px; }
 
 /* ----------------------------------- */
 
@@ -97,7 +99,7 @@
 /* ----------------------------------- */
 /* -------->> Connected link <<------- */
 /* ----------------------------------- */
-.login-link {
+body .login-link {
     box-sizing: border-box;
     display: table;
     text-decoration: none;
@@ -109,35 +111,38 @@
     }
 
     /* Avatar user */
-    .login-link .wgt_userAvatar {
+    body .login-link .wgt_userAvatar {
+        border: #fff solid 1px;
         font-size: 30px;
         float: left;
+        height: 34px; /* Hauteur de l'image */
         margin-right: 12px;
+        width: 34px;
     }
 
         /* Without avatar */
-        .login-link .wgt_userAvatar:before {
+        body .login-link .wgt_userAvatar:before {
             display: block;
-            margin-top: 5px;
+            margin: 5px 0 0 2px;
         }
 
         /* With avatar */
-        .login-link .wgt_userAvatar img {
-            border: #fff solid 1px;
+        body .login-link .wgt_userAvatar img {
             height: 34px;
             width: 34px;
         }
     
     /* user name */
-    .login-link .wgt_userName {
+    body .login-link .wgt_userName {
         font-size: 14px;
         font-weight: 400;
         display: block;
-        line-height: 1.6;
+        line-height: 1.3;
+        padding-bottom: 4px;
     }
 
     /* link My space */
-    .login-link .wgt_mySpace {
+    body .login-link .wgt_MySpace {
         font-size: 12px;
         text-decoration: underline;
     }

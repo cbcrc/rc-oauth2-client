@@ -219,7 +219,7 @@
              if (userInfo.picture && userInfo.picture != " " && userInfo.picture.indexOf("avatar_default") == -1) {
                 html +=     '<span class="wgt_userAvatar"><img alt="' + i18n[locale].profileImgAlt + " " + userInfo.name + '" src="' + userInfo.picture + '"/></span>';
              } else {
-                html +=     '<span class="wgt_userAvatar  cbcrc-icon-profile-circle-outline"></span>';
+                html +=     '<span class="wgt_userAvatar cbcrc-icon-profile"></span>';
             }
             html +=         '<strong id="' + markupElemSelector.id.username + '" class="wgt_userName">'+getLoggedInMessage(userInfo) +'</strong>'
                  +          '<span class="wgt_MySpace">'+i18n[locale].myAccountLinkLabel+'</span>'
