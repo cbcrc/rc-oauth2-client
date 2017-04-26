@@ -48,7 +48,8 @@
               loginWidget: "widgetLogin",
               loginLink: "rc-oauth2-login-link",
               logoutLink: "rc-oauth2-logout-link",
-              username: "rc-oauth2-username"
+              username: "rc-oauth2-username",
+              profileImage: "rc-oauth2-profileImage"
           },
           className: { 
               arrowIcon: "wgt_iconeFleche",
@@ -260,13 +261,7 @@
               + '<div id="widgetLogin_containerUserInfo">'
               + '<button type="button" id="' + markupElemSelector.id.dropMenuToggler + '" aria-controls="' + markupElemSelector.id.dropMenuContainer + '" aria-expanded="false">'
               + '<span class="wgt_userImg">'
-              + '     <span class="wgt_userProfileImage">';
-          if (userInfo.picture && userInfo.picture != " " && userInfo.picture.indexOf("avatar_default") == -1) {
-              html += '<img id="smallProfilPict" class="smallCircular" width="37" alt="' + i18n[locale].profileImgAlt + " " + userInfo.name + '" src="' + userInfo.picture + '"/>';
-          } else {
-              html += '<span class="icon-avatar_default"></span>';
-          }
-          html += '</span>'
+              + '     <span id="' + markupElemSelector.id.profileImage + '" class="wgt_userProfileImage">'  + getLoggedInProfileImage(userInfo) +  '</span>'
               + '     </span>'
               + '<span id="' + markupElemSelector.id.username + '" class="wgt_userName">' + getLoggedInMessage(userInfo) + '</span>'
               + '<span class="wgt_label">' + i18n[locale].dropMenuTogglerLabel + '</span>'
@@ -289,7 +284,17 @@
               + '</div>';
           return html;
       };
-
+      var getLoggedInProfileImage = function(userInfo){
+        var locale = config.locale;
+          var i18n = config.i18n;
+          var img;
+        if (userInfo.picture && userInfo.picture != " " && userInfo.picture.indexOf("avatar_default") == -1) {
+              img = '<img id="smallProfilPict" class="smallCircular" width="37" alt="' + i18n[locale].profileImgAlt + " " + userInfo.name + '" src="' + userInfo.picture + '"/>';
+          } else {
+              img = '<span class="icon-avatar_default"></span>';
+          }
+          return img;
+      };
       var getLoggedInMessage = function (userInfo) {
           var locale = config.locale;
           var i18n = config.i18n;
@@ -382,6 +387,8 @@
           log("updateLoggedInMarkup");
           var elem = $("#" + markupElemSelector.id.username);
           elem.innerHTML = getLoggedInMessage(userInfo);
+          elem = $("#" + markupElemSelector.id.profileImage);
+          elem.innerHTML = getLoggedInProfileImage(userInfo);
       };
 
       return {
