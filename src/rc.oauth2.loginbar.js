@@ -126,7 +126,8 @@
 
              if (isFunction(config.loginComplete)) {
                  var accessToken = oauthClient.getAccessToken();
-                 config.loginComplete(accessToken, data);
+                 var lrAccessToken = oauthClient.getLRAccessToken();
+                 config.loginComplete(accessToken, lrAccessToken, data);
              }
          } else { //4xx (401) or 5xx
              getUserInfoFail(httpStatus, "getUserInfoDone called with a 4xx/5xx HTTP status", "loginbar: getUserInfoDone");

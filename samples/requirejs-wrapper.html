@@ -58,7 +58,7 @@
              rcOAuth2LoginBarView,
             {
                 forceLogin: false, 
-                loginComplete: function (accessToken) { console.log("my access token: " + accessToken); },
+                loginComplete: function (accessToken, lrAccessToken, userInfo) { console.log("my access token: " + accessToken); },
                 logoutComplete: function () { console.log("my logoutComplete called!"); }
             },
             true);

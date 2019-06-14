@@ -416,6 +416,20 @@
         }
         return result;
       };
+
+      var getLRAccessToken = function () {
+        log("getLRAccessToken");
+
+        var lrAccessTokenPersistKey = getPersistedDataKey(persistedDataKeys.lrAccessToken); 
+        var result = "";   
+        //check local storage or cookie
+        if (isLocalStorage()) { 
+            result = localStorage.getItem(lrAccessTokenPersistKey); 
+        } else {
+            result = getCookie(lrAccessTokenPersistKey);    
+        } 
+        return result;
+      };
     
       var tryPersistAccessTokens = function (urlHash) {
           log("tryPersistAccessTokens");
@@ -657,7 +671,8 @@
 
       return {
           init: init,
-          getAccessToken: getAccessToken,
+          getAccessToken: getAccessToken, 
+          getLRAccessToken: getLRAccessToken,
           getUserInfo: getUserInfo, 
           login: login,
           logout: logout

@@ -257,7 +257,7 @@ Because the code is AMD ready (!) , you have 3 integration options:
                                 // Default = false (a redirection to the login page will occur)
         ,loginComplete:null     // optional - a function to be invoked when the user has succesfully logged
                                 //            in to the client application, with signature
-                                //            function(accessToken, userInfoData){}
+                                //            function(accessToken, lrAccessToken, userInfoData){}
         ,logoutComplete:null    // optional - a function to be invoked when hte logout process completes, with signature
                                 //            function(){}
       } 
