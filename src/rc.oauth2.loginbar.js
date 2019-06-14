@@ -40,8 +40,7 @@
      var isLoggedIn = false;
    
      var config = { 
-         forceLogin: false
-         , vfDependant: false
+            forceLogin: false 
          , modalMode: false 
          , loginComplete: null
          , logoutComplete: null
@@ -65,10 +64,7 @@
                  }
              }
          }
-     }; 
-     var isVf = function () {
-         return (config.vfDependant === true) && window.viafoura;
-     }; 
+     };  
 
      //
      // Intitialization
@@ -165,7 +161,7 @@
          log("logout");
          log(">> httpStatus=" + httpStatus + ", result:" + data.result);
 
-         if (isVf()) {
+         if (window.viafoura && window.viafoura.session) { 
              window.viafoura.session.logout();
          }
 

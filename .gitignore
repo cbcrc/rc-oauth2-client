@@ -9,6 +9,7 @@
 local-settings.txt
 tests/
 *.csproj
+.vscode/*
 
 # Build results
 [Dd]ebug/
@@ -185,3 +186,5 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+
