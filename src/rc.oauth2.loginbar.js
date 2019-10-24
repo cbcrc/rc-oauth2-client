@@ -40,8 +40,7 @@
      var isLoggedIn = false;
    
      var config = { 
-         forceLogin: false
-         , vfDependant: false
+            forceLogin: false 
          , modalMode: false 
          , loginComplete: null
          , logoutComplete: null
@@ -65,10 +64,7 @@
                  }
              }
          }
-     }; 
-     var isVf = function () {
-         return (config.vfDependant === true) && window.viafoura;
-     }; 
+     };  
 
      //
      // Intitialization
@@ -130,7 +126,8 @@
 
              if (isFunction(config.loginComplete)) {
                  var accessToken = oauthClient.getAccessToken();
-                 config.loginComplete(accessToken, data);
+                 var lrAccessToken = oauthClient.getLRAccessToken();
+                 config.loginComplete(accessToken, lrAccessToken, data);
              }
          } else { //4xx (401) or 5xx
              getUserInfoFail(httpStatus, "getUserInfoDone called with a 4xx/5xx HTTP status", "loginbar: getUserInfoDone");
@@ -165,7 +162,7 @@
          log("logout");
          log(">> httpStatus=" + httpStatus + ", result:" + data.result);
 
-         if (isVf()) {
+         if (window.viafoura && window.viafoura.session) { 
              window.viafoura.session.logout();
          }
 

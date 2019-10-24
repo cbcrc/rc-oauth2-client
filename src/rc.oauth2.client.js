@@ -25,7 +25,7 @@
         //    module.exports = factory;
     }
         //
-        //Standard support (add instance to window
+        //Standard support (add instance to window)
         //
     else {
         root.rcOAuth2Client = factory;
@@ -37,27 +37,27 @@
       var debugActive = false;
       var useLocalStorage; /*set in isLocalStorage()*/
       var callbackKeys = {
-          accessToken: "access_token"
+            accessToken: "access_token"
           , expiresIn: "expires_in"
           , tokenType: "token_type"
           , state: "state"
           , scope: "scope"
-          , error: "error"
-          , vfsession: "vfsession" /*viafoura session id*/
+          , error: "error" 
+          , lrAccessToken: "lrat" 
       };
       var persistedDataKeys = {
-          accessToken: "at"
-          , userInfo: "ui"
-          , vfSession: "VfSess"
+            accessToken: "at"
+          , userInfo: "ui" 
+          , lrAccessToken: "lrat"
 
       };
       var config = {
-          clientId: ""
+            clientId: ""
           , responseType: "token"
           , context: 1 // 1=init login call, 2=callback
       };
       var callConfig = {
-          domain: "dev-services.radio-canada.ca"
+            domain: "dev-services.radio-canada.ca"
           , authorizePath: "/auth/oauth/v2/authorize"
           , logoutPath: "/auth/oauth/v2/logout"
           , userInfoPath: "/openid/connect/v1/userinfo"
@@ -66,12 +66,10 @@
           , state: ""
           , persistUserInfo: false
           , cookieMode: false
-          , cookieDomain: undefined
-          , vfDependant: false
+          , cookieDomain: undefined 
       };
-      var callbackConfig = {
-          vfDependant: false
-          , done: null
+      var callbackConfig = { 
+            done: null
           , fail: null
           , cookieMode: false
           , cookieDomain: undefined
@@ -256,9 +254,7 @@
               settings.fail(request.status, e, "client: ajax onsend");
           }
       };
-      var isVf = function () {
-          return (callbackConfig.vfDependant === true || callConfig.vfDependant === true) /*&& window.viafoura*/;
-      };
+       
       var encode = function (value) {
           var out = value;
           try {
@@ -319,7 +315,7 @@
           var isPersisted;
 
           if (typeof (urlHash[callbackKeys.accessToken]) === "string") {
-              isPersisted = tryPersistAccessToken(urlHash);
+              isPersisted = tryPersistAccessTokens(urlHash);
               stateEchoed = decodeURIComponent(urlHash[callbackKeys.state]).toString();
               if (isPersisted) {
                   if (isFunction(callbackConfig.done)) {
@@ -385,50 +381,66 @@
       };
 
       var getAccessToken = function () {
-          log("getAccessToken");
+        log("getAccessToken");
 
-          var accessTokenPersistKey = getPersistedDataKey(persistedDataKeys.accessToken);
-          var at;
-          var result = "";
-          var now;
-          var cookie;
+        var accessTokenPersistKey = getPersistedDataKey(persistedDataKeys.accessToken);
+        var at;
+        var result = "";
+        var now;
+        var cookie;
 
-          //check local storage or cookie
-          if (isLocalStorage()) {
-              // set access token
-              at = localStorage.getItem(accessTokenPersistKey);
-              at = decode(at);
-              //Attention: Safari on MAC throws EOF error when attempting JSON.parse on empty strings
-              if (at && at != " ") {
-                  at = JSON.parse(at);
-                  now = new Date();
-                  if (at && Date.parse(at.expires) > now) {
-                      result = at.token;
-                  }
-              }
+        //check local storage or cookie
+        if (isLocalStorage()) {
+            // set access token
+            at = localStorage.getItem(accessTokenPersistKey);
+            at = decode(at);
+            //Attention: Safari on MAC throws EOF error when attempting JSON.parse on empty strings
+            if (at && at != " ") {
+                at = JSON.parse(at);
+                now = new Date();
+                if (at && Date.parse(at.expires) > now) {
+                    result = at.token;
+                }
+            }
 
-          } else {
-              cookie = getCookie(accessTokenPersistKey);
-              cookie = decode(cookie);
-              //Attention: Safari on MAC throws EOF error when attempting JSON.parse on empty strings
-              if (cookie && typeof (cookie) === "string" && cookie != " ") {
-                  at = JSON.parse(cookie);
-                  if (at) {
-                      result = at.token;
-                  };
-              }
-          }
-          return result;
+        } else {
+            cookie = getCookie(accessTokenPersistKey);
+            cookie = decode(cookie);
+            //Attention: Safari on MAC throws EOF error when attempting JSON.parse on empty strings
+            if (cookie && typeof (cookie) === "string" && cookie != " ") {
+                at = JSON.parse(cookie);
+                if (at) {
+                    result = at.token;
+                };
+            }
+        }
+        return result;
       };
-      var tryPersistAccessToken = function (urlHash) {
-          log("tryPersistAccessToken");
+
+      var getLRAccessToken = function () {
+        log("getLRAccessToken");
+
+        var lrAccessTokenPersistKey = getPersistedDataKey(persistedDataKeys.lrAccessToken); 
+        var result = "";   
+        //check local storage or cookie
+        if (isLocalStorage()) { 
+            result = localStorage.getItem(lrAccessTokenPersistKey); 
+        } else {
+            result = getCookie(lrAccessTokenPersistKey);    
+        } 
+        return result;
+      };
+    
+      var tryPersistAccessTokens = function (urlHash) {
+          log("tryPersistAccessTokens");
           var accessToken = urlHash[callbackKeys.accessToken];
           var expiresIn = urlHash[callbackKeys.expiresIn];
-          var scope = urlHash[callbackKeys.scope];
-          var viafouraSession = urlHash[callbackKeys.vfsession];
+          var scope = urlHash[callbackKeys.scope]; 
+          var lrAccessToken = urlHash[callbackKeys.lrAccessToken]
           var accessTokenPersistKey;
           var expireDate;
           var dataToPersist;
+          var lrAccessTokenPersistKey;
 
           //all values must be present for persistance
           if (typeof accessToken === "string" && accessToken != "" && accessToken != " " && typeof expiresIn === "string" && typeof scope === "string") {
@@ -438,43 +450,40 @@
               expireDate = expireDate.toUTCString();
               dataToPersist = JSON.stringify({ token: accessToken, expires: expireDate });
               dataToPersist = encode(dataToPersist);
+              lrAccessTokenPersistKey = getPersistedDataKey(persistedDataKeys.lrAccessToken);
 
-              //persist access token to localstorage or cookie 
+              //persist data to localstorage or cookie 
               if (isLocalStorage()) {
                   log(">> set localStorage item: " + accessTokenPersistKey);
-                  localStorage.setItem(accessTokenPersistKey, dataToPersist);
+                  localStorage.setItem(accessTokenPersistKey, dataToPersist); // OAuth2 access token
+                  log(">> set localStorage item: " + lrAccessTokenPersistKey);
+                  localStorage.setItem(lrAccessTokenPersistKey, lrAccessToken); // LR access token
               } else {
-                  setCookie(accessTokenPersistKey, dataToPersist, expireDate, callbackConfig.cookieDomain);
-              }
-
-
-              // viafoura session support
-              if (isVf()) {
-                  setCookie(persistedDataKeys.vfSession, viafouraSession, expireDate, callbackConfig.cookieDomain);
-              }
+                  setCookie(accessTokenPersistKey, dataToPersist, expireDate, callbackConfig.cookieDomain); // OAuth2 access token
+                  setCookie(lrAccessTokenPersistKey, lrAccessToken, expireDate, callbackConfig.cookieDomain); // LR access token
+              } 
 
               return true;
           } else {
               return false;
           }
       };
-      var deletePersistedAccessToken = function (httpStatus) {
-          log("deletePersistedAccessToken");
+      var deletePersistedAccessTokens = function (httpStatus) {
+          log("deletePersistedAccessTokens");
           var key = getPersistedDataKey(persistedDataKeys.accessToken);
+          var lrKey = getPersistedDataKey(persistedDataKeys.lrAccessToken);
 
           //check local storage or cookie
           if (httpStatus === 401) {
               if (isLocalStorage()) {
-                  log(">> remove localStorage item: " + key);
-                  localStorage.removeItem(key);
+                log(">> remove localStorage item: " + key);
+                    localStorage.removeItem(key);
+                log(">> remove localStorage item: " + lrKey);
+                  localStorage.removeItem(lrKey);
               } else {
-                  deleteCookie(key, callConfig.cookieDomain);
-              }
-
-              // viafoura session support
-              if (isVf()) {
-                  deleteCookie(persistedDataKeys.vfSession, callConfig.cookieDomain);
-              }
+                deleteCookie(key, callConfig.cookieDomain);
+                deleteCookie(lrKey, callConfig.cookieDomain);
+              } 
           }
       };
 
@@ -537,7 +546,7 @@
                   }(done, isFunction(done));
                   settings.fail = function (fail, isFunction) {
                       return function (httpStatus, statusText, caseLabel) {
-                          deletePersistedAccessToken(httpStatus);
+                          deletePersistedAccessTokens(httpStatus);
                           if (isFunction) {
                               fail(httpStatus, statusText, caseLabel);
                           }
@@ -632,7 +641,7 @@
 
           //
           //take mandatory action...
-          deletePersistedAccessToken(401);//we always want to revoke the token, even if the auth server faulted on logout call
+          deletePersistedAccessTokens(401);//we always want to revoke the token, even if the auth server faulted on logout call
           deletePersistedUserInfo(401);//we always want to remove user info, even if the auth server faulted on logout call 
 
           //
@@ -662,8 +671,9 @@
 
       return {
           init: init,
-          getAccessToken: getAccessToken,
-          getUserInfo: getUserInfo,
+          getAccessToken: getAccessToken, 
+          getLRAccessToken: getLRAccessToken,
+          getUserInfo: getUserInfo, 
           login: login,
           logout: logout
       };
