@@ -48,6 +48,7 @@
               loginWidget: "widgetLogin",
               loginLink: "rc-oauth2-login-link",
               logoutLink: "rc-oauth2-logout-link",
+              logoutLink: "rc-oauth2-logout-global-link",
               username: "rc-oauth2-username",
               profileImage: "rc-oauth2-profileImage"
           },
@@ -200,6 +201,8 @@
           config.i18n.fr.loginLinkTitle = "Connexion au centre des membres";
           config.i18n.fr.logoutLinkLabel = "Déconnexion";
           config.i18n.fr.logoutLinkTitle = "Déconnexion du centre des membres";
+          config.i18n.fr.logoutGlobalLinkLabel = "Déconnexion globale";
+          config.i18n.fr.logoutGlobalLinkAriaLabel = "Déconnexion globale"; 
           config.i18n.fr.dropMenuTogglerLabel = "Ouvrez le menu d'options de compte";
           config.i18n.fr.dropMenuContainerAriaLabel = "Menu d'options de compte";
           config.i18n.fr.profileImgAlt = "Avatar d'utilisateur";
@@ -212,6 +215,8 @@
           config.i18n.en.loginLinkTitle = "Sign-in to the members center";
           config.i18n.en.logoutLinkLabel = "Sign-out";
           config.i18n.en.logoutLinkTitle = "Sign-out of the members center";
+          config.i18n.en.logoutGlobalLinkLabel = "Global Sign-out";
+          config.i18n.en.logoutGlobalLinkAriaLabel = "Global Sign-out"; 
           config.i18n.en.dropMenuTogglerLabel = "Expand the account options menu";
           config.i18n.en.dropMenuContainerAriaLabel = "Account options menu";
           config.i18n.en.profileImgAlt = "User profile picture";
@@ -276,7 +281,8 @@
                   // + '<li>'
                   //+ '<div class="wgt_arrow"></div>'
                   // + '</li>'
-              + '<li role="menuitem"><button type="button" id ="' + markupElemSelector.id.logoutLink + '"  title="' + i18n[locale].logoutLinkTitle + '">' + i18n[locale].logoutLinkLabel + '</button></li>'
+                  + '<li role="menuitem"><button type="button" id ="' + markupElemSelector.id.logoutLink + '"  title="' + i18n[locale].logoutLinkTitle + '">' + i18n[locale].logoutLinkLabel + '</button></li>'
+                  + '<li role="menuitem"><button type="button" id ="' + markupElemSelector.id.logoutGlobalLink + '"  title="' + i18n[locale].logoutGlobalLinkTitle + '">' + i18n[locale].logoutGlobalLinkLabel + '</button></li>'
                       + '</ul>'
                   + '</div>'
               + '</div>'
@@ -308,10 +314,11 @@
           addEvent($("#" + markupElemSelector.id.loginLink), "click", loginFunction);
       };
 
-      var injectLoggedInMarkup = function (userInfo, logoutFunction) {
+      var injectLoggedInMarkup = function (userInfo, logoutFunction, logoutGlobalFunction) {
           log("injectLoggedInMarkup");
           container.innerHTML = getLoggedInMarkup(userInfo);
           addEvent($("#" + markupElemSelector.id.logoutLink), "click", logoutFunction);
+          addEvent($("#" + markupElemSelector.id.logoutGlobalLink), "click", logoutGlobalFunction);
           injectLoggedInMarkupDropMenuItems();
           addDropMenuEvents(); 
       };

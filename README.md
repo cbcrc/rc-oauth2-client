@@ -191,7 +191,7 @@ Because the code is AMD ready (!) , you have 3 integration options:
                                 //        en : {loggedInMessage:"{0}"}
                                 //      }
                                 // Note: the {0} token is replaced by the logged-in user's display name
-        ,dropMenuItems: []      // optional - an array of user action objects to add to the base action of 'Logout'
+        ,dropMenuItems: []      // optional - an array of user action objects to add to the base actions of 'Logout' and 'Global Logout'
                                 // An action object has the following properties:  
                                 // label: the name of the property in your i18n configuration object above 
                                 // title: optional - the name of the property in your i18n configuration object above
@@ -258,7 +258,7 @@ Because the code is AMD ready (!) , you have 3 integration options:
         ,loginComplete:null     // optional - a function to be invoked when the user has succesfully logged
                                 //            in to the client application, with signature
                                 //            function(accessToken, lrAccessToken, userInfoData){}
-        ,logoutComplete:null    // optional - a function to be invoked when hte logout process completes, with signature
+        ,logoutComplete:null    // optional - a function to be invoked when the logout process completes, with signature
                                 //            function(){}
       } 
       ```

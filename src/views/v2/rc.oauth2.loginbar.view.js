@@ -46,6 +46,7 @@
                 container: "rc-oauth2-loginbar", 
                 loginLink: "rc-oauth2-login-link",
                 logoutLink: "rc-oauth2-logout-link",
+                logoutGlobalLink: "rc-oauth2-logout-global-link",
                 connectedLink: "rc-oauth2-connected-link" 
             },
             className: { 
@@ -148,6 +149,8 @@
             config.i18n.fr.loginLinkAriaLabel = "Connexion au centre des membres";
             config.i18n.fr.logoutLinkLabel = "Déconnexion";
             config.i18n.fr.logoutLinkAriaLabel = "Déconnexion du centre des membres"; 
+            config.i18n.fr.logoutGlobalLinkLabel = "Déconnexion globale";
+            config.i18n.fr.logoutGlobalLinkAriaLabel = "Déconnexion globale"; 
             config.i18n.fr.profileImgAlt = "Avatar d'utilisateur"; 
             // config.i18n.fr.targetBlankText = "(nouvelle fenêtre)";
             if (!config.i18n.fr.myAccountLinkLabel) config.i18n.fr.myAccountLinkLabel = "Mon espace";
@@ -160,6 +163,8 @@
             config.i18n.en.loginLinkAriaLabel = "Sign-in to the members center";
             config.i18n.en.logoutLinkLabel = "Sign-out";
             config.i18n.en.logoutLinkAriaLabel = "Sign-out of the members center"; 
+            config.i18n.en.logoutGlobalLinkLabel = "Global Sign-out";
+            config.i18n.en.logoutGlobalLinkAriaLabel = "Global Sign-out"; 
             config.i18n.en.profileImgAlt = "User profile picture";
             //config.i18n.en.targetBlankText = "(new window)";  
             if (!config.i18n.en.myAccountLinkLabel) config.i18n.en.myAccountLinkLabel = "My Account";
@@ -206,7 +211,8 @@
        var getLogoutMarkup = function () {
             var locale = config.locale;
             var i18n = config.i18n;
-            var html = '<button type="button" id="' + markupElemSelector.id.logoutLink + '" class="cdm-button logout-link cbcrc-icon-exit" aria-label="' + i18n[locale].logoutLinkAriaLabel + '">' + i18n[locale].logoutLinkLabel + '</button>';
+            var html = '<button type="button" id="' + markupElemSelector.id.logoutLink + '" class="cdm-button logout-link cbcrc-icon-exit" aria-label="' + i18n[locale].logoutLinkAriaLabel + '">' + i18n[locale].logoutLinkLabel + '</button>' + 
+            '<button type="button" id="' + markupElemSelector.id.logoutGlobalLink + '" class="cdm-button logout-link cbcrc-icon-exit" aria-label="' + i18n[locale].logoutGlobalLinkAriaLabel + '">' + i18n[locale].logoutGlobalLinkLabel + '</button>' ;
             return html;
         };
 
@@ -239,12 +245,13 @@
              }
         };
 
-        var injectLoggedInMarkup = function (userInfo, logoutFunction) {
+        var injectLoggedInMarkup = function (userInfo, logoutFunction, logoutGlobalFunction) {
             log("injectLoggedInMarkup");
             container.innerHTML = getLoggedInMarkup(userInfo); 
             if (containerLogout!= null){
                 containerLogout.innerHTML = getLogoutMarkup();
-                 addEvent($("#" + markupElemSelector.id.logoutLink), "click", logoutFunction);
+                addEvent($("#" + markupElemSelector.id.logoutLink), "click", logoutFunction);
+                addEvent($("#" + markupElemSelector.id.logoutGlobalLink), "click", logoutGlobalFunction);
             }  
         };
 

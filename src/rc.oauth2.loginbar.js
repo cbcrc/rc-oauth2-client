@@ -101,7 +101,7 @@
      }; 
      var injectLoggedInMarkup = function (userInfo) { 
          log("injectLoggedInMarkup");
-         loginbarView.injectLoggedInMarkup(userInfo, logout);
+         loginbarView.injectLoggedInMarkup(userInfo, logout, logoutGlobal);
      }; 
      var updateLoggedInMarkup = function (userInfo) { 
          log("updateLoggedInMarkup");
@@ -156,8 +156,11 @@
      };
 
      var logout = function (event) {
-         oauthClient.logout(logoutComplete);
-     };
+        oauthClient.logout(false,logoutComplete);
+    };
+    var logoutGlobal = function (event) {
+        oauthClient.logout(true,logoutComplete);
+    };
      var logoutComplete = function (httpStatus, data) {
          log("logout");
          log(">> httpStatus=" + httpStatus + ", result:" + data.result);

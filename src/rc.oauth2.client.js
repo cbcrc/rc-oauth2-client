@@ -633,7 +633,7 @@
               document.location.href = url;
           }
       };
-      var logout = function (complete) {
+      var logout = function (isGlobalLogout,complete) {
           log("logout");
 
           var accessToken = getAccessToken();
@@ -664,7 +664,7 @@
           }(iframe, complete, isFunction(complete));
 
 
-          iframe.src = "https://" + callConfig.domain + callConfig.logoutPath + "?access_token=" + accessToken;
+          iframe.src = "https://" + callConfig.domain + callConfig.logoutPath + "?access_token=" + accessToken + ((isGlobalLogout)?"&global=1":"");
 
           document.body.appendChild(iframe);
       };
