@@ -62,9 +62,7 @@ Because the code is AMD ready (!) , you have 3 integration options:
                                 //default = ""
         ,persistUserInfo:false  //optional - if we should locally persist (cache) userinfo payload. 
                                 //           A value of true places emphasis on performance over data consistancy
-                                //default = false 
-		    ,vfDependant: false     //if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
-                                //default = false
+                                //default = false  
         ,cookieMode:false       //optional - persist userinfo payload using cookies rather 
                                 //           than the default (and recommended!) local storage mechanism
                                 //           The setting is only used if persistUserInfo setting is set to true 
@@ -78,9 +76,7 @@ Because the code is AMD ready (!) , you have 3 integration options:
       If you have set *context* to 2, then the settings will accept the following object: 
       ```javascript
       {
-        vfDependant: false      //if Viafoura dependant actions must be taken. Ex: Write viafoura session cookie
-                                //default = false
-        ,done: null             //a function/delegate with signature function(state /*String*/){}
+        done: null             //a function/delegate with signature function(state /*String*/){}
                                 //called when an access token has been granted 
         ,fail: null             //a function/delegate with signature 
                                 //function(errorMessage /*String*/, state /*String*/){}
@@ -89,8 +85,7 @@ Because the code is AMD ready (!) , you have 3 integration options:
                                 //           than the default (and recommended!) local storage mechanism
                                 //default = false 
         ,cookieDomain:undefined //optional - define the domain value to which cookies will be bound
-                                //           The setting is used to persist viafoura session cookie (if vfDependant is set to true) 
-                                //           and/or the access token payload cookie (if cookieMode is set to true) 
+                                //           The setting is used to persist the access token payload cookies (if cookieMode is set to true) 
                                 //default = undefined (therfore, the current request's domain)
                                 //Attention: the value of cookieDomain MUST be the same as context #1 settings 
       }
@@ -252,19 +247,17 @@ Because the code is AMD ready (!) , you have 3 integration options:
 
     + `settings` //*Object literal*
 
-      The settings parameter takes the follwoing object:
+      The settings parameter takes the following object:
 
       ```javascript 
       {
         forceLogin: false       // optional -  if true, the user will be automatically  prompted to login
-                                // Default = false
-        ,vfDependant: false     // if Viafoura dependant actions must be taken. Ex: Delete viafoura session cookie
-                                // Default = false
+                                // Default = false 
         ,modalMode: false       // optional - whether or not the login page should be shown in a modal
                                 // Default = false (a redirection to the login page will occur)
         ,loginComplete:null     // optional - a function to be invoked when the user has succesfully logged
                                 //            in to the client application, with signature
-                                //            function(accessToken, userInfoData){}
+                                //            function(accessToken, lrAccessToken, userInfoData){}
         ,logoutComplete:null    // optional - a function to be invoked when hte logout process completes, with signature
                                 //            function(){}
       } 

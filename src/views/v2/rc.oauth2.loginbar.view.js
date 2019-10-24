@@ -46,8 +46,7 @@
                 container: "rc-oauth2-loginbar", 
                 loginLink: "rc-oauth2-login-link",
                 logoutLink: "rc-oauth2-logout-link",
-                connectedLink: "rc-oauth2-connected-link",
-                username: "rc-oauth2-username"
+                connectedLink: "rc-oauth2-connected-link" 
             },
             className: { 
             }
@@ -214,6 +213,7 @@
         var getLoggedInMarkup = function (userInfo) {
             var locale = config.locale;
             var i18n = config.i18n;
+            var username = i18n[locale].loggedInMessage.replace(/\{0\}/gi, ((userInfo.given_name) ? userInfo.given_name : ((userInfo.name) ? userInfo.name.split(" ")[0] : "")));
             var html = '<a href="' + i18n[locale].myAccountLink + '" class="cdm-button login-link" id="' + markupElemSelector.id.connectedLink + '">'
                      +  '<span class="wgt-connected-content">';
              if (userInfo.picture && userInfo.picture != " " && userInfo.picture.indexOf("avatar_default") == -1) {
@@ -221,20 +221,13 @@
              } else {
                 html +=     '<span class="wgt_userAvatar cbcrc-icon-profile"></span>';
             }
-            html +=         '<strong id="' + markupElemSelector.id.username + '" class="wgt_userName">'+getLoggedInMessage(userInfo) +'</strong>'
+            html +=         '<strong class="wgt_userName">'+username+'</strong>'
                  +          '<span class="wgt_MySpace">'+i18n[locale].myAccountLinkLabel+'</span>'
                  +      '</span>'
                  +   '</a>';  
             return html;
         };
-
-        var getLoggedInMessage = function (userInfo) {
-            var locale = config.locale;
-            var i18n = config.i18n;
-            var msg = i18n[locale].loggedInMessage.replace(/\{0\}/gi, ((userInfo.given_name) ? userInfo.given_name : ((userInfo.name) ? userInfo.name.split(" ")[0] : "")));
-            return msg;
-        };
-
+ 
         var injectLoginMarkup = function (loginFunction) {
             log("injectLoginMarkup");
             container.innerHTML = getLoginMarkup();
@@ -257,8 +250,7 @@
 
         var updateLoggedInMarkup = function (userInfo) {
             log("updateLoggedInMarkup");
-            var elem = $("#" + markupElemSelector.id.username);
-            elem.innerHTML = getLoggedInMessage(userInfo);
+            container.innerHTML = getLoggedInMarkup(userInfo); 
         };
 
         return {
