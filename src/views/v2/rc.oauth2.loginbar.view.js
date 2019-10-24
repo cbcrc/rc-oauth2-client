@@ -40,6 +40,7 @@
         var config = {
             locale: "fr"
          ,i18n: {} 
+         , showGlobalLogoutButton:false
         };
         var markupElemSelector = {
             id: {
@@ -211,8 +212,10 @@
        var getLogoutMarkup = function () {
             var locale = config.locale;
             var i18n = config.i18n;
-            var html = '<button type="button" id="' + markupElemSelector.id.logoutLink + '" class="cdm-button logout-link cbcrc-icon-exit" aria-label="' + i18n[locale].logoutLinkAriaLabel + '">' + i18n[locale].logoutLinkLabel + '</button>' + 
-            '<button type="button" id="' + markupElemSelector.id.logoutGlobalLink + '" class="cdm-button logout-link cbcrc-icon-exit" aria-label="' + i18n[locale].logoutGlobalLinkAriaLabel + '">' + i18n[locale].logoutGlobalLinkLabel + '</button>' ;
+            var html = '<button type="button" id="' + markupElemSelector.id.logoutLink + '" class="cdm-button logout-link cbcrc-icon-exit" aria-label="' + i18n[locale].logoutLinkAriaLabel + '">' + i18n[locale].logoutLinkLabel + '</button>';
+            if (config.showGlobalLogoutButton){
+                html += '<button type="button" id="' + markupElemSelector.id.logoutGlobalLink + '" class="cdm-button logout-link cbcrc-icon-exit" aria-label="' + i18n[locale].logoutGlobalLinkAriaLabel + '">' + i18n[locale].logoutGlobalLinkLabel + '</button>' ;
+            }
             return html;
         };
 
@@ -251,7 +254,7 @@
             if (containerLogout!= null){
                 containerLogout.innerHTML = getLogoutMarkup();
                 addEvent($("#" + markupElemSelector.id.logoutLink), "click", logoutFunction);
-                addEvent($("#" + markupElemSelector.id.logoutGlobalLink), "click", logoutGlobalFunction);
+                if (config.showGlobalLogoutButton) addEvent($("#" + markupElemSelector.id.logoutGlobalLink), "click", logoutGlobalFunction); 
             }  
         };
 

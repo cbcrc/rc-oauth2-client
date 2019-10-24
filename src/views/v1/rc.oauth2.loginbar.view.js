@@ -38,6 +38,7 @@
           locale: "fr"
        , i18n: {}
        , dropMenuItems: []
+       ,showGlobalLogoutButton:false
       };
       var markupElemSelector = {
           id: {
@@ -281,9 +282,11 @@
                   // + '<li>'
                   //+ '<div class="wgt_arrow"></div>'
                   // + '</li>'
-                  + '<li role="menuitem"><button type="button" id ="' + markupElemSelector.id.logoutLink + '"  title="' + i18n[locale].logoutLinkTitle + '">' + i18n[locale].logoutLinkLabel + '</button></li>'
-                  + '<li role="menuitem"><button type="button" id ="' + markupElemSelector.id.logoutGlobalLink + '"  title="' + i18n[locale].logoutGlobalLinkTitle + '">' + i18n[locale].logoutGlobalLinkLabel + '</button></li>'
-                      + '</ul>'
+                  + '<li role="menuitem"><button type="button" id ="' + markupElemSelector.id.logoutLink + '"  title="' + i18n[locale].logoutLinkTitle + '">' + i18n[locale].logoutLinkLabel + '</button></li>';
+            if(config.showGlobalLogoutButton){
+                    html += '<li role="menuitem"><button type="button" id ="' + markupElemSelector.id.logoutGlobalLink + '"  title="' + i18n[locale].logoutGlobalLinkTitle + '">' + i18n[locale].logoutGlobalLinkLabel + '</button></li>';
+            }
+            html += '</ul>'
                   + '</div>'
               + '</div>'
               + '</div>'
@@ -318,7 +321,7 @@
           log("injectLoggedInMarkup");
           container.innerHTML = getLoggedInMarkup(userInfo);
           addEvent($("#" + markupElemSelector.id.logoutLink), "click", logoutFunction);
-          addEvent($("#" + markupElemSelector.id.logoutGlobalLink), "click", logoutGlobalFunction);
+          if (config.showGlobalLogoutButton) addEvent($("#" + markupElemSelector.id.logoutGlobalLink), "click", logoutGlobalFunction);
           injectLoggedInMarkupDropMenuItems();
           addDropMenuEvents(); 
       };
